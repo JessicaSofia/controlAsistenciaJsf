@@ -1,10 +1,38 @@
+.uce-table1 {
+	border: transparent !important;
+	padding: 0 !important;
+}
+.uce-table {
+	border: transparent !important;
+	padding: 0 !important;
+}
+.uce-column1 {
+	padding: 1px 2px !important;	
+}
+.uce-column2 {
+	border-right: transparent !important;
+	padding: 1px 2px !important;
+}
+.uce-column3 {
+	width: 30%;
+    text-align: center;
+    border-left: transparent !important;
+    padding: 1px 2px !important;
+}
+/*Quita lineas de los radio button*/
+.uce-column3 > table  {
+	border: transparent;
+}
 /********************************************************************/
 /*********************** PARA RESPONSIVE ****************************/
 /********************************************************************/
 /*responsive*/
 body, html {
+	width: 100%;
     height: 100%;
+    margin: 0;
     max-width: 100%;
+    overflow-x: hidden;  
 }
 .grid.condensed {
     display: block;
@@ -521,6 +549,7 @@ body, html {
 .grid.condensed .row.cells12 > .cell.offset12 {
   margin-left: 100%;
 }
+
 @media screen and (min-width: 1401px) {
 	html {
 		font-size: 120%;
@@ -563,11 +592,17 @@ body, html {
 	}
 }
 
+@media screen and (min-width: 1301px) {
+	.login {
+		background-size: cover !important;
+	}	
+}
+
 @media screen and (max-width: 992px) {
 	.container {
 		width: 100%;
 		padding: 10px;
-	}
+	}input
 }
 
 @media screen and (max-width: 768px) {
@@ -922,6 +957,7 @@ body, html {
 		margin-top: -32px;
 		font-size: 51.2px;
 	}
+	
 }
 
 @media screen and (max-width: 800px) {
@@ -1015,111 +1051,224 @@ body, html {
 /****************** CONFIGURACIONES DEL LOGIN ***********************/
 /********************************************************************/
 /** Configuracion del login**/
+.cabecera-texto {
+	padding: 2.8rem;
+    line-height: 1.8;
+}
 .login{
-	background-image: url('../../img/fondo.png');
+	background-image: url('../../img/fondo_uce.png');
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 100%;
+	height: auto;
+	min-height:100%;
+	font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;	
+}
+
+.login2{
+	background-image: url('../img/fondo_uce.png');
 	background-repeat: no-repeat;
 	width: 100%;
 	height: auto;
-	font-family: 'Open Sans';
+	font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;
 	background-size: cover;
 }
 
-.login .formularioLogin {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 86%;
-	height: 30%;
+#login-button{
+  cursor: pointer;
+  position: absolute;
+  top: 12rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30px;
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(3,3,3,.2);
+  overflow: hidden;
+  opacity: 1;
+  box-shadow: 8px 10px 20px #000;
 }
 
-.login .iniciarSesion {
-	background-image: url('../../img/iniciarSesionButton.png');
-	background-repeat: no-repeat;
-	background-size: cover;
-	position: absolute;
-	top: 9vw;
-	left: 76vw;
-	width: 23.4vw;
-	height: 4.8vw;
+/* Login container */
+#container{
+  position: absolute;
+  top: 12rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 400px;
+  height: 310px;
+  border-radius: 0px;
+  background: rgba(3,3,3,.2);
+  box-shadow: 8px 10px 20px rgba(3,3,3,.6);
+  display: none;
 }
 
-.login .salirLogin {
-	font-family: "Open Sans";
-	position: absolute;
-    top: 14vw;
-    left: 93vw;
-    padding: 0;
+.close-btn{
+  position: absolute;
+  cursor: pointer;
+  font-family: 'Open Sans Condensed', sans-serif;
+  line-height: 18px;
+  top: 6px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  border-radius: 10px;
+  opacity: .2;
+  -webkit-transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -o-transition: all 2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-.login .modalDialog {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background-image: url('../../img/desenfocado.png');
-	background-repeat: no-repeat;
-	background-size: cover;
-	width: 100%;
-	z-index: 99999;
-	opacity: 0;
-	-webkit-transition: opacity 400ms ease-in;
-	-moz-transition: opacity 400ms ease-in;
-	transition: opacity 400ms ease-in;
-	pointer-events: none;
+.close-btn img {
+	width: 25px;
+}
+.close-btn:hover{
+  opacity: .5;
 }
 
-.login .modalDialog:target {
-	opacity: 1;
-	pointer-events: auto;
+/* Heading */
+h1{
+  font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;
+  position: relative;
+  margin: 0px;
+  text-align: center;
+  font-size: 25px;
+  color: #fff;
+  text-shadow: 3px 3px 10px #000;
 }
 
-.login .modalDialog>div {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	margin: 0px;
-	background-image: url('../../img/iniciarSesionBackground.png');
-	background-repeat: no-repeat;
-	background-size: cover;
-	height: 27vw;
-	width: 33vw;
+/* Inputs */
+
+.usuario input, .password input, .ingresar input {
+  font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;
+  text-decoration: none;
+  position: relative;
+  width: 80%;
+  display: block;
+  margin: 9px auto;
+  font-size: 17px;
+  color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bolder;
+  background: rgba(3,3,3,.15);
+  -webkit-transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -o-transition: all 2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-.login .close {
-	color: #ffffff;
-	font-size: 2.5vw;
-	position: fixed;
-	left: 29.3vw;
-	top: 0.3vw;
-	text-align: center;
-	text-decoration: none;
+.usuario input:focus, .password input:focus {
+  outline: none;
+  box-shadow: 3px 3px 10px #333;
+  background: rgba(3,3,3,.4);
 }
 
-.login .transparente {
-	background: transparent;
-	filter: alpha(opacity = 0);
-	-moz-opacity: 0.0;
-	opacity: 0.0;
+/* Placeholders */
+::-webkit-input-placeholder {
+   color: #ddd;  }
+:-moz-placeholder { /* Firefox 18- */
+   color: #fff;  }
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #fff;  }
+:-ms-input-placeholder {  
+   color: #fff;  }
+
+/* Link */
+
+/*a:hover{
+  opacity: 0.7;
+}*/
+
+#remember-container{
+  position: relative;
+  margin: -17px 20px;
 }
 
-.login .errorValidacion {
-	color: #FF0000;
-	font-weight: bolder;
+#remember{
+  position: absolute;
+  font-size: 11px;
+  font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;
+  color: #000;
+  top: 15px;
+  left: 65px;
+  cursor: pointer;
+  text-shadow: none; 
+}
+
+#forgotten{
+  position: absolute;
+  font-size: 10px;
+  font-family: 'Adequate ExtraLight','Segoe UI_','Open Sans',Verdana,Arial,Helvetica,sans-serif;
+  color: #000;
+  right: 24px;
+  top: 15px;
+  cursor: pointer;
+  text-shadow: none;
+}
+
+.fa.fa-uce_academico {
+	font-size: 6rem;
+	padding: 0 5px;
+	color: #004671;
+	display: flex;
+    justify-content: center;
+	animation-name: latido;
+	animation-duration: .5s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: 60;
+	animation-fill-mode: forwards;
+	animation-direction: alternate;
+}
+
+.fa.fa-user-secret {
+	font-size: 30px;
+	padding: 15px 15px 15px 0;
+}
+
+.fa.fa-key {
+	font-size: 30px;
+	padding: 15px 10px 15px 0;
 }
 
 
+@keyframes latido {
+	from{
+		font-size: 6rem;
+		color: #004671;
+	}
+	to {
+		font-size: 6.1rem;
+		color: #0076bd;
+	}
+}
 
+.usuario, .password {
+	width: 80%;
+	height: auto;
+	display: flex;
+	margin: auto;
+}
 
+.ingresar input {
+	background-color: #004671;
+	margin-right: 44px;
+	width: 68%; 
+}
 
 
 
 /********************************************************************/
 /*********************** EDICIONES PRIME ****************************/
 /********************************************************************/
-
 .dtic{
 	margin: 0px;
 	font-family: "Open Sans";
@@ -1127,7 +1276,7 @@ body, html {
 	font-weight: 200;
 	font-size: 13px;
 	margin: 0px;
-	color: rgb(0, 0, 0);
+	color: rgb(0, 0, 0);	
 }
 
 /** Configuracion de la cabecera**/
@@ -1288,7 +1437,7 @@ body, html {
     color: rgb(0,0,0);
     font-weight: 600;
     margin-left: 0.5em;
-    margin-bottom: 0.5em;
+    /*margin-bottom: 0.5em;*/
     font-size: 1em;
 }
 
@@ -1320,7 +1469,35 @@ body, html {
     padding: 5px !important;
 }
 
-.ui-growl-item {
-	background: #575756;
+.ui-panel-my-titlebar .ui-panel-title {
+  	border: 1px solid transparent!important;
+	padding: 1px 5px!important;
+	background-color: rgb(76, 182, 241)!important;
+	border-radius: 5px!important;
+	color: #fff!important;
+ }
+
+.ui-panel-my-titlebar .ui-panel-titlebar {
+  	padding: 0 !important;
+  	background: #868686;
+ } 
+
+ 
+  .dropitem-uce {
+	float: right;
+	width: 100px;
+	height: 30px;
+	border: 1px solid #dddddd;
+	background: #ffffff;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+	margin: 5px 0;
+	position: absolute;
+	top: 22px;
+	z-index: 1;
+	display: none !important;
 }
 
+.ui-menuitem.ui-menubar-options.ui-widget.ui-corner-all:hover .dropitem-uce	{
+	display: block !important;
+}

@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"> 
-      
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+
 <h:head>
-  <ui:include src="/componentesGenerales/plantillas/pltHead.xhtml" />
+	<ui:include src="/componentesGenerales/plantillas/pltHead.xhtml" />
 </h:head>
-	<h:body class="dtic">
+<h:body class="dtic" onload="nobackbutton(); verificarErrores();" >
 		<div id="cabecera" style="height: auto;">
 			<ui:include src="/componentesGenerales/plantillas/pltCabecera.xhtml" />
 		</div>
-		<div id="wrapper" class="wrapper">
+		<div id="wrapper"  class="wrapper" >
+			<div id="barraSuperior">
+				<ui:insert name="paginacion"></ui:insert>
+			</div>
 			<div id="mensajeGlobal">
 					<p:messages autoUpdate="true" globalOnly="true" />
 			</div>
@@ -24,5 +28,5 @@
 		<div id="pie" class="pie">
 				<ui:include src="/componentesGenerales/plantillas/pltPie.xhtml" />
 		</div>
-	</h:body> 
+</h:body>
 </html>

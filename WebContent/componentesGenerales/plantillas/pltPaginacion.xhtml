@@ -1,0 +1,15 @@
+<h:panelGroup xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<div class="" style="color: rgb(0, 0, 0);border: 1px solid rgb(204, 200, 200);width: 99%;height: 30px;margin: 5px auto;background-color: rgb(239, 239, 239);position: relative;">
+		<i class="fa fa-map-marker"
+			style="background: rgb(76, 182, 241);color: white;padding: 2px 7px;border-radius: 50%;margin: 3px 7px;font-size: 20px;position: absolute;"></i>
+		<h:outputText style="background: rgba(255,255,255,0.0);margin: 5px 20px;padding-left: 20px;z-index: 1;position: absolute;" value="#{pagina}:" />
+		<i class="fa fa-user" style="float: right;margin: 0px 8px 0 5px;;font-size: 20px;border-radius: 50%;background: #4cb6f1;padding: 2px 6px 5px;color: #fff;"></i>
+		<h:outputText style="float: right;margin: 5px;" value="#{generalesConstantesForm.separarNombres(sesionUsuarioForm.frmSuUsuario.usrPersona.prsNombres)[0]} #{generalesConstantesForm.separaCaracteres(sesionUsuarioForm.frmSuUsuario.usrPersona.prsPrimerApellido, 0, 1)}." />
+	</div>
+</h:panelGroup>
+

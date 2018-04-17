@@ -25,11 +25,14 @@ xmlns:aop="http://www.springframework.org/schema/aop">
 access="permitAll"/>
 <security:intercept-url pattern="/controlAsistencia/generalidades/index.jsf"
 access="permitAll"/>
+
+<security:intercept-url pattern="/controlAsistencia/empleado/busquedaEmpleado.xhtml"
+access="permitAll"/>
 <security:intercept-url pattern="/controlAsistencia/**" access="isAuthenticated()"/>
 <security:logout invalidate-session="true" />
 <security:custom-filter ref="sessionManagementFilter"
 before="SESSION_MANAGEMENT_FILTER" />
-<security:form-login login-page="/controlAsistencia/login.jsp"
+<security:form-login login-page="/controlAsistencia/generalidades/login.jsp"
 default-target-url="/controlAsistencia/generalidades/principal.jsf" always-use-default-target="true" authentication-failure-url="/errorLogin.jsf" />
 </security:http>
 <!-- DEFINE EL AUTENTICATION MANAGER A PARTIR DEL BEAN PROVEEDOR DE LA AUTENTICACION

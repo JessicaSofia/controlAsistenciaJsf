@@ -12,7 +12,7 @@
 <ui:include src="/componentesGenerales/plantillas/pltCabecera.xhtml" />
 </div>
 <div id="wrapper" class="wrapper" >
-</div>
+
 <div id="menu">
 <ui:include src="/componentesGenerales/plantillas/pltMenu.xhtml" />
 <ui:insert name="paginacion"></ui:insert>
@@ -21,9 +21,52 @@
 <p:messages autoUpdate="true" globalOnly="true" />
 </div>
 <div id="contenido">
+<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
+	<p:panel id="pnlBusquedaEmpleado"  header="Busqueda Empleado">
+	<div class="grid condensed" style="margin:0 !important">
+	<div class="row cells8"> 
+						<div class="cell colspan2">
+		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado" value="Nombres: "/>
+		       			</div>
+		       			<div class="cell colspan4">	
+		       					<p:inputText  id="txtBusquedaEmpleado" value="#{busquedaEmpleado.txtBusquedaEmpleado}" 
+		       									style=" font-weight: Normal !important; with: 100%"  ></p:inputText> 
+		       			</div>
+		       					<div class="cell colspan2">	
+		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleado.buscarEmpleado()}" update="tblEmpleados"></p:commandButton>
+		       					</div>
+		       	
+	</div>				
+	<div id="divTblEmpleados" >
+	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleado.lstDetallePuesto}">
+	 
+        <p:column headerText="Cédula">
+            <h:outputText value="#{emp.fichaEmpleado.persona.prsIdentificacion}" />
+        </p:column>
+        <p:column headerText="Nombres">
+            <h:outputText value="#{emp.fichaEmpleado.persona.prsNombres}" />
+        </p:column>
+        <p:column headerText="Apellidos">
+            <h:outputText value="#{emp.fichaEmpleado.persona.toString()}" />
+        </p:column>
+        <p:column headerText="Dependencia">
+            <h:outputText value="#{emp.dependencia.dpnDescripcion}" />
+        </p:column>
+        <p:column style="width:32px;text-align: center">
+             <p:commandButton update=":form:frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar">
+                <f:setPropertyActionListener value="#{emp}" target="#{busquedaEmpleado.seleccionDetallePuesto}" />
+            </p:commandButton>
+        </p:column>
+	</p:dataTable>
+	</div>
+</div>
+	</p:panel>
+	</h:form>
 <ui:include
 src="/componentesGenerales/plantillas/dialogos/dialogoTrabajando.xhtml" />
-<ui:insert name="cuerpo"></ui:insert>
+<ui:insert name="cuerpo">
+</ui:insert>
+</div>
 </div>
 <div id="pie">
 <ui:include src="/componentesGenerales/plantillas/pltPie.xhtml" />
