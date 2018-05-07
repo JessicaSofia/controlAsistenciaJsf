@@ -38,6 +38,106 @@
 		       			</ui:decorate>
 					</div>
 				</div>
+				 <div class="row cells8"> 
+					<div class="cell colspan8"><!--Numero de  dias de vacaciones  --> 
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblNumDias" for="txtNumDias" value="N° Días: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtNumDias" value="8" 
+		       									style="font-weight: Normal !important;"></p:inputText>
+		       					
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgNumDias" for="txtNumDias" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					<div class="cell colspan8"><!-- Fecha Inicio de Vacaciones -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblFechaInicio" for="CalFechaInicio" value="Desde: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:calendar id="CalFechaInicio"  ></p:calendar>	
+		       				</ui:define>
+		       				
+		       					<ui:define name="etiquetaError">
+		       				<p:message id="msgCalFechaInicio" for="CalFechaInicio" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+				</div>
+				<br/>
+				
+				<p:commandButton id="btnCalcularVacacion"  value="Calcular"> </p:commandButton>
+				<br/>
+				<div class="cell colspan8"><!-- Fecha Final -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblFechaFinal" for="txtFechaFinal" value="Hasta: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtFechaFinal" value="18/05/2018 00:00:00" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					<div class="cell colspan8"><!-- Saldo Vacaciones  Periodo1  -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblSaldo1" for="txtSaldo1" value="Saldo Vacaciones(Periodo anterior): "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtSaldo1" value="8" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					<div class="cell colspan8"><!-- Saldo Vacaciones  Periodo2  -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblSaldo2" for="txtSaldo2" value="Saldo Vacaciones(Periodo actual): "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtSaldo2" value="15" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan8"><!-- Observaciones  -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputTextarea id="txtObservacion" value="Ingrese de alguna  observaaacion" 
+		       									style="font-weight: Normal !important;">
+		       					</p:inputTextarea>
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>  
+					<div class="cell colspan8"><!-- Con copia a -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputTextarea id="txtCopia" value="a nadie" 
+		       									style="font-weight: Normal !important;">
+		       					</p:inputTextarea>
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>  
+					       
+				
+					
 		</div>
 					
 	</p:panel>

@@ -26,8 +26,15 @@ access="permitAll"/>
 <security:intercept-url pattern="/controlAsistencia/generalidades/index.jsf"
 access="permitAll"/>
 
-<security:intercept-url pattern="/controlAsistencia/empleado/busquedaEmpleado.xhtml"
+<security:intercept-url pattern="/controlAsistencia/empleado/busquedaEmpleado.jsf"
 access="permitAll"/>
+<security:intercept-url pattern="/controlAsistencia/vacaciones/Vacacion.jsf"
+access="permitAll"/>
+
+<security:intercept-url pattern="/controlAsistencia/vacaciones/VacacionesRegistros.jsf"
+access="permitAll"/>
+
+<security:intercept-url pattern="/titulacion/generalidades/login.jsp" access="permitAll"/>
 <security:intercept-url pattern="/controlAsistencia/**" access="isAuthenticated()"/>
 <security:logout invalidate-session="true" />
 <security:custom-filter ref="sessionManagementFilter"
