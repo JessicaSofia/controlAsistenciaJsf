@@ -8,22 +8,15 @@
 	<h:body>
 		<h:form>
 			<p:menubar>
-				<p:submenu label="Registro" rendered="#{sesionUsuarioForm.adminNivelacion}">
-					<p:menuitem value="Registro automático" action="#{registroAutomaticoForm.iniciarRegistroForm(sesionUsuarioForm.frmSuUsuario)}" ajax="false" />
+				<p:submenu label="Registro" >
+					<p:menuitem value="Registro automático" />
+				 </p:submenu>
+				<p:submenu label="Administración nivelación" >
+					<p:menuitem value="Registro matrícula histórico"  />
 				</p:submenu>
-				<p:submenu label="Administración nivelación" rendered="#{sesionUsuarioForm.usuarioNivelacion}">
-					<p:menuitem value="Registro matrícula histórico" action="#{registroHistoricoForm.irAlistarEstudiante(sesionUsuarioForm.frmSuUsuario)}" ajax="false" />
-				</p:submenu>
-				
-				
-             	
-             				
-				<f:facet name="options">
-					<i class="fa fa-user" style="float: right;margin: 0px 8px 0 5px;;font-size: 20px;border-radius: 50%;background: #4cb6f1;padding: 2px 6px 5px;color: #fff;"></i>
-					<h:outputText style="float: right;margin: 5px;" value="#{generalesConstantesForm.separarNombres(sesionUsuarioForm.frmSuUsuario.usrPersona.prsNombres)[0]} #{generalesConstantesForm.separaCaracteres(sesionUsuarioForm.frmSuUsuario.usrPersona.prsPrimerApellido, 0, 1)}." />
-					<a href="#{request.contextPath}/j_spring_security_logout" class="dropitem-uce">
-						<span style="margin-left: 0.4em;">Cerrar Sesión</span>
-					</a>
+					
+			<f:facet name="options">
+					<a >Salir del Sistema</a>
 				</f:facet>
 				
 			</p:menubar>

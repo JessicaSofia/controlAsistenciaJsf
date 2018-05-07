@@ -1,31 +1,31 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-	<ui:composition template="/controlAsistencia/generalidades/principal.xhtml">
-	<ui:define name="cuerpo">
+      xmlns:p="http://primefaces.org/ui"> 
+      
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+		<ui:define name="cuerpo">
 	<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
 	<p:panel id="pnlBusquedaEmpleado"  header="Busqueda Empleado">
 	<div class="grid condensed" style="margin:0 !important">
 	<div class="row cells8"> 
 						<div class="cell colspan2">
-		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtNombres" value="Nombres: "/>
+		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado" value="Nombres: "/>
 		       			</div>
 		       			<div class="cell colspan4">	
 		       					<p:inputText  id="txtBusquedaEmpleado" value="#{busquedaEmpleado.txtBusquedaEmpleado}" 
-		       									style="font-weight: Normal !important;"></p:inputText> 
+		       									style=" font-weight: Normal !important; with: 100%"  ></p:inputText> 
 		       			</div>
-		       				
+		       					<div class="cell colspan2">	
+		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleado.buscarEmpleado()}" update="tblEmpleados"></p:commandButton>
+		       					</div>
 		       	
 	</div>				
 	<div id="divTblEmpleados" >
 	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleado.lstDetallePuesto}">
-	 <f:facet name="header">
-            Empleados
-        </f:facet>
+	 
         <p:column headerText="Cédula">
             <h:outputText value="#{emp.fichaEmpleado.persona.prsIdentificacion}" />
         </p:column>
@@ -48,6 +48,7 @@
 </div>
 	</p:panel>
 	</h:form>
-	</ui:define>
+	
+	</ui:define> 
 	</ui:composition>
 </html>

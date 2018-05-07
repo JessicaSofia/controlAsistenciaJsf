@@ -119,20 +119,22 @@
 	<div id="divTblRegistrosVacaciones">
 	<p:dataTable  var="listVac" value="#{registrosVacacion.listaVacacion}">
 	<p:column   headerText="N° Autorizión">
-	<h:outputText value="" />
+	<h:outputText value="{#{listVac.vccNumAutorizacion}}" />
 	</p:column>
 	<p:column   headerText="Fecha Emisión">
-	<h:outputText value="" />
+	<h:outputText value="#{listVac.vccFechaEmision}" />
 	</p:column>
 	<p:column   headerText="Fecha Desde">
-	<h:outputText value="" />
+	<h:outputText value="{#{listVac.vccFechaInicio}}" />
 	</p:column>
 	<p:column   headerText="Fecha Hasta">
-	<h:outputText value="" />
+	<h:outputText value="{#{listVac.vccFechaFin}}" />
 	</p:column>
 	<p:column  >
-	<p:commandButton  value="Ver/Editar)"></p:commandButton>
-	</p:column><p:column >
+	<p:commandButton  value="Ver/Editar)">
+	 <f:setPropertyActionListener value="#{listVac}" target="#{registrosVacacion.seleccionVacacion}" />
+	</p:commandButton>
+	</p:column><p:column>
 	<p:commandButton value="Imprimir"></p:commandButton>
 	</p:column>
 	 </p:dataTable>
@@ -145,7 +147,7 @@
 	</h:form>
 <ui:include
 src="/componentesGenerales/plantillas/dialogos/dialogoTrabajando.xhtml" />
-<ui:insert name="cuerpo">
+<ui:insert name="cuerpo"> 
 </ui:insert>
 </div>
 </div>
