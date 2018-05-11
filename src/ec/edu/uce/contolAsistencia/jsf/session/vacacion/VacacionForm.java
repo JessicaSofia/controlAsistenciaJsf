@@ -98,7 +98,7 @@ public class VacacionForm implements   Serializable{
 	}
 	
 	public void GuardarVacacion(){
-			
+			srvVacacion.VacionInsertar(vacacion);
 		}
 	
 	public void EditarVacacion(){
