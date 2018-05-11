@@ -1,4 +1,4 @@
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -7,7 +7,7 @@
 
 	<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
 	<ui:define name="cuerpo">
-	<h:form  id="formVacacion">
+	<h:form  id="VacacionForm">
 	<p:panel  id="panelVacacion" header="Nuevo Registro">
 	<div class="grid condensed">
 				<!-- ******************** FILA NUMERO 1 ************************ -->
@@ -18,7 +18,7 @@
 		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNAutorizacion" value="Nombre" 
+		       					<p:outputLabel id="txtNAutorizacion" value="#{vacacionForm.vacacion.vccNumAutorizacion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -31,7 +31,7 @@
 		       					<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtFechaElaboracion" value="06/05/2018 00:00:00" 
+		       					<p:outputLabel id="txtFechaElaboracion" value="#{vacacionForm.vacacion.vccFechaEmision}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -45,7 +45,7 @@
 		       					<p:outputLabel id="lblNumDias" for="txtNumDias" value="N° Días: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputText id="txtNumDias" value="8" 
+		       					<p:inputText id="txtNumDias" value="#{vacacionForm.vacacion.vccNumDias}" 
 		       									style="font-weight: Normal !important;"></p:inputText>
 		       					
 		       				</ui:define>
@@ -60,7 +60,7 @@
 		       					<p:outputLabel id="lblFechaInicio" for="CalFechaInicio" value="Desde: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:calendar id="CalFechaInicio"  ></p:calendar>	
+		       					<p:calendar id="CalFechaInicio" value="#{vacacionForm.vacacion.vccFechaInicio}" ></p:calendar>	
 		       				</ui:define>
 		       				
 		       					<ui:define name="etiquetaError">
@@ -72,7 +72,7 @@
 				</div>
 				<br/>
 				
-				<p:commandButton id="btnCalcularVacacion"  value="Calcular"> </p:commandButton>
+				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}"> </p:commandButton>
 				<br/>
 				<div class="cell colspan8"><!-- Fecha Final -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
@@ -80,7 +80,7 @@
 		       					<p:outputLabel id="lblFechaFinal" for="txtFechaFinal" value="Hasta: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtFechaFinal" value="18/05/2018 00:00:00" 
+		       					<p:outputLabel id="txtFechaFinal" value="#{vacacionForm.vacacion.vccFechaFin}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -117,7 +117,7 @@
 		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtObservacion" value="Ingrese de alguna  observaaacion" 
+		       					<p:inputTextarea id="txtObservacion" value="#{vacacionForm.vacacion.vccObservacion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:inputTextarea>
 		       				</ui:define>
@@ -129,14 +129,24 @@
 		       					<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtCopia" value="a nadie" 
+		       					<p:inputTextarea id="txtCopia" value="#{vacacionForm.vacacion.vccCopia}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:inputTextarea>
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>  
-					       
-				
+					<center>       
+				<div  class="row cells8">
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir"  ></p:commandButton>
+				</div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnGuardarVacion" value="Cancelar" actionListener="#{vacacionForm.GuardarVacacion()}" ></p:commandButton>
+				</div>
+				</div>
+				</center>
 					
 		</div>
 					

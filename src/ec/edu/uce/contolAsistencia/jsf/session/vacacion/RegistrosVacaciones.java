@@ -1,14 +1,13 @@
 package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
