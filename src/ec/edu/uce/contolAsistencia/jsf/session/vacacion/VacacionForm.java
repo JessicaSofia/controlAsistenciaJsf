@@ -1,7 +1,10 @@
 package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 
+
 import java.io.Serializable;
+
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +20,7 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
 
+
 @ManagedBean(name="vacacionForm")
 @SessionScoped
 public class VacacionForm implements   Serializable{
@@ -26,7 +30,9 @@ public class VacacionForm implements   Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Vacacion  vacacion;
-	private List<SaldoVacacion> saldoVacacion;
+	
+	
+	
 	private boolean esActualizacion;
 	
 	
@@ -34,7 +40,14 @@ public class VacacionForm implements   Serializable{
 	private Vacacion seleccionVacacion;
 	@ManagedProperty(value="#{busquedaEmpleado.seleccionDetallePuesto}")
 	private DetallePuesto seleccionDetallePuesto;
+	@ManagedProperty(value="#{registrosVacacion.saldoVacacion}")
+	private List<SaldoVacacion> saldoVacacion;
+	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
+	private SaldoVacacion saldoVacacion1;
+	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
+	private SaldoVacacion saldoVacacion2;  
 	
+	 
 	@PostConstruct
 	public void init(){
 		if(seleccionVacacion==null){
@@ -47,6 +60,7 @@ public class VacacionForm implements   Serializable{
 		}	else {
 			vacacion=seleccionVacacion;
 		}
+		
 	}
 	
 	@EJB
@@ -87,18 +101,32 @@ public class VacacionForm implements   Serializable{
 	public void setEsActualizacion(boolean esActualizacion) {
 		this.esActualizacion = esActualizacion;
 	}
+	
+	public SaldoVacacion getSaldoVacacion1() {
+		return saldoVacacion1;
+	}
+	public void setSaldoVacacion1(SaldoVacacion saldoVacacion1) {
+		this.saldoVacacion1 = saldoVacacion1;
+	}
+	public SaldoVacacion getSaldoVacacion2() {
+		return saldoVacacion2;
+	}
+	public void setSaldoVacacion2(SaldoVacacion saldoVacacion2) {
+		this.saldoVacacion2 = saldoVacacion2;
+	}
 	/**
 	 * 
 	 * ============= Métodos==============
 	 */
-	
+	 
 	public void CalcularVacaciones(){
 	vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), vacacion.getVccNumDias()));
-	
+	generarNumAutorizacion();
+	CalcularSaldoVacacion(vacacion.getVccNumDias());
 	}
 	
 	public void GuardarVacacion(){
-			srvVacacion.VacionInsertar(vacacion);
+			srvVacacion.VacionInsertar(vacacion);	
 		}
 	
 	public void EditarVacacion(){
@@ -107,6 +135,7 @@ public class VacacionForm implements   Serializable{
 	
 	public Date calcularFechaFinal( Date fechaInicio , int numDias){
 		Calendar fechaFinal = Calendar.getInstance();
+		
 		
 		if(fechaInicio!=null){
 			fechaFinal.setTime(fechaInicio);
@@ -129,10 +158,47 @@ public class VacacionForm implements   Serializable{
 			numAutorizacion=1;
 		}
 		return numAutorizacion;
+	} 
+	
+	public void CalcularSaldoVacacion(int num){
+		int saldoDias1=saldoVacacion1.getSlvcTotalDias();
+		int saldoDias2=saldoVacacion2.getSlvcTotalDias();
+		Date saldoHoras1=saldoVacacion1.getSlvcTotalHoras();
+		Date saldoHoras2=saldoVacacion2.getSlvcTotalHoras();
+		
+		 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); 
+	
+		
+		Calendar horaInicio = Calendar.getInstance();
+		 horaInicio.set(Calendar.HOUR, 0);
+		 horaInicio.set(Calendar.MINUTE, 0);
+		 horaInicio.set(Calendar.SECOND, 0);
+		 Date horaDefault=horaInicio.getTime();
+		int saldoTotaldias1= saldoDias1-num;
+		if(saldoTotaldias1<0){
+			saldoVacacion1.setSlvcTotalDias(0);
+		if(saldoHoras1==horaDefault){  
+			saldoTotaldias1=  saldoTotaldias1+saldoDias2;
+			saldoVacacion2.setSlvcTotalDias(saldoTotaldias1);
+		}else{
+			
+			saldoVacacion1.setSlvcTotalDias(0);
+			Calendar hora1 = Calendar.getInstance();
+			hora1.setTime(saldoHoras1);
+			int hora=hora1.get(Calendar.HOUR);
+			int minutos=hora1.get(Calendar.MINUTE);
+			
+			System.out.println("IMPLEMENTCION INCOMPLETA  RESTAR HORAS CUANDO TIENE HORAS RESTANTES");
+			if(minutos==0){
+				
+			}		
+			
+		}
+		
+		}else{
+			saldoVacacion1.setSlvcTotalDias(saldoTotaldias1);
+		}
+						
 	}
-	 
-	
-	
-	
-
+            
 }

@@ -24,23 +24,23 @@
 		       	
 	</div>				
 	<div id="divTblEmpleados" >
-	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleado.lstDetallePuesto}">
+	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleado.lstPersona}">
 	 
         <p:column headerText="Cédula">
-            <h:outputText value="#{emp.fichaEmpleado.persona.prsIdentificacion}" />
+            <p:outputLabel value="#{emp.prsIdentificacion}"></p:outputLabel>  
         </p:column>
         <p:column headerText="Nombres">
-            <h:outputText value="#{emp.fichaEmpleado.persona.prsNombres}" />
-        </p:column>
+            <h:outputText value="#{emp.prsNombres}" />
+        </p:column>                                                                                                                                               
         <p:column headerText="Apellidos">
-            <h:outputText value="#{emp.fichaEmpleado.persona.toString()}" />
+            <h:outputText value="#{emp.toString()}" />
         </p:column>
         <p:column headerText="Dependencia">
-            <h:outputText value="#{emp.dependencia.dpnDescripcion}" />
+            <h:outputText value="#{busquedaEmpleado.ObtenerNombreDependencia(emp.dpnId)}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":form:frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar">
-                <f:setPropertyActionListener value="#{emp}" target="#{busquedaEmpleado.seleccionDetallePuesto}" />
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml">
+                <f:setPropertyActionListener value="#{emp}" target="#{busquedaEmpleado.seleccionPersona}" />
             </p:commandButton>
         </p:column>
 	</p:dataTable>

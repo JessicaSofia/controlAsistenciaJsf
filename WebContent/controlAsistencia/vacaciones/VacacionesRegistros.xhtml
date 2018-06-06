@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -35,7 +35,7 @@
 		       					<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtCedula" value="#{registrosVacacion.seleccionDetallePuesto.fichaEmpleado.persona.prsIdentificacion}" 
+		       					<p:outputLabel id="txtCedula" value="#{registrosVacacion.seleccionPersona.prsIdentificacion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -47,7 +47,7 @@
 		       					<p:outputLabel id="lblNombres" for="txtNombres" value="Nombres: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNombres" value="#{registrosVacacion.seleccionDetallePuesto.fichaEmpleado.persona.toString()}" 
+		       					<p:outputLabel id="txtNombres" value="#{registrosVacacion.seleccionPersona.prsNombres}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -59,7 +59,7 @@
 		       					<p:outputLabel id="lblDependencia" for="txtDependencia" value="Dependencia: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtDependencia" value="#{registrosVacacion.seleccionDetallePuesto.dependencia.dpnDescripcion}" 
+		       					<p:outputLabel id="txtDependencia" value="#{registrosVacacion.dependencia.dpnDescripcion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -71,7 +71,7 @@
 		       					<p:outputLabel id="lblRegimen" for="txtRegimen" value="Régimen: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtRegimen" value="#{registrosVacacion.seleccionDetallePuesto.puesto.grupoOcupacional.regimen.rgmDescripcion}" 
+		       					<p:outputLabel id="txtRegimen" value="regimen" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -83,7 +83,7 @@
 		       					<p:outputLabel id="lblDenominacion" for="txtDenominacion" value="Denominación: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtDenominacion" value="#{registrosVacacion.seleccionDetallePuesto.puesto.pstDenominacion}" 
+		       					<p:outputLabel id="txtDenominacion" value="#{registrosVacacion.puesto.pstDenominacion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -95,7 +95,7 @@
 		       					<p:outputLabel id="lblSaldoVacaciones1" for="txtSaldovacaciones1" value="Saldo Vacacion (Periodo Anterior): "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldovacaciones1" value="#{registrosVacacion.saldoVacacionPorPeriodo(1)}" 
+		       					<p:outputLabel id="txtSaldovacaciones1" value="#{registrosVacacion.saldoVacacion1.toString()}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -107,7 +107,7 @@
 		       					<p:outputLabel id="lblSaldoVacaciones2" for="txtSaldovacaciones2" value="Saldo Vacacion (Periodo Actual): "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldovacaciones2" value="#{registrosVacacion.saldoVacacionPorPeriodo(2)}" 
+		       					<p:outputLabel id="txtSaldovacaciones2" value="#{registrosVacacion.saldoVacacion2.toString()}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -131,7 +131,7 @@
 	<h:outputText value="{#{listVac.vccFechaFin}}" />
 	</p:column>
 	<p:column  >
-	<p:commandButton  value="Ver/Editar)">
+	<p:commandButton  value="Ver/Editar)"  action="/controlAsistencia/vacaciones/Vacacion.xhtml"  >
 	 <f:setPropertyActionListener value="#{listVac}" target="#{registrosVacacion.seleccionVacacion}" />
 	</p:commandButton>
 	</p:column><p:column>
@@ -140,7 +140,7 @@
 	 </p:dataTable>
 	</div>
 <div>
-<p:commandButton value=" Nuevo Registro" ></p:commandButton>
+<p:commandButton value=" Nuevo Registro" action="/controlAsistencia/vacaciones/Vacacion.xhtml"></p:commandButton>
 </div>
 	</p:panel>
 	
@@ -155,4 +155,4 @@ src="/componentesGenerales/plantillas/dialogos/dialogoTrabajando.xhtml" />
 <ui:include src="/componentesGenerales/plantillas/pltPie.xhtml" />
 </div>
 </h:body>
-</html>
+</html> 

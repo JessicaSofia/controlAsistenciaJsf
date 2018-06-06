@@ -1,16 +1,29 @@
 package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
+import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.GrupoOcupacionalServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
-import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
+import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
+import ec.edu.uce.controlAsistencia.jpa.entidades.GrupoOcupacional;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
 
@@ -22,19 +35,97 @@ public  class RegistrosVacaciones  implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private  List<Vacacion>   listaVacacion;
+	private  List<Vacacion>   listaVacacion = new ArrayList<>();
 	private Vacacion seleccionVacacion;
-	private List<SaldoVacacion> saldoVacacion  = null;  
+	private List<SaldoVacacion> saldoVacacion  = null; 
+	private SaldoVacacion saldoVacacion1;
+	private SaldoVacacion saldoVacacion2;
+	private DetallePuestoDto detallePuestoEmpleado;
+	private FichaEmpleado fichaEmpleado;
+	private Dependencia dependencia;
+	private GrupoOcupacional  grupoOcupacional;
+	private Puesto puesto;
+	private Regimen regimen;
 	
-	@ManagedProperty(value="#{busquedaEmpleado.seleccionDetallePuesto}")
-	private DetallePuesto seleccionDetallePuesto;
+	
+	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
+	private PersonaDto seleccionPersona;
 	
 	@EJB
-	private VacacionServicio  srvVacacion;
+	private VacacionServicio  srvVacacion;  
+	
+	@EJB
+	private DetallePuestoServicio  srvDetallePuesto; 
+	
+	@EJB
+	private FichaEmpleadoServicio srvFichaEmpleado;
+	
+	@EJB
+	private DependenciaServicio srvDependencia;
+	
+	@EJB
+	private RegimenServicio srvRegimen;
+	
+	@EJB 
+	private GrupoOcupacionalServicio srvGrupoOcupacional;
+	
+	
+	@EJB
+	private PuestoServicio srvPuesto;
+	                      
+	
+	@PostConstruct 
+	public void  init(){
+	}
+	
+	
+
+	public Dependencia getDependencia() {
+		if(dependencia==null){
+			dependencia=srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
+		}
+		return dependencia;
+	}
+
+	public void setDependencia(Dependencia dependencia) {
+		this.dependencia = dependencia;
+	}
+
+
+
+	public DetallePuestoDto getDetallePuestoEmpleado() {
+		if(detallePuestoEmpleado==null){
+		detallePuestoEmpleado =srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
+		if(detallePuestoEmpleado==null){
+			System.out.println(" salio nulo");
+		}
+		}
+		
+		return detallePuestoEmpleado;
+	}
+
+	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
+		this.detallePuestoEmpleado = detallePuestoEmpleado;
+	}
+
+
+
+	public FichaEmpleado getFichaEmpleado() {
+		fichaEmpleado= srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
+		return fichaEmpleado;
+	}
+
+
+
+	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
+		this.fichaEmpleado = fichaEmpleado;
+	}
+
+
 
 	public List<Vacacion> getListaVacacion() {
-		if(seleccionDetallePuesto !=null ){
-			listaVacacion=srvVacacion.ListaVacacionesPorDetallePuestoId(seleccionDetallePuesto.getDtpsId());			
+		if(seleccionPersona !=null ){
+			listaVacacion=srvVacacion.ListaVacacionesPorDetallePuestoId(seleccionPersona.getDtpsId());	
 		}
 		return listaVacacion;
 	}
@@ -42,7 +133,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	public void setListaVacacion(List<Vacacion> listaVacacion) {
 		this.listaVacacion = listaVacacion;
 	}
-
+ 
 	public Vacacion getSeleccionVacacion() {
 		
 		return seleccionVacacion;
@@ -56,7 +147,7 @@ public  class RegistrosVacaciones  implements Serializable {
 
 	public List<SaldoVacacion> getSaldoVacacion() {
 		if(saldoVacacion==null){
-			saldoVacacion=srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionDetallePuesto.getDtpsId());
+			//saldoVacacion=srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionDetall.getDtpsId());
 		}
 		return saldoVacacion;
 	}
@@ -65,12 +156,14 @@ public  class RegistrosVacaciones  implements Serializable {
 		this.saldoVacacion = saldoVacacion;
 	}
 
-	public DetallePuesto getSeleccionDetallePuesto() {
-		return seleccionDetallePuesto;
+	
+
+	public PersonaDto getSeleccionPersona() {
+		return seleccionPersona;
 	}
 
-	public void setSeleccionDetallePuesto(DetallePuesto seleccionDetallePuesto) {
-		this.seleccionDetallePuesto = seleccionDetallePuesto;
+	public void setSeleccionPersona(PersonaDto seleccionPersona) {
+		this.seleccionPersona = seleccionPersona;
 	}
 
 	public VacacionServicio getSrvVacacion() {
@@ -81,28 +174,81 @@ public  class RegistrosVacaciones  implements Serializable {
 		this.srvVacacion = srvVacacion;
 	}
 
-	
-	
+	public SaldoVacacion getSaldoVacacion1() {
+		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1);
+		return saldoVacacion1;
+	}
 
+	public void setSaldoVacacion1(SaldoVacacion saldoVacacion1) {
+		
+		this.saldoVacacion1 = saldoVacacion1;
+	}
+
+	public SaldoVacacion getSaldoVacacion2() {
+ 		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1);  
+		return saldoVacacion2;
+	}
+
+	public void setSaldoVacacion2(SaldoVacacion saldoVacacion2) {
+		this.saldoVacacion2 = saldoVacacion2;
+	}
+
+
+
+	public GrupoOcupacional getGrupoOcupacional() {
+		if(grupoOcupacional==null){
+			if(puesto !=null){
+			//srvGrupoOcupacional.BuscarPorId(puesto.)	
+			}
+		   
+		}
+		return grupoOcupacional;
+	}
+
+
+
+	public void setGrupoOcupacional(GrupoOcupacional grupoOcupacional) {
+		this.grupoOcupacional = grupoOcupacional;
+	}
+
+
+
+	public Puesto getPuesto() {
+		if(puesto==null){
+			detallePuestoEmpleado=srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
+			System.out.println(detallePuestoEmpleado.toString());
+			if(detallePuestoEmpleado!=null){
+			srvPuesto.BuscarPorId(detallePuestoEmpleado.getPuesto());
+			}
+		}
+		return puesto;
+	}
+
+	public void setPuesto(Puesto puesto) {
+		this.puesto = puesto;
+	}
+
+
+
+	public Regimen getRegimen() {
+		return regimen;
+	}
+
+
+
+	public void setRegimen(Regimen regimen) {
+		this.regimen = regimen;
+	}
+
+	
+	
+     
 	/**
 	 * Region Metodos
 	 */
 	
-	 public String saldoVacacionPorPeriodo(int periodo){
-		 
-		 String  TotalPeriodo="";
-		 for(SaldoVacacion lsv: saldoVacacion){
-			if(lsv.getSlvcPeriodo()== periodo){
-				TotalPeriodo=lsv.toString();
-				
-			}
-		 }
-		return TotalPeriodo;
+	
+	
 	 }
 	 
-	
-	
-	
-	
 
-}
