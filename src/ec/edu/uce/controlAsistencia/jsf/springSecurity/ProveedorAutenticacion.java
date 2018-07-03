@@ -30,6 +30,7 @@ AuthenticationException{
 String username = authentication.getName();
 String password = (String) authentication.getCredentials();
 
+
 //verificacion de usuario y password
 if(username.equalsIgnoreCase("administrador")){
 if(!password.equals("123456")){

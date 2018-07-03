@@ -47,7 +47,7 @@
 		       					<p:outputLabel id="lblNombres" for="txtNombres" value="Nombres: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNombres" value="#{registrosVacacion.seleccionPersona.prsNombres}" 
+		       					<p:outputLabel id="txtNombres" value="#{registrosVacacion.seleccionPersona.nombresCompetos()}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -65,6 +65,18 @@
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>
+						<div class="cell colspan8"><!-- DENOMINACION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblDenominacion" for="txtDenominacion" value="Denominación: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtDenominacion" value="#{registrosVacacion.puesto.pstDenominacion}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
 					<div class="cell colspan8"><!-- REGIMEN -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 		       				<ui:define name="etiqueta">	
@@ -77,18 +89,7 @@
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>
-					<div class="cell colspan8"><!-- DENOMINACION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDenominacion" for="txtDenominacion" value="Denominación: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtDenominacion" value="#{registrosVacacion.puesto.pstDenominacion}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
+				
 					<div class="cell colspan8"><!-- SALDO  VACIONES PERIODO ANTERIOR -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 		       				<ui:define name="etiqueta">	

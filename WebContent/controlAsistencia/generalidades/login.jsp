@@ -81,7 +81,7 @@
 						<div style="position: absolute;top: 100%;left: 60%;transform: translate(-50%, -50%);width: 100%;">
 							<input type="submit" value="Ingresar" style="line-height:2.57vw;;width:21.4vw;font-size:1.5vw;background-color:#AA9003;border-width:0px;color:#FFFFFF;"/>
 						</div>
-						<div style="position:absolute;top: 135%;left: 50%;transform: translate(-50%, -50%);">
+						<div style="position:absolute;top: 100%;left: 50%;transform: translate(-50%, -50%);">
 					</div>
 					</form>
 					<div>
