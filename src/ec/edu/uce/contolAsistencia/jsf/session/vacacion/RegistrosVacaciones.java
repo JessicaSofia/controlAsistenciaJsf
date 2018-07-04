@@ -43,8 +43,8 @@ public  class RegistrosVacaciones  implements Serializable {
 	private DetallePuestoDto detallePuestoEmpleado;
 	private FichaEmpleado fichaEmpleado;
 	private Dependencia dependencia;
-	private Puesto puesto;
-	private Regimen regimen;
+	private Puesto puesto= null;
+	private Regimen regimen=null;
 	
 	
 	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
@@ -182,7 +182,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	}
 
 	public SaldoVacacion getSaldoVacacion2() {
- 		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1);  
+ 		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2);  
 		return saldoVacacion2;
 	}
 
@@ -200,11 +200,9 @@ public  class RegistrosVacaciones  implements Serializable {
 
 	public Puesto getPuesto() {
 		if(puesto==null){
-			detallePuestoEmpleado=srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
-			System.out.println(detallePuestoEmpleado.toString());
-			if(detallePuestoEmpleado!=null){
-			srvPuesto.BuscarPorId(detallePuestoEmpleado.getPuesto());
-			}
+		
+			srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+	
 		}
 		return puesto;
 	}
@@ -216,6 +214,10 @@ public  class RegistrosVacaciones  implements Serializable {
 
 
 	public Regimen getRegimen() {
+		
+		if(regimen ==null){
+			regimen=srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
+		}
 		return regimen;
 	}
 

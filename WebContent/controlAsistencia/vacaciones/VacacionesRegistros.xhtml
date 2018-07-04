@@ -73,7 +73,7 @@
 		       				<ui:define name="valor">	
 		       					<p:outputLabel id="txtDenominacion" value="#{registrosVacacion.puesto.pstDenominacion}" 
 		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
+		       					</p:outputLabel>	                          
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>
@@ -83,7 +83,7 @@
 		       					<p:outputLabel id="lblRegimen" for="txtRegimen" value="Régimen: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtRegimen" value="regimen" 
+		       					<p:outputLabel id="txtRegimen" value="#{registrosVacacion.regimen.rgmDescripcion}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
