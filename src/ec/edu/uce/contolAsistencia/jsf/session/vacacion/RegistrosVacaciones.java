@@ -99,7 +99,7 @@ public  class RegistrosVacaciones  implements Serializable {
 		}
 		
 		return detallePuestoEmpleado;
-	}
+  	}
 
 	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
 		this.detallePuestoEmpleado = detallePuestoEmpleado;
@@ -172,7 +172,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	}
 
 	public SaldoVacacion getSaldoVacacion1() {
-		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1);
+		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId() );
 		return saldoVacacion1;
 	}
 
@@ -182,7 +182,8 @@ public  class RegistrosVacaciones  implements Serializable {
 	}
 
 	public SaldoVacacion getSaldoVacacion2() {
- 		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2);  
+		System.out.println("seleccion Persona" + seleccionPersona.getDtpsId());
+ 		saldoVacacion2=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2,seleccionPersona.getDtpsId());  
 		return saldoVacacion2;
 	}
 
@@ -201,7 +202,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	public Puesto getPuesto() {
 		if(puesto==null){
 		
-			srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+			puesto=srvPuesto.BuscarPorId(seleccionPersona.getPstId());
 	
 		}
 		return puesto;

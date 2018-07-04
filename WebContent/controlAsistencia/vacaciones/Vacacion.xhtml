@@ -72,7 +72,7 @@
 				</div>
 				<br/>
 				
-				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}"> </p:commandButton>
+				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}" update="VacacionForm"> </p:commandButton>
 				<br/>
 				<div class="cell colspan8"><!-- Fecha Final -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
@@ -92,7 +92,7 @@
 		       					<p:outputLabel id="lblSaldo1" for="txtSaldo1" value="Saldo Vacaciones(Periodo anterior): "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldo1" value="8" 
+		       					<p:outputLabel id="txtSaldo1" value="#{vacacionForm.saldoVacacion1.toString()}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -104,7 +104,7 @@
 		       					<p:outputLabel id="lblSaldo2" for="txtSaldo2" value="Saldo Vacaciones(Periodo actual): "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldo2" value="15" 
+		       					<p:outputLabel id="txtSaldo2" value="#{vacacionForm.saldoVacacion2.toString()}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:outputLabel>	
 		       				</ui:define>
@@ -140,11 +140,15 @@
 				<div class="cell colpan3"></div>
 				<div class="cell colpan3"></div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir"  ></p:commandButton>
+                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir" actionListener="#{vacacionForm.GuardarVacacion()}"  ></p:commandButton>
 				</div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnCancelarVacion" value="Cancelar" actionListener="#{vacacionForm.GuardarVacacion()}" ></p:commandButton>
+                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{vacacionForm.anularVacacion()}"></p:commandButton>
 				</div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnCancelarVacion" value="Cancelar"></p:commandButton>
+				</div>
+				
 				</div>
 				</center>
 					

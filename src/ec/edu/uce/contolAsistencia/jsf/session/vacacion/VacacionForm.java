@@ -4,10 +4,10 @@ package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 import java.io.Serializable;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -15,6 +15,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
+import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
@@ -30,41 +33,44 @@ public class VacacionForm implements   Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Vacacion  vacacion;
+	private DetallePuesto detallePuesto;
+	private Estados estado;
 	
 	
-	
-	private boolean esActualizacion;
+	private boolean esActualizacion=false;
 	
 	
 	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
 	private Vacacion seleccionVacacion;
-	@ManagedProperty(value="#{busquedaEmpleado.seleccionDetallePuesto}")
-	private DetallePuesto seleccionDetallePuesto;
-	@ManagedProperty(value="#{registrosVacacion.saldoVacacion}")
-	private List<SaldoVacacion> saldoVacacion;
-	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
+	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
+	private PersonaDto seleccionPersona;
+	@ManagedProperty(value="#{registrosVacacion.saldoVacacion1}")
 	private SaldoVacacion saldoVacacion1;
-	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
+	@ManagedProperty(value="#{registrosVacacion.saldoVacacion2}")
 	private SaldoVacacion saldoVacacion2;  
 	
 	 
 	@PostConstruct
 	public void init(){
 		if(seleccionVacacion==null){
-
+			esActualizacion=false;
 			vacacion=new Vacacion();
 			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
 			vacacion.setVccFechaEmision(fechaEmision);
 			
 		}	else {
+			esActualizacion=true;
 			vacacion=seleccionVacacion;
 		}
 		
 	}
 	
 	@EJB
-	private VacacionServicio  srvVacacion;
+	private VacacionServicio  srvVacacion; 
+	
+	@EJB
+	private DetallePuestoServicio srvDetallePuesto;
 	
 	
 	/**
@@ -77,11 +83,21 @@ public class VacacionForm implements   Serializable{
 	public void setVacacion(Vacacion vacacion) {
 		this.vacacion = vacacion;
 	}
-	public List<SaldoVacacion> getSaldoVacacion() {
-		return saldoVacacion;
+	
+	
+
+	
+	public Estados getEstado() {
+		return estado;
 	}
-	public void setSaldoVacacion(List<SaldoVacacion> saldoVacacion) {
-		this.saldoVacacion = saldoVacacion;
+	public void setEstado(Estados estado) {
+		this.estado = estado;
+	}
+	public DetallePuesto getDetallePuesto() {
+		return detallePuesto;
+	}
+	public void setDetallePuesto(DetallePuesto detallePuesto) {
+		this.detallePuesto = detallePuesto;
 	}
 	public Vacacion getSeleccionVacacion() {
 		return seleccionVacacion;
@@ -89,12 +105,14 @@ public class VacacionForm implements   Serializable{
 	public void setSeleccionVacacion(Vacacion seleccionVacacion) {
 		this.seleccionVacacion = seleccionVacacion;
 	}
-	public DetallePuesto getSeleccionDetallePuesto() {
-		return seleccionDetallePuesto;
+	
+	
+	public PersonaDto getSeleccionPersona() {
+		return seleccionPersona;
 	}
-	public void setSeleccionDetallePuesto(DetallePuesto seleccionDetallePuesto) {
-		this.seleccionDetallePuesto = seleccionDetallePuesto;
-	}	
+	public void setSeleccionPersona(PersonaDto seleccionPersona) {
+		this.seleccionPersona = seleccionPersona;
+	}
 	public boolean isEsActualizacion() {
 		return esActualizacion;
 	}
@@ -115,36 +133,62 @@ public class VacacionForm implements   Serializable{
 		this.saldoVacacion2 = saldoVacacion2;
 	}
 	/**
-	 * 
+	 *  
 	 * ============= Métodos==============
+	 * @throws ParseException 
 	 */
 	 
 	public void CalcularVacaciones(){
-	vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), vacacion.getVccNumDias()));
-	generarNumAutorizacion();
-	CalcularSaldoVacacion(vacacion.getVccNumDias());
+		if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null) {
+			vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), vacacion.getVccNumDias()));
+			CalcularSaldoVacacion(vacacion.getVccNumDias());
+		}
+		else {
+			//implementacion de mensajes
+		}
+	
 	}
 	
 	public void GuardarVacacion(){
-			srvVacacion.VacionInsertar(vacacion);	
+		boolean retorno=false;
+		detallePuesto= srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		
+		vacacion.setDetallePuesto(detallePuesto);
+		if(esActualizacion) {
+	   		vacacion.setVccEstado(Estados.Activo.getId());
+			Vacacion vac=srvVacacion.VacacionActualizar(vacacion);
+			if(vac!=null) {
+				retorno= true;
+			}else{
+				retorno =false;
+			}
+		}	
+		else {
+			retorno =srvVacacion.VacionInsertar(vacacion);	
 		}
-	
+		
+			 
+			 if(retorno) {
+				 saldoVacacion1.setDetallePuesto(detallePuesto);
+				 saldoVacacion2.setDetallePuesto(detallePuesto);
+				 srvVacacion.ActualizarSaldoVacacion(saldoVacacion1);
+				 srvVacacion.ActualizarSaldoVacacion(saldoVacacion2);
+			 }else  {
+				// no se inserto o no se actualizo 
+			 }
+			
+		}
+	                    
 	public void EditarVacacion(){
 		
 	} 
 	
 	public Date calcularFechaFinal( Date fechaInicio , int numDias){
 		Calendar fechaFinal = Calendar.getInstance();
-		
-		
-		if(fechaInicio!=null){
 			fechaFinal.setTime(fechaInicio);
 			fechaFinal.add(Calendar.DAY_OF_YEAR, numDias); 	
-		}
-		return (Date) fechaFinal.getTime();
 		
-		
-	
+		return (Date) fechaFinal.getTime();	
 	}
 	/**
 	 * Metodo paara  generar el Numero De Autorizacion
@@ -160,45 +204,40 @@ public class VacacionForm implements   Serializable{
 		return numAutorizacion;
 	} 
 	
-	public void CalcularSaldoVacacion(int num){
-		int saldoDias1=saldoVacacion1.getSlvcTotalDias();
-		int saldoDias2=saldoVacacion2.getSlvcTotalDias();
-		Date saldoHoras1=saldoVacacion1.getSlvcTotalHoras();
-		Date saldoHoras2=saldoVacacion2.getSlvcTotalHoras();
-		
-		 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); 
 	
-		
-		Calendar horaInicio = Calendar.getInstance();
-		 horaInicio.set(Calendar.HOUR, 0);
-		 horaInicio.set(Calendar.MINUTE, 0);
-		 horaInicio.set(Calendar.SECOND, 0);
-		 Date horaDefault=horaInicio.getTime();
-		int saldoTotaldias1= saldoDias1-num;
-		if(saldoTotaldias1<0){
-			saldoVacacion1.setSlvcTotalDias(0);
-		if(saldoHoras1==horaDefault){  
-			saldoTotaldias1=  saldoTotaldias1+saldoDias2;
-			saldoVacacion2.setSlvcTotalDias(saldoTotaldias1);
-		}else{
+	public void CalcularSaldoVacacion(int num){
+	
+		int saldoDias1=saldoVacacion1.getSlvcDiasRestantes();
+		int saldoDias2=saldoVacacion2.getSlvcDiasRestantes();
+		String saldoHoras1=saldoVacacion1.getSlvcTotalHoras();
+		String saldoHoras2=saldoVacacion2.getSlvcTotalHoras();
+		 
+		int saldoTotaldias= saldoDias1-num;
+		if(saldoTotaldias<0){
+			saldoVacacion1.setSlvcDiasRestantes(0);
+			saldoTotaldias=  saldoTotaldias+saldoDias2;
+			if(saldoTotaldias<0) {
+				//mnsaje supera el limite de dias de saldo , verificar por dias tomadas
+			}
+			else{
+				saldoVacacion2.setSlvcDiasRestantes(saldoTotaldias);
+			} 
 			
-			saldoVacacion1.setSlvcTotalDias(0);
-			Calendar hora1 = Calendar.getInstance();
-			hora1.setTime(saldoHoras1);
-			int hora=hora1.get(Calendar.HOUR);
-			int minutos=hora1.get(Calendar.MINUTE);
-			
-			System.out.println("IMPLEMENTCION INCOMPLETA  RESTAR HORAS CUANDO TIENE HORAS RESTANTES");
-			if(minutos==0){
-				
-			}		
-			
+	
+		}   else {  
+			saldoVacacion1.setSlvcDiasRestantes(saldoTotaldias);
 		}
 		
-		}else{
-			saldoVacacion1.setSlvcTotalDias(saldoTotaldias1);
-		}
-						
 	}
-            
+	
+	
+	public void anularVacacion() {
+		
+		boolean retorno = false;
+		vacacion.setVccEstado(Estados.Anulado.getId());
+		vacacion.getVccObservacionEstado();
+		srvVacacion.VacacionActualizar(vacacion);
+		
+		
+	} 
 }
