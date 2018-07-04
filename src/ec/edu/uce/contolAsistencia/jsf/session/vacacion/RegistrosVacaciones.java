@@ -43,7 +43,6 @@ public  class RegistrosVacaciones  implements Serializable {
 	private DetallePuestoDto detallePuestoEmpleado;
 	private FichaEmpleado fichaEmpleado;
 	private Dependencia dependencia;
-	private GrupoOcupacional  grupoOcupacional;
 	private Puesto puesto;
 	private Regimen regimen;
 	
@@ -66,12 +65,10 @@ public  class RegistrosVacaciones  implements Serializable {
 	@EJB
 	private RegimenServicio srvRegimen;
 	
-	@EJB 
-	private GrupoOcupacionalServicio srvGrupoOcupacional;
-	
 	
 	@EJB
 	private PuestoServicio srvPuesto;
+	
 	                      
 	
 	@PostConstruct 
@@ -195,21 +192,9 @@ public  class RegistrosVacaciones  implements Serializable {
 
 
 
-	public GrupoOcupacional getGrupoOcupacional() {
-		if(grupoOcupacional==null){
-			if(puesto !=null){
-			//srvGrupoOcupacional.BuscarPorId(puesto.)	
-			}
-		   
-		}
-		return grupoOcupacional;
-	}
+	
 
 
-
-	public void setGrupoOcupacional(GrupoOcupacional grupoOcupacional) {
-		this.grupoOcupacional = grupoOcupacional;
-	}
 
 
 

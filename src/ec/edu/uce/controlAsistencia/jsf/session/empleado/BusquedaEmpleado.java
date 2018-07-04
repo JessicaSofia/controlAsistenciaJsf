@@ -118,9 +118,7 @@ public class BusquedaEmpleado implements Serializable{
 			 if(listEmpleados != null){
 				 lstPersona=listEmpleados;
 				 
-				 for (PersonaDto p: lstPersona){
-					 System.out.println(" dato " + p);
-				 } 
+			
 			 }
 			 else {
 				 // tocar mandar el mensaje  no hay ese empleado
