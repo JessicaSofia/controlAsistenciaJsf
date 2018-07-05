@@ -27,9 +27,9 @@
 		</script>
 	
 		<div >
-			<div style="position:absolute;top:2vw;left:2vw">
+			<div style="position:absolute;top:2vw;left:2vw;margin-left: 15%;">
 				<div >
-					<h1 style="font-size:6.8vw;color:#48B1F0;margin-bottom:5px; ">Bienvenido</h1>
+					<h1 style="font-size:6.8vw;color:#48B1F0;margin-bottom:5px;">Bienvenido</h1>
 				</div>
 				<div style="border-bottom:3px solid #E20613;">
 				</div>
@@ -38,7 +38,7 @@
     						   align-items: center;text-align: center;"></h1>
 				</div>
 				<div   >
-					<h1 style="font-size:1.3vw;color:#FFFFFF;letter-spacing:0.45vw; ">SISTEMA DE CCONTROL DE ASISTENCIA</h1>
+					<h1 style="font-size:1.3vw;color:#FFFFFF;letter-spacing:0.45vw; ">SISTEMA DE CONTROL DE ASISTENCIA</h1>
 				</div>
 			</div>
 			<a href="#dialogoLogin" onclick="document.getElementById('j_username').value='';document.getElementById('j_password').value='';">
@@ -50,7 +50,7 @@
 			
 			<a href="<%=request.getContextPath()%>/controlAsistencia/generalidades/index.jsf" >
 				<div class="salirLogin">
-					<h1 style="color: rgb(0,118,189); font-size: 1em;  font-size: small;">Regresar</h1>
+					<h1 style="color:rgb(255, 255, 255); font-size: 1em;  font-size: small;">Regresar</h1>
 				</div>
 			</a>
 			
@@ -66,23 +66,20 @@
 					<div style="height:30px;">
 						<a href="#close" title="Cerrar" class="close">X</a>
 					</div>
-					<div style="position:absolute;top: 20%;left: 50%;transform: translate(-50%, -50%);">
-						<h1 style="font-weight: bold;font-size:1.69vw;color:#FFFFFF;letter-spacing: 0.05em;">INICIAR SESIÓN</h1>
-					</div>
 					<form action="<%=request.getContextPath()%>/j_spring_security_check" method="post" class="formularioLogin" >
-						<div style="position: absolute;left: 60%;transform: translate(-50%, -50%);width: 100%;">
+					
+						<div style="position: absolute;left: 60%;transform: translate(-50%, -50%);width: 100%;margin-top: 25%;">
+						<h1 style="font-weight: bold;font-size:1.69vw;color:#FFFFFF;letter-spacing: 0.05em;margin-top: 1%;margin-right: 80%;">INICIAR SESIÓN</h1>
+						<br>
 							<input type="text" id="j_username" name="j_username" style="font-size:1.5vw;width:17vw;line-height:2.57vw;padding-left:1vw;"/>
 							<img src="<%=request.getContextPath()%>/img/iconoUsuario.png" style="position:fixed;height:3vw;"/>
-						</div>
-						<div style="position: absolute;top: 50%;left: 60%;transform: translate(-50%, -50%);width: 100%;">
-							<input type="password" id="j_password" name="j_password" style="font-size:1.5vw;width:17vw;line-height:2.57vw;padding-left:1vw;" />
-							<img src="<%=request.getContextPath()%>/img/iconoClave.png" style="position:fixed;height:3vw;"/>
-						</div>
-						<div style="position: absolute;top: 100%;left: 60%;transform: translate(-50%, -50%);width: 100%;">
-							<input type="submit" value="Ingresar" style="line-height:2.57vw;;width:21.4vw;font-size:1.5vw;background-color:#AA9003;border-width:0px;color:#FFFFFF;"/>
-						</div>
-						<div style="position:absolute;top: 100%;left: 50%;transform: translate(-50%, -50%);">
-					</div>
+						<br>
+							<input type="password" id="j_password" name="j_password" style="font-size:1.5vw;width:17vw;line-height:2.57vw;padding-left:1vw;margin-top: 1%;" />
+							<img src="<%=request.getContextPath()%>/img/iconoClave.png" style="position:fixed;height:3vw;margin-top: 1%;"/>
+						<br>
+						<input type="submit" value="Ingresar" style="line-height:2.57vw;;width:21.4vw;font-size:1.5vw;background-color:#AA9003;border-width:0px;color:#FFFFFF;margin-top: 1%;"/>
+						
+						
 					</form>
 					<div>
 					</div>
