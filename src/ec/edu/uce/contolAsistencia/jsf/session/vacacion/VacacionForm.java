@@ -155,7 +155,6 @@ public class VacacionForm implements   Serializable{
 		
 		vacacion.setDetallePuesto(detallePuesto);
 		if(esActualizacion) {
-	   		vacacion.setVccEstado(Estados.Activo.getId());
 			Vacacion vac=srvVacacion.VacacionActualizar(vacacion);
 			if(vac!=null) {
 				retorno= true;
@@ -164,6 +163,7 @@ public class VacacionForm implements   Serializable{
 			}
 		}	
 		else {
+			vacacion.setVccEstado(Estados.Activo.getId());
 			retorno =srvVacacion.VacionInsertar(vacacion);	
 		}
 		
@@ -238,6 +238,17 @@ public class VacacionForm implements   Serializable{
 		vacacion.getVccObservacionEstado();
 		srvVacacion.VacacionActualizar(vacacion);
 		
-		
 	} 
+	
+	public String regresar() {
+		String ruta="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml";
+		limpiar();
+		return ruta;
+	}
+	
+	public void limpiar() {
+		seleccionVacacion=null;
+		vacacion=null;
+		esActualizacion=false;
+	}
 }
