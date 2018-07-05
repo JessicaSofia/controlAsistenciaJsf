@@ -120,16 +120,16 @@
 	<div id="divTblRegistrosVacaciones">
 	<p:dataTable  var="listVac" value="#{registrosVacacion.listaVacacion}">
 	<p:column   headerText="N° Autorizión">
-	<h:outputText value="{#{listVac.vccNumAutorizacion}}" />
+	<h:outputText value="#{listVac.vccNumAutorizacion}" />
 	</p:column>
 	<p:column   headerText="Fecha Emisión">
 	<h:outputText value="#{listVac.vccFechaEmision}" />
 	</p:column>
 	<p:column   headerText="Fecha Desde">
-	<h:outputText value="{#{listVac.vccFechaInicio}}" />
+	<h:outputText value="#{listVac.vccFechaInicio}" />
 	</p:column>
 	<p:column   headerText="Fecha Hasta">
-	<h:outputText value="{#{listVac.vccFechaFin}}" />
+	<h:outputText value="#{listVac.vccFechaFin}" />
 	</p:column>
 	<p:column  >
 	<p:commandButton  value="Ver/Editar)"  action="/controlAsistencia/vacaciones/Vacacion.xhtml"  >
