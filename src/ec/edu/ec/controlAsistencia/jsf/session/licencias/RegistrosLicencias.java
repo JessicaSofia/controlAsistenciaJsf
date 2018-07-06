@@ -10,24 +10,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
-import ec.edu.ec.controlAsistencia.ejb.servicios.impl.LicenciaPermiso;
+
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.GrupoOcupacionalServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaPermisoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
-import ec.edu.uce.controlAsistencia.jpa.entidades.GrupoOcupacional;
+
 import ec.edu.uce.controlAsistencia.jpa.entidades.LicenciaYPermiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
-import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
-import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
+
 
 @ManagedBean(name="registrosLicencias")
 @SessionScoped
@@ -68,7 +68,7 @@ public  class RegistrosLicencias  implements Serializable {
 	private PuestoServicio srvPuesto;
 	
 	@EJB
-	private LicenciaPermiso srvLicencia;
+	private LicenciaPermisoServicio srvLicencia;
 	
 	                      
 	
@@ -156,15 +156,7 @@ public  class RegistrosLicencias  implements Serializable {
 	}
 
 	
-	public LicenciaPermiso getSrvLicencia() {
-		return srvLicencia;
-	}
 
-
-
-	public void setSrvLicencia(LicenciaPermiso srvLicencia) {
-		this.srvLicencia = srvLicencia;
-	}
 
 
 
