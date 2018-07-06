@@ -38,7 +38,7 @@
 		       			</ui:decorate>
 					</div>
 				</div>
-				 <div class="row cells8"> 
+				 <div class="row cells8" style="width: fit-content;"> 
 					<div class="cell colspan8"><!--Numero de  dias de vacaciones  --> 
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
@@ -71,9 +71,10 @@
 					
 				</div>
 				<br/>
-				
-				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}" update="VacacionForm"> </p:commandButton>
+				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}" update="VacacionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
 				<br/>
+				<p:separator></p:separator>
+				 <div class="row cells8" style="width: fit-content;"> 
 				<div class="cell colspan8"><!-- Fecha Final -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 		       				<ui:define name="etiqueta">	
@@ -135,6 +136,8 @@
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>  
+					</div>
+					<p:separator></p:separator>
 					<center>       
 				<div  class="row cells8">
 				<div class="cell colpan3"></div>

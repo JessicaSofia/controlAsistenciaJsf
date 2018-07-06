@@ -268,7 +268,7 @@ body, html {
   width: 87.5%;
 }
 .grid.condensed .row.cells8 > .cell.colspan8 {
-  width: 100%;
+  width: 65%;
 }
 .grid.condensed .row.cells8 > .cell.offset1 {
   margin-left: 12.5%;
@@ -1389,6 +1389,7 @@ h1{
 
 .dtic .ui-panel .ui-panel-titlebar {
     padding: 0.1em 1em 0.1em;
+    text-align: center;
 }
 
 .dtic .ui-panel .ui-panel-title {
@@ -1399,7 +1400,7 @@ h1{
 .dtic .ui-panel .ui-panel-content {
     border: 0;
     background: none;
-    padding: 0em 0em 0em 0em;
+    padding: 10px;
 }
 
 .dtic .ui-widget-content {
@@ -1501,3 +1502,4 @@ h1{
 .ui-menuitem.ui-menubar-options.ui-widget.ui-corner-all:hover .dropitem-uce	{
 	display: block !important;
 }
+
