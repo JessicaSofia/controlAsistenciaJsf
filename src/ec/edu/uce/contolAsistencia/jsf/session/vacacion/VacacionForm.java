@@ -40,8 +40,7 @@ public class VacacionForm implements   Serializable{
 	private boolean esActualizacion=false;
 	
 	
-	@ManagedProperty(value="#{registrosVacacion.seleccionVacacion}")
-	private Vacacion seleccionVacacion;
+
 	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
 	@ManagedProperty(value="#{registrosVacacion.saldoVacacion1}")
@@ -52,17 +51,6 @@ public class VacacionForm implements   Serializable{
 	 
 	@PostConstruct
 	public void init(){
-		if(seleccionVacacion==null){
-			esActualizacion=false;
-			vacacion=new Vacacion();
-			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
-			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
-			vacacion.setVccFechaEmision(fechaEmision);
-			
-		}	else {
-			esActualizacion=true;
-			vacacion=seleccionVacacion;
-		}
 		
 	}
 	
@@ -99,13 +87,7 @@ public class VacacionForm implements   Serializable{
 	public void setDetallePuesto(DetallePuesto detallePuesto) {
 		this.detallePuesto = detallePuesto;
 	}
-	public Vacacion getSeleccionVacacion() {
-		return seleccionVacacion;
-	}
-	public void setSeleccionVacacion(Vacacion seleccionVacacion) {
-		this.seleccionVacacion = seleccionVacacion;
-	}
-	
+
 	
 	public PersonaDto getSeleccionPersona() {
 		return seleccionPersona;
@@ -242,13 +224,31 @@ public class VacacionForm implements   Serializable{
 	
 	public String regresar() {
 		String ruta="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml";
-		limpiar();
+		//limpiar();
 		return ruta;
 	}
 	
 	public void limpiar() {
-		seleccionVacacion=null;
+		
 		vacacion=null;
 		esActualizacion=false;
 	}
+	
+	
+	
+	public void cargarVariables(Vacacion seleccionVacacion ) {
+		if(seleccionVacacion==null){
+			esActualizacion=false;
+			vacacion=new Vacacion();
+			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
+			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
+			vacacion.setVccFechaEmision(fechaEmision);
+			
+		}	else {
+			esActualizacion=true;
+			vacacion=seleccionVacacion;
+		}
+		
+	}
+	
 }

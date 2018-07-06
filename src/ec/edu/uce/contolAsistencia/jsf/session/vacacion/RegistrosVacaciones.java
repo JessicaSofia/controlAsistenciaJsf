@@ -47,7 +47,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	private Regimen regimen=null;
 	
 	
-	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
+
 	private PersonaDto seleccionPersona;
 	
 	@EJB
@@ -235,8 +235,29 @@ public  class RegistrosVacaciones  implements Serializable {
 	 * Region Metodos
 	 */
 	
+	public String regresar() {
+		String ruta="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml";
+		//limpiar();
+		return ruta;
+	}
 	
+	public void limpiar() {
+		seleccionPersona=null;
+		listaVacacion=null;
+		saldoVacacion1=null;
+		saldoVacacion2 =null;
+		dependencia=null;
+		regimen=null;
+		puesto=null;
+		
+	}
 	
-	 }
+	public void cargarVariables(PersonaDto persona) {
+		limpiar();
+		seleccionPersona=persona;
+		
+	}
+	
+	}
 	 
 

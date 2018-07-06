@@ -168,7 +168,7 @@
 									<i class="fa fa-check-square-o" />
 								</f:facet>
 								<p:commandButton value="Ver/Editar"
-									action="/controlAsistencia/vacaciones/Vacacion.xhtml">
+									action="/controlAsistencia/vacaciones/Vacacion.xhtml" actionListener="#{vacacionForm.cargarVariables(listVac)}">
 									<f:setPropertyActionListener value="#{listVac}"
 										target="#{registrosVacacion.seleccionVacacion}" />
 								</p:commandButton>
@@ -180,7 +180,7 @@
 					<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/vacaciones/Vacacion.xhtml"></p:commandButton>
+							action="/controlAsistencia/vacaciones/Vacacion.xhtml"  actionListener="#{vacacionForm.cargarVariables(null)}"></p:commandButton>
 							</center>
 					</div>
 				</p:panel>
