@@ -2,6 +2,8 @@ package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,14 +13,19 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
+import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
+import ec.edu.uce.controlAsistencia.ejb.datos.ParametrosVacacion;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.GrupoOcupacionalServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ParametroVacacionesServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Contrato;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
 import ec.edu.uce.controlAsistencia.jpa.entidades.GrupoOcupacional;
@@ -69,6 +76,12 @@ public  class RegistrosVacaciones  implements Serializable {
 	@EJB
 	private PuestoServicio srvPuesto;
 	
+	@EJB
+	private ContratoServicio srvContrato;
+	
+	
+	@EJB 
+	private ParametroVacacionesServicio srvParamVacaciones;
 	                      
 	
 	@PostConstruct 
@@ -172,7 +185,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	}
 
 	public SaldoVacacion getSaldoVacacion1() {
-		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId() );
+		//saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId() );
 		return saldoVacacion1;
 	}
 
@@ -182,8 +195,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	}
 
 	public SaldoVacacion getSaldoVacacion2() {
-		System.out.println("seleccion Persona" + seleccionPersona.getDtpsId());
- 		saldoVacacion2=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2,seleccionPersona.getDtpsId());  
+ 		//saldoVacacion2=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2,seleccionPersona.getDtpsId());  
 		return saldoVacacion2;
 	}
 
@@ -254,10 +266,102 @@ public  class RegistrosVacaciones  implements Serializable {
 	
 	public void cargarVariables(PersonaDto persona) {
 		limpiar();
+		System.out.println("entramos");
 		seleccionPersona=persona;
+		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId());
+		saldoVacacion2=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2, seleccionPersona.getDtpsId());
 		
+		if(saldoVacacion1==null && saldoVacacion2==null) {
+			
+			System.out.println("entramos");
+			saldoVacacion1= new SaldoVacacion();
+			saldoVacacion1.setSlvcDiasAnticipados(0);
+			saldoVacacion1.setSlvcDiasRegistrados(0);
+			saldoVacacion1.setSlvcDiasRestantes(0);
+			saldoVacacion1.setSlvcEstado(Estados.Activo.getId());
+			saldoVacacion1.setSlvcPeriodo(1);
+			saldoVacacion1.setSlvcTotalDias(calcularDiasDisponibles());
+			saldoVacacion1.setSlvcTotalHoras("00:00");
+			
+
+			
 	}
 	
 	}
+	
+	
+public int  calcularDiasDisponibles() {
+int diasDisp=0;
+Calendar fechActual = Calendar.getInstance();
+Calendar fechaContrato=Calendar.getInstance();
+
+Contrato contrato=srvContrato.obtenerporDetallePuestoId(seleccionPersona.getDtpsId());
+if(contrato!=null) {
+	GregorianCalendar cal = new GregorianCalendar();
+	fechaContrato.setTime(contrato.getCntFechaInicio()); 
+	int anoAct=fechActual.get(Calendar.YEAR);
+	int mesAct=fechActual.get(Calendar.MONTH);
+	int diaAct=fechActual.get(Calendar.DAY_OF_MONTH);
+	
+	int anoCont=fechaContrato.get(Calendar.YEAR);
+	int mesCont=fechaContrato.get(Calendar.MONTH);
+	int  diaCont=fechaContrato.get(Calendar.DAY_OF_MONTH);
+	
+
+         int[] monthDay = { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+         int Anios = anoAct- anoCont;
+         int Meses;
+         int Dias;
+
+          fechaContrato.add(Calendar.YEAR, Anios);
+         if (fechActual.compareTo(fechaContrato) < 0)
+             Anios--;
+
+         int increment = 0;
+         if (diaCont > diaAct)
+             increment = monthDay[mesCont];
+
+         if (increment == -1)
+         {
+             increment = (short)(cal.isLeapYear(anoCont) ? 29 : 28);
+         }
+
+         if (increment != 0)
+         {
+             Dias = (diaAct + increment) - diaCont;
+             increment = 1;
+         }
+         else
+             Dias = diaAct - diaCont;
+
+         if ((mesCont + increment) > mesAct)
+             Meses = (mesAct + 12) - (mesCont + increment);
+         else
+             Meses = (mesAct) - (mesCont + increment);
+	
+
+if(Anios==0) {
+	System.out.println("Años "+ Anios + "  Meses "  +Meses+  " Dias "+Dias);
+	
+	String valorNumDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAño.getId(), seleccionPersona.getRgmId()).getPrvcrgValor();
+	int diasReg=Integer.parseInt(valorNumDias);
+	int diasxmes=diasReg /12;
+	diasDisp=diasxmes*Meses;
+	
+	
+}
+
+else {
+	
+	// No existe fecha de contracion;
+	
+}
+}
+return diasDisp;
+
+	
+}
 	 
+
+}
 

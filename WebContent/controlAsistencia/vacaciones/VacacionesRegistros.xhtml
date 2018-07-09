@@ -121,7 +121,7 @@
 											value="Saldo Vacacion (Periodo Anterior): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones1"
+										<p:outputLabel id="txtSaldovacaciones1" rendered="#{registrosVacacion.saldoVacacion1!=null}"
 											value="#{registrosVacacion.saldoVacacion1.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
@@ -138,7 +138,7 @@
 											value="Saldo Vacacion (Periodo Actual): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones2"
+										<p:outputLabel id="txtSaldovacaciones2" rendered="#{registrosVacacion.saldoVacacion2!=null}"
 											value="#{registrosVacacion.saldoVacacion2.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
