@@ -282,6 +282,7 @@ public  class RegistrosVacaciones  implements Serializable {
 			saldoVacacion1.setSlvcPeriodo(1);
 			saldoVacacion1.setSlvcTotalDias(calcularDiasDisponibles());
 			saldoVacacion1.setSlvcTotalHoras("00:00");
+			// comentario
 			
 
 			
