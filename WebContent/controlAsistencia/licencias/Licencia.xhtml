@@ -1,0 +1,326 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+	<ui:define name="cuerpo">
+		<h:form id="VacacionForm">
+			<p:tabView id="tabLicencias">
+				<p:tab title="Registro de Licencias">
+					<p:panel id="panelVacacion" header="Nuevo Registro">
+						<div class="grid condensed">
+							<!-- ******************** FILA NUMERO 1 ************************ -->
+							<div class="row cells8">
+								<div class="cell colspan4">
+									<!-- NNOMBRES -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion"
+												value="N° licencia: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:outputLabel id="txtNAutorizacion"
+												value="#{licenciaForm.licenciaPermiso.lcprNumLicencia}"
+												style="font-weight: Normal !important;">
+											</p:outputLabel>
+										</ui:define>
+									</ui:decorate>
+								</div>
+
+								<div class="cell colspan4">
+									<!-- Fecha Elaboracion -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblFechaElaboracion"
+												for="txtFechaElaboracion" value="Fecha Elaboración: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:outputLabel id="txtFechaElaboracion"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaEmision}"
+												style="font-weight: Normal !important;">
+											</p:outputLabel>
+										</ui:define>
+									</ui:decorate>
+								</div>
+							</div>
+							<div class="row cells8" style="width: fit-content;">
+								<div class="cell colspan8">
+									<!--Numero de  dias de vacaciones  -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="CBoxTipos" value="Tipo Licencia: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:selectOneMenu id="tipoLicencia"
+												value="#{licenciaForm.tipoLicencia}" effect="fold">
+												<f:selectItem itemLabel="Seleccionar" itemValue="0" />
+												<f:selectItems value="#{licenciaForm.tiposLicencias}" />
+											</p:selectOneMenu>
+
+										</ui:define>
+
+									</ui:decorate>
+								</div>
+								<div class="cell colspan8">
+									<!--Numero de  dias de vacaciones  -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblNumDias" for="txtNumDias"
+												value="N° Días: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:inputText id="txtNumDias"
+												value="#{licenciaForm.licenciaPermiso.lcprNumDias}"
+												style="font-weight: Normal !important;"></p:inputText>
+
+										</ui:define>
+										<ui:define name="etiquetaError">
+											<p:message id="msgNumDias" for="txtNumDias" />
+										</ui:define>
+									</ui:decorate>
+								</div>
+								<div class="cell colspan8">
+									<!-- Fecha Inicio de Vacaciones -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblFechaInicio" for="CalFechaInicio"
+												value="Desde: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:calendar id="CalFechaInicio"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaInicio}"></p:calendar>
+										</ui:define>
+
+										<ui:define name="etiquetaError">
+											<p:message id="msgCalFechaInicio" for="CalFechaInicio" />
+										</ui:define>
+									</ui:decorate>
+								</div>
+
+							</div>
+							<br />
+							<p:commandButton id="btnCalcularVacacion" value="Calcular"
+								actionListener="#{licenciaForm.calcularPeriodoLicencia()}"
+								update="tabLicencias:panelVacacion"
+								style="margin-left: 9%;margin-bottom: 1%;">
+							</p:commandButton>
+							<br />
+							<p:separator></p:separator>
+							<div class="row cells8" style="width: fit-content;">
+								<div class="cell colspan8">
+									<!-- Fecha Final -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblFechaFinal" for="txtFechaFinal"
+												value="Hasta: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:calendar id="txtFechaFinal" disabled="true"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaFin}"
+												style="font-weight: Normal !important;">
+											</p:calendar>
+										</ui:define>
+									</ui:decorate>
+								</div>
+
+
+
+								<div class="cell colspan8">
+									<!-- Observaciones  -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblObservacion" for="txtObservacion"
+												value="Explicación: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:inputTextarea id="txtObservacion"
+												value="#{licenciaForm.licenciaPermiso.lcprObservacion}"
+												style="font-weight: Normal !important;">
+											</p:inputTextarea>
+										</ui:define>
+									</ui:decorate>
+								</div>
+								<div class="cell colspan8">
+									<!-- Con copia a -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblCopia" for="txtCopia"
+												value="Observación: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:inputTextarea id="txtCopia"
+												value="#{licenciaForm.licenciaPermiso.lcprObservacion}"
+												style="font-weight: Normal !important;">
+											</p:inputTextarea>
+										</ui:define>
+									</ui:decorate>
+								</div>
+							</div>
+							<p:separator></p:separator>
+							<center>
+								<div class="row cells8">
+									<div class="cell colpan3"></div>
+									<div class="cell colpan3"></div>
+									<div class="cell colpan3">
+										<p:commandButton id="btnGuardarVacion"
+											value="Guardar e Imprimir"
+											actionListener="#{licenciaForm.guardadLicencia()}"></p:commandButton>
+									</div>
+									
+
+								</div>
+							</center>
+
+						</div>
+
+					</p:panel>
+				</p:tab>
+				<p:tab title="Registro Permiso Personal">
+				<p:panel id="panelPermiso" header="Nuevo Registro">
+						<div class="grid condensed">
+							<!-- ******************** FILA NUMERO 1 ************************ -->
+							<div class="row cells8">
+								
+
+								<div class="cell colspan4">
+									<!-- Fecha Elaboracion -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblFechaSistema"
+												for="txtFechaSistema" value="Fecha Elaboración: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:outputLabel id="txtFechaSistema"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaEmision}"
+												style="font-weight: Normal !important;">
+											</p:outputLabel>
+										</ui:define>
+									</ui:decorate>
+								</div>
+							</div>
+							<div class="row cells8" style="width: fit-content;">
+							<div class="cell colspan8">
+									<!-- Fecha Inicio de Vacaciones -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblFecha" for="CalFecha"
+												value="Fecha:  " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:calendar id="CalFecha"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaInicio}"></p:calendar>
+										</ui:define>
+
+										
+									</ui:decorate>
+								</div>
+								
+								<div class="cell colspan8">
+									<!--Numero de  dias de vacaciones  -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblNumHoras" for="txtNumHoras"
+												value="N° Horas: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:inputText id="txtNumHoras"
+												value="#{licenciaForm.licenciaPermiso.lcprNumDias}"
+												style="font-weight: Normal !important;"></p:inputText>
+
+										</ui:define>
+										
+									</ui:decorate>
+								</div>
+								
+
+							</div>
+							<br />
+							<p:commandButton id="btnCalcularHoras" value="Calcular"
+								actionListener="#{licenciaForm.calcularPeriodoLicencia()}"
+								update="tabLicencias:panelPermiso"
+								style="margin-left: 9%;margin-bottom: 1%;">
+							</p:commandButton>
+							<br />
+							<p:separator></p:separator>
+							<div class="row cells8" style="width: fit-content;">
+								<div class="cell colspan8">
+									<!-- Fecha Final -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblHoraFinal" for="txtHoraFinal"
+												value="Hasta: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:calendar id="txtHoraFinal" disabled="true"
+												value="#{licenciaForm.licenciaPermiso.lcprFechaFin}"
+												style="font-weight: Normal !important;">
+											</p:calendar>
+										</ui:define>
+									</ui:decorate>
+								</div>
+
+
+
+								<div class="cell colspan8">
+									<!-- Observaciones  -->
+									<ui:decorate
+										template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+										<ui:define name="etiqueta">
+											<p:outputLabel id="lblAasuto" for="txtAsunto"
+												value="Explicación: " />
+										</ui:define>
+										<ui:define name="valor">
+											<p:inputTextarea id="txtAsunto"
+												value="#{licenciaForm.licenciaPermiso.lcprObservacion}"
+												style="font-weight: Normal !important;">
+											</p:inputTextarea>
+										</ui:define>
+									</ui:decorate>
+								</div>
+								
+							</div>
+							<p:separator></p:separator>
+							<center>
+								<div class="row cells8">
+									<div class="cell colpan3"></div>
+									<div class="cell colpan3"></div>
+									<div class="cell colpan3">
+										<p:commandButton id="btnGuardarPermiso"
+											value="Guardar e Imprimir"
+											actionListener="#{licenciaForm.guardadLicencia()}"></p:commandButton>
+									</div>
+									
+
+								</div>
+							</center>
+
+						</div>
+
+					</p:panel>
+				
+				
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>
