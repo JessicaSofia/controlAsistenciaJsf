@@ -11,15 +11,19 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.FaceletContext;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaPermisoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.TipoLicenciaServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.LicenciaYPermiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
@@ -44,6 +48,11 @@ public class LicenciaForm implements Serializable {
 	private Map<String, String> tiposLicencias;
 	private Estados estado;
 	private TipoLicencia tipoLicenciaEntidad;
+	private boolean panelLicencia = false;
+	private boolean panelPermiso = false;
+	private boolean btnConCargoVacaciones = false;
+	private boolean tabEditDias = false;
+	private boolean tabEditHora = false;
 
 	@ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
@@ -59,9 +68,8 @@ public class LicenciaForm implements Serializable {
 	 * SERVICIOS
 	 */
 
-	/*
-	 * @EJB private VacacionServicio srvVacacion;
-	 */
+	@EJB private VacacionServicio srvVacacion;
+	
 
 	@EJB
 	private DetallePuestoServicio srvDetallePuesto;
@@ -126,6 +134,36 @@ public class LicenciaForm implements Serializable {
 		 */
 
 	}
+	
+	public void calcularHoras() {
+		String horas = licenciaPermiso.getLcprNumHoras();
+		String[] divH1=horas.split(":");
+		int h1=Integer.parseInt(divH1[0]);
+		int m1=Integer.parseInt(divH1[1]);
+		
+		String horaInicio = licenciaPermiso.getLcprHoraInicio();
+		String[] divH2=horaInicio.split(":");
+		int h2=Integer.parseInt(divH2[0]);
+		int m2=Integer.parseInt(divH2[1]);
+		
+		int res1 = h1+h2;
+		int res2 = m1+m2;
+		
+		licenciaPermiso.setLcprHoraFin(res1+":"+res2);
+		
+		
+		}
+
+		/*
+		 * if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null)
+		 * {
+		 * vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio
+		 * (), vacacion.getVccNumDias()));
+		 * CalcularSaldoVacacion(vacacion.getVccNumDias()); } else {
+		 * //implementacion de mensajes }
+		 */
+
+	
 
 	public Date calcularFechaFinal(Date fechaInicio, int numDias) {
 		Calendar fechaFinal = Calendar.getInstance();
@@ -152,6 +190,22 @@ public class LicenciaForm implements Serializable {
 		} else {
 			esActualizacion = true;
 			licenciaPermiso = seleccionLicencia;
+			this.tipoLicencia = String.valueOf(this.licenciaPermiso.getTipoLicencia().getTplcId()); 
+			if(this.tipoLicencia.equals("2")){
+				this.panelPermiso = true;
+				this.panelLicencia = false;
+				if(this.licenciaPermiso.getLcprNumDias() != 0){
+					this.tabEditHora = true;
+					this.tabEditDias = false;
+				}else{
+					this.tabEditHora = false;
+					this.tabEditDias = true;
+				}
+				
+			}else{
+				this.panelLicencia = true;
+				this.panelPermiso = false;
+			}
 		}
 
 	}
@@ -174,7 +228,32 @@ public class LicenciaForm implements Serializable {
 			}
 		} else {
 			licenciaPermiso.setTplcEstado(Estados.Activo.getId());
+			if(this.tipoLicenciaEntidad.getTplcId()==2){
+				licenciaPermiso.setLcprNumLicencia(0);
+			}
 			retorno = srvLicenciaPermiso.LicenciaPermisoInsertar(licenciaPermiso);
+			if(srvVacacion.contarRegistros(seleccionPersona.getDpnId()) == 0){
+				
+			}
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+		}
+	}
+	
+	public void mostrarPanel(){
+		if(this.tipoLicencia.equals("2")){
+			this.panelPermiso = true;
+			this.panelLicencia = false;
+		}else{
+			this.panelLicencia = true;
+			this.panelPermiso = false;
+		}
+	}
+	
+	public void cargarAVacaciones(){
+		if(this.btnConCargoVacaciones == true){
+			this.licenciaPermiso.setLcprCargoVacaciones(1);
+		}else{
+			this.licenciaPermiso.setLcprCargoVacaciones(0);
 		}
 	}
 
@@ -237,5 +316,47 @@ public class LicenciaForm implements Serializable {
 	public void setTiposLicencias(Map<String, String> tiposLicencias) {
 		this.tiposLicencias = tiposLicencias;
 	}
+
+	public boolean isPanelLicencia() {
+		return panelLicencia;
+	}
+
+	public void setPanelLicencia(boolean panelLicencia) {
+		this.panelLicencia = panelLicencia;
+	}
+
+	public boolean isPanelPermiso() {
+		return panelPermiso;
+	}
+
+	public void setPanelPermiso(boolean panelPermiso) {
+		this.panelPermiso = panelPermiso;
+	}
+
+	public boolean isBtnConCargoVacaciones() {
+		return btnConCargoVacaciones;
+	}
+
+	public void setBtnConCargoVacaciones(boolean btnConCargoVacaciones) {
+		this.btnConCargoVacaciones = btnConCargoVacaciones;
+	}
+
+	public boolean isTabEditDias() {
+		return tabEditDias;
+	}
+
+	public void setTabEditDias(boolean tabEditDias) {
+		this.tabEditDias = tabEditDias;
+	}
+
+	public boolean isTabEditHora() {
+		return tabEditHora;
+	}
+
+	public void setTabEditHora(boolean tabEditHora) {
+		this.tabEditHora = tabEditHora;
+	}
+	
+	
 
 }
