@@ -137,6 +137,7 @@ public class LicenciaForm implements Serializable {
 	
 	public void calcularHoras() {
 		String horas = licenciaPermiso.getLcprNumHoras();
+		
 		String[] divH1=horas.split(":");
 		int h1=Integer.parseInt(divH1[0]);
 		int m1=Integer.parseInt(divH1[1]);

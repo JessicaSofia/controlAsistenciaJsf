@@ -8,11 +8,13 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.taglibs.standard.tag.common.fmt.SetTimeZoneSupport;
@@ -25,6 +27,7 @@ import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ParametroVacacionesServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Contrato;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
@@ -43,6 +46,8 @@ public class VacacionForm implements   Serializable{
 	private Vacacion  vacacion;
 	private DetallePuesto detallePuesto;
 	private Estados estado;
+
+	private List<SaldoVacacion> saldoVacacion  = null; 
 	
 	
 	private boolean esActualizacion=false;
@@ -52,10 +57,10 @@ public class VacacionForm implements   Serializable{
 	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
 
-	@ManagedProperty(value="#{registrosVacacion.saldoVacacion1}")
+	
 	private SaldoVacacion saldoVacacion1;
 
-	@ManagedProperty(value="#{registrosVacacion.saldoVacacion2}")
+	
 	private SaldoVacacion saldoVacacion2;  
 	
 	 
@@ -73,7 +78,8 @@ public class VacacionForm implements   Serializable{
 	@EJB
 	private ContratoServicio srvContrato;
 	
-	
+	@EJB
+	private  PersonaServicio srvPersona;
 	@EJB 
 	private ParametroVacacionesServicio srvParamVacaciones;
 	/**
@@ -90,6 +96,12 @@ public class VacacionForm implements   Serializable{
 	
 
 	
+	public List<SaldoVacacion> getSaldoVacacion() {
+		return saldoVacacion;
+	}
+	public void setSaldoVacacion(List<SaldoVacacion> saldoVacacion) {
+		this.saldoVacacion = saldoVacacion;
+	}
 	public Estados getEstado() {
 		return estado;
 	}
@@ -236,7 +248,6 @@ public class VacacionForm implements   Serializable{
 
 			int totalDias=saldoVacacion1.getSlvcTotalDias();
 			
-			System.out.println(" id de parametroVa " +ParametrosVacacion.NumFinesSemana.getId());
 			String  vlNumf= srvParamVacaciones.buscarPorId(ParametrosVacacion.NumFinesSemana.getId(), seleccionPersona.getRgmId()).getPrvcrgValor();
 			int numFin=Integer.parseInt(vlNumf);
 			if(num==5) {
@@ -258,14 +269,21 @@ public class VacacionForm implements   Serializable{
 						int fins=sumReg/5;
 						if(fins>saldoVacacion1.getSlvcNumFinSemana()) {
 							if(fins<numFin) {
+								saldoVacacion1.setSlvcNumFinSemana(fins);
 								num=num+2;
 							}
 						}
 							
-					}		
+					}	else {
+						int numFinsem=saldoVacacion1.getSlvcNumFinSemana();
+						if(numFinsem<numFin) {
+							saldoVacacion1.setSlvcNumFinSemana(numFinsem+1);
+						}
+					}
 				}
+			
 				int finReg=saldoVacacion1.getSlvcDiasRegistrados()+num;
-				vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
+				//vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
 				saldoVacacion1.setSlvcDiasRegistrados(finReg);
 				saldoVacacion1.setSlvcDiasRestantes(totalDias-finReg);
 				
@@ -331,6 +349,25 @@ public class VacacionForm implements   Serializable{
 			esActualizacion=true;
 			vacacion=seleccionVacacion;
 		}
+		
+		
+		saldoVacacion=srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionPersona.getDtpsId());
+		if(saldoVacacion.size()>1) {
+			for(SaldoVacacion  s:  saldoVacacion ) {
+				if(s.getSlvcPeriodo()==1) {
+					saldoVacacion1=s;
+				}
+				if(s.getSlvcPeriodo()==2) {
+					saldoVacacion2=s;
+				}
+			}
+		}
+		else {
+			for(SaldoVacacion  s:  saldoVacacion ) {		
+					saldoVacacion2=s;	
+		}		
+	}
+
 	
 	}
 	
