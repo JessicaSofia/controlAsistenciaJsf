@@ -51,7 +51,11 @@ public class VacacionForm implements   Serializable{
 
 	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
+
+	@ManagedProperty(value="#{registrosVacacion.saldoVacacion1}")
 	private SaldoVacacion saldoVacacion1;
+
+	@ManagedProperty(value="#{registrosVacacion.saldoVacacion2}")
 	private SaldoVacacion saldoVacacion2;  
 	
 	 
@@ -133,8 +137,7 @@ public class VacacionForm implements   Serializable{
 	 
 	public void CalcularVacaciones(){
 		if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null) {
-			vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), vacacion.getVccNumDias()));
-			CalcularSaldoVacacion(vacacion.getVccNumDias());
+			CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
 		}
 		else {
 			//implementacion de mensajes
@@ -177,10 +180,9 @@ public class VacacionForm implements   Serializable{
 	} 
 	
 	public Date calcularFechaFinal( Date fechaInicio , int numDias){
-		Calendar fechaFinal = Calendar.getInstance();
+	       	Calendar fechaFinal = Calendar.getInstance();
 			fechaFinal.setTime(fechaInicio);
-			fechaFinal.add(Calendar.DAY_OF_YEAR, numDias-1); 	
-		  
+			fechaFinal.add(Calendar.DAY_OF_YEAR, numDias-1); 
 		return (Date) fechaFinal.getTime();	
 	}
 	/**
@@ -198,23 +200,32 @@ public class VacacionForm implements   Serializable{
 	} 
 	
 	
-	public void CalcularSaldoVacacion(int num){
+	public void CalcularSaldoVacacion(Date fechaInicio, int num){
 	
-		int diasDisp=0;
 		if(saldoVacacion1!=null && saldoVacacion2!=null) {
 	
 		int saldoDias1=saldoVacacion1.getSlvcDiasRestantes();
 		int saldoDias2=saldoVacacion2.getSlvcDiasRestantes();
-		String saldoHoras1=saldoVacacion1.getSlvcTotalHoras();
+		int diasReg2=saldoVacacion2.getSlvcDiasRegistrados();
+		int totaldias1=saldoVacacion1.getSlvcTotalDias();
+		int totaldias2=saldoVacacion2.getSlvcTotalDias();
+		
 		
 		int saldoTotaldias= saldoDias1-num;
 		if(saldoTotaldias<0){
+			saldoVacacion1.setSlvcDiasRegistrados(totaldias1);
 			saldoVacacion1.setSlvcDiasRestantes(0);
+			saldoVacacion1.setSlvcEstado(Estados.DesActivo.getId() );
 			saldoTotaldias= saldoTotaldias+saldoDias2;
 			if(saldoTotaldias<0) {
 				System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
+				saldoVacacion2.setSlvcDiasAnticipados((-1)*saldoTotaldias);
+				saldoVacacion2.setSlvcDiasRegistrados(totaldias2);
+				saldoVacacion2.setSlvcDiasRestantes(0);
 				}
 			else{
+				
+				saldoVacacion2.setSlvcDiasRegistrados(diasReg2+num);
 				saldoVacacion2.setSlvcDiasRestantes(saldoTotaldias);
 				saldoVacacion2.setSlvcTotalHoras(saldoVacacion1.getSlvcTotalHoras());
 				saldoVacacion1.setSlvcTotalHoras("00:00");
@@ -222,12 +233,67 @@ public class VacacionForm implements   Serializable{
 			}
 	
 		}   else {  
-			saldoVacacion1.setSlvcDiasRestantes(saldoTotaldias);
+
+			int totalDias=saldoVacacion1.getSlvcTotalDias();
+			
+			System.out.println(" id de parametroVa " +ParametrosVacacion.NumFinesSemana.getId());
+			String  vlNumf= srvParamVacaciones.buscarPorId(ParametrosVacacion.NumFinesSemana.getId(), seleccionPersona.getRgmId()).getPrvcrgValor();
+			int numFin=Integer.parseInt(vlNumf);
+			if(num==5) {
+				
+				if(saldoVacacion1.getSlvcNumFinSemana()<numFin) {
+					num=num+2;
+					saldoVacacion1.setSlvcNumFinSemana(saldoVacacion1.getSlvcNumFinSemana()+1);
+				}
+			
+				}else {
+					vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
+					if(num<5) {
+
+						vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));	
+						int f=saldoVacacion1.getSlvcNumFinSemana();
+						int dsFin=f*2;
+						int sumReg=saldoVacacion1.getSlvcDiasRegistrados()+num-dsFin;
+						
+						int fins=sumReg/5;
+						if(fins>saldoVacacion1.getSlvcNumFinSemana()) {
+							if(fins<numFin) {
+								num=num+2;
+							}
+						}
+							
+					}		
+				}
+				int finReg=saldoVacacion1.getSlvcDiasRegistrados()+num;
+				vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
+				saldoVacacion1.setSlvcDiasRegistrados(finReg);
+				saldoVacacion1.setSlvcDiasRestantes(totalDias-finReg);
+				
+			}
+			
+		}else {
+			if(saldoVacacion1== null && saldoVacacion2!=null) {
+				int saldoDias2=saldoVacacion2.getSlvcDiasRestantes();
+				int totaldias2=saldoVacacion2.getSlvcTotalDias();
+				int diasReg2=saldoVacacion2.getSlvcDiasRegistrados();
+				int saldoTotaldias= saldoDias2-num;
+				if(saldoTotaldias<0) {
+					System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
+					saldoVacacion2.setSlvcDiasAnticipados((-1)*saldoTotaldias);
+					saldoVacacion2.setSlvcDiasRegistrados(totaldias2);
+					saldoVacacion2.setSlvcDiasRestantes(0);
+					}
+				else{
+					
+					saldoVacacion2.setSlvcDiasRegistrados(diasReg2+num);
+					saldoVacacion2.setSlvcDiasRestantes(saldoTotaldias);
+				
+				}
+		
+			}
 		}
 		}
 		
-	}
-	
 	
 	public void anularVacacion() {
 		
@@ -265,97 +331,9 @@ public class VacacionForm implements   Serializable{
 			esActualizacion=true;
 			vacacion=seleccionVacacion;
 		}
-		
-		saldoVacacion1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId());
-		saldoVacacion2=srvVacacion.ObtenerSaldoVacacionPorPeriodo(2, seleccionPersona.getDtpsId());
-		if(saldoVacacion1==null && saldoVacacion2==null) {
-			saldoVacacion1= new SaldoVacacion();
-			saldoVacacion1.setSlvcDiasAnticipados(0);
-			saldoVacacion1.setSlvcDiasRegistrados(0);
-			saldoVacacion1.setSlvcDiasRestantes(0);
-			saldoVacacion1.setSlvcEstado(Estados.Activo.getId());
-			saldoVacacion1.setSlvcPeriodo(1);
-			saldoVacacion1.setSlvcTotalDias(calcularDiasDisponibles());
-			saldoVacacion1.setSlvcTotalHoras("00:00");
-			// comentario
+	
 	}
 	
-		
-		
-		
-	}
-	
-	
-public int  calcularDiasDisponibles() {
-int diasDisp=0;
-Calendar fechActual = Calendar.getInstance();
-Calendar fechaContrato=Calendar.getInstance();
 
-Contrato contrato=srvContrato.obtenerporDetallePuestoId(seleccionPersona.getDtpsId());
-if(contrato!=null) {
-	GregorianCalendar cal = new GregorianCalendar();
-	fechaContrato.setTime(contrato.getCntFechaInicio()); 
-	int anoAct=fechActual.get(Calendar.YEAR);
-	int mesAct=fechActual.get(Calendar.MONTH);
-	int diaAct=fechActual.get(Calendar.DAY_OF_MONTH);
-	
-	int anoCont=fechaContrato.get(Calendar.YEAR);
-	int mesCont=fechaContrato.get(Calendar.MONTH);
-	int  diaCont=fechaContrato.get(Calendar.DAY_OF_MONTH);
-	
-
-         int[] monthDay = { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-         int Anios = anoAct- anoCont;
-         int Meses;
-         int Dias;
-
-          fechaContrato.add(Calendar.YEAR, Anios);
-         if (fechActual.compareTo(fechaContrato) < 0)
-             Anios--;
-
-         int increment = 0;
-         if (diaCont > diaAct)
-             increment = monthDay[mesCont];
-
-         if (increment == -1)
-         {
-             increment = (short)(cal.isLeapYear(anoCont) ? 29 : 28);
-         }
-
-         if (increment != 0)
-         {
-             Dias = (diaAct + increment) - diaCont;
-             increment = 1;
-         }
-         else
-             Dias = diaAct - diaCont;
-
-         if ((mesCont + increment) > mesAct)
-             Meses = (mesAct + 12) - (mesCont + increment);
-         else
-             Meses = (mesAct) - (mesCont + increment);
-	
-
-if(Anios==0) {
-	System.out.println("Años "+ Anios + "  Meses "  +Meses+  " Dias "+Dias);
-	
-	String valorNumDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAño.getId(), seleccionPersona.getRgmId()).getPrvcrgValor();
-	int diasReg=Integer.parseInt(valorNumDias);
-	int diasxmes=diasReg /12;
-	diasDisp=diasxmes*Meses;
-	
-	
-}
-
-else {
-	
-	// No existe fecha de contracion;
-	
-}
-}
-return diasDisp;
-
-	
-}
 }
 
