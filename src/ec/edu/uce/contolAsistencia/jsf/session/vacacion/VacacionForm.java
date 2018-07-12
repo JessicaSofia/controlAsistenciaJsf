@@ -4,33 +4,37 @@ package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 import java.io.Serializable;
 
 import java.sql.Timestamp;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.taglibs.standard.tag.common.fmt.SetTimeZoneSupport;
-import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
-import ec.edu.uce.controlAsistencia.ejb.datos.ParametroVacacionesDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.ParametrosVacacion;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ParametroVacacionesServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
-import ec.edu.uce.controlAsistencia.jpa.entidades.Contrato;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
+import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
 
@@ -46,29 +50,33 @@ public class VacacionForm implements   Serializable{
 	private Vacacion  vacacion;
 	private DetallePuesto detallePuesto;
 	private Estados estado;
-
 	private List<SaldoVacacion> saldoVacacion  = null; 
-	
-	
 	private boolean esActualizacion=false;
-	
-	
-
-	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
-	private PersonaDto seleccionPersona;
-
-	
+	private  List<Vacacion>   listaVacacion = new ArrayList<>();
+	private Vacacion seleccionVacacion;
 	private SaldoVacacion saldoVacacion1;
-
+	private SaldoVacacion saldoVacacion2;
+	private DetallePuestoDto detallePuestoEmpleado;
+	private FichaEmpleado fichaEmpleado;
+	private Dependencia dependencia;
+	private Puesto puesto= null;
+	private Regimen regimen=null;
+	private PersonaDto seleccionPersona;
+	private  SaldoVacacion  salVacaCal1;
+	private  SaldoVacacion  salVacaCal2;
 	
-	private SaldoVacacion saldoVacacion2;  
 	
-	 
-	@PostConstruct
-	public void init(){
-		
-	}
-	
+	/***
+	 * Declaracion  de servicios
+	 */
+	@EJB
+	private FichaEmpleadoServicio srvFichaEmpleado;
+	@EJB
+	private DependenciaServicio srvDependencia;
+	@EJB
+	private RegimenServicio srvRegimen;
+	@EJB
+	private PuestoServicio srvPuesto;
 	@EJB
 	private VacacionServicio  srvVacacion; 
 	
@@ -82,6 +90,133 @@ public class VacacionForm implements   Serializable{
 	private  PersonaServicio srvPersona;
 	@EJB 
 	private ParametroVacacionesServicio srvParamVacaciones;
+	
+	
+	                      
+	
+	
+/**
+ * Getters and setters
+ */
+	public Dependencia getDependencia() {
+		if(dependencia==null){
+			dependencia=srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
+		}
+		return dependencia;
+	}
+
+	public void setDependencia(Dependencia dependencia) {
+		this.dependencia = dependencia;
+	}
+
+
+
+	public DetallePuestoDto getDetallePuestoEmpleado() {
+		if(detallePuestoEmpleado==null){
+		detallePuestoEmpleado =srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
+		if(detallePuestoEmpleado==null){
+			System.out.println(" salio nulo");
+		}
+		}
+		
+		return detallePuestoEmpleado;
+  	}
+
+	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
+		this.detallePuestoEmpleado = detallePuestoEmpleado;
+	}
+
+
+
+	public FichaEmpleado getFichaEmpleado() {
+		fichaEmpleado= srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
+		return fichaEmpleado;
+	}
+
+
+
+	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
+		this.fichaEmpleado = fichaEmpleado;
+	}
+
+
+
+	public List<Vacacion> getListaVacacion() {
+		if(seleccionPersona !=null ){
+			listaVacacion=srvVacacion.ListaVacacionesPorDetallePuestoId(seleccionPersona.getDtpsId());	
+		}
+		return listaVacacion;
+	}
+
+	public void setListaVacacion(List<Vacacion> listaVacacion) {
+		this.listaVacacion = listaVacacion;
+	}
+ 
+	public Vacacion getSeleccionVacacion() {
+		
+		return seleccionVacacion;
+	}
+
+	public void setSeleccionVacacion(Vacacion seleccionVacacion) {
+		this.seleccionVacacion = seleccionVacacion;
+	}
+	
+	public VacacionServicio getSrvVacacion() {
+		return srvVacacion;
+	}
+
+	public void setSrvVacacion(VacacionServicio srvVacacion) {
+		this.srvVacacion = srvVacacion;
+	}
+
+	public Puesto getPuesto() {
+		if(puesto==null){
+		
+			puesto=srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+	
+		}
+		return puesto;
+	}
+
+	public void setPuesto(Puesto puesto) {
+		this.puesto = puesto;
+	}
+
+	public Regimen getRegimen() {
+		
+		if(regimen ==null){
+			regimen=srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
+		}
+		return regimen;
+	}
+
+	public void setRegimen(Regimen regimen) {
+		this.regimen = regimen;
+	}
+	
+	
+	 
+	public SaldoVacacion getSalVacaCal1() {
+		return salVacaCal1;
+	}
+
+	public void setSalVacaCal1(SaldoVacacion salVacaCal1) {
+		this.salVacaCal1 = salVacaCal1;
+	}
+
+	public SaldoVacacion getSalVacaCal2() {
+		return salVacaCal2;
+	}
+
+	public void setSalVacaCal2(SaldoVacacion salVacaCal2) {
+		 this.salVacaCal2 = salVacaCal2;
+	}
+
+	@PostConstruct
+	public void init(){
+		
+	}
+	
 	/**
 	 * 
 	 * =============Getters  and Setters==============
@@ -92,10 +227,7 @@ public class VacacionForm implements   Serializable{
 	public void setVacacion(Vacacion vacacion) {
 		this.vacacion = vacacion;
 	}
-	
-	
 
-	
 	public List<SaldoVacacion> getSaldoVacacion() {
 		return saldoVacacion;
 	}
@@ -115,7 +247,6 @@ public class VacacionForm implements   Serializable{
 		this.detallePuesto = detallePuesto;
 	}
 
-	
 	public PersonaDto getSeleccionPersona() {
 		return seleccionPersona;
 	}
@@ -141,12 +272,8 @@ public class VacacionForm implements   Serializable{
 	public void setSaldoVacacion2(SaldoVacacion saldoVacacion2) {
 		this.saldoVacacion2 = saldoVacacion2;
 	}
-	/**
-	 *  
-	 * ============= Métodos==============
-	 * @throws ParseException 
-	 */
-	 
+
+	
 	public void CalcularVacaciones(){
 		if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null) {
 			CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
@@ -177,11 +304,22 @@ public class VacacionForm implements   Serializable{
 		
 			 
 			 if(retorno) {
-				 saldoVacacion1.setDetallePuesto(detallePuesto);
-				 saldoVacacion2.setDetallePuesto(detallePuesto);
-				 srvVacacion.ActualizarSaldoVacacion(saldoVacacion1);
-				 srvVacacion.ActualizarSaldoVacacion(saldoVacacion2);
-			  }else  {
+				 if(salVacaCal1!=null && salVacaCal2!=null) {
+
+					 salVacaCal1.setDetallePuesto(detallePuesto);
+					 salVacaCal2.setDetallePuesto(detallePuesto);
+					 srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
+					 srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+					  
+					 
+				 }else {
+					if(salVacaCal1==null && salVacaCal2!=null) {
+						 salVacaCal2.setDetallePuesto(detallePuesto);
+						 srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+						 
+					}
+				 }
+				 }else  {
 				// no se inserto o no se actualizo 
 			 }
 			
@@ -191,6 +329,12 @@ public class VacacionForm implements   Serializable{
 		
 	} 
 	
+	/***
+	 * Calcula la fecha final de  vacaciones 
+	 * @param fechaInicio
+	 * @param numDias
+	 * @return
+	 */
 	public Date calcularFechaFinal( Date fechaInicio , int numDias){
 	       	Calendar fechaFinal = Calendar.getInstance();
 			fechaFinal.setTime(fechaInicio);
@@ -211,100 +355,103 @@ public class VacacionForm implements   Serializable{
 		return numAutorizacion;
 	} 
 	
-	
+	/***
+	 * calcula el Salo de vacaciones por periodos disponibles
+	 * @param fechaInicio
+	 * @param num
+	 */
 	public void CalcularSaldoVacacion(Date fechaInicio, int num){
 	
-		if(saldoVacacion1!=null && saldoVacacion2!=null) {
-	
-		int saldoDias1=saldoVacacion1.getSlvcDiasRestantes();
-		int saldoDias2=saldoVacacion2.getSlvcDiasRestantes();
-		int diasReg2=saldoVacacion2.getSlvcDiasRegistrados();
-		int totaldias1=saldoVacacion1.getSlvcTotalDias();
-		int totaldias2=saldoVacacion2.getSlvcTotalDias();
 		
+		int  totaldias2=0, saldoDias2 =0,  diasReg2=0, diasAnt2=0, numFSem1=0, numFsTotal1=0;
+		int  totaldias1=0, saldoDias1 =0, diasReg1=0, diasAnt1=0, numFSem2=0, numFsTotal2=0;
+		
+		
+		if(salVacaCal1!=null) {
+		saldoDias1=salVacaCal1.getSlvcDiasRestantes();
+		totaldias1=salVacaCal1.getSlvcTotalDias();
+		diasReg1=salVacaCal1.getSlvcDiasRegistrados();
+		diasAnt1=salVacaCal1.getSlvcDiasAnticipados();
+		numFSem1=salVacaCal1.getSlvcNumFinSemana();
+		numFsTotal1=salVacaCal1.getSlvcTotalDias()/7;
+			
+		}
+		if(salVacaCal2!=null) {
+			totaldias2=salVacaCal2.getSlvcTotalDias();	
+			saldoDias2=salVacaCal2.getSlvcDiasRestantes();
+			diasReg2=salVacaCal2.getSlvcDiasRegistrados();
+			diasAnt2=salVacaCal2.getSlvcDiasAnticipados();
+			numFSem2=salVacaCal2.getSlvcNumFinSemana();
+			numFsTotal2=salVacaCal2.getSlvcTotalDias()/7;
+		}
+		
+		if(saldoVacacion1!=null && saldoVacacion2!=null) {
+		int f=num/7;
 		
 		int saldoTotaldias= saldoDias1-num;
 		if(saldoTotaldias<0){
-			saldoVacacion1.setSlvcDiasRegistrados(totaldias1);
-			saldoVacacion1.setSlvcDiasRestantes(0);
-			saldoVacacion1.setSlvcEstado(Estados.DesActivo.getId() );
+			salVacaCal1.setSlvcDiasRegistrados(totaldias1);
+			salVacaCal1.setSlvcDiasRestantes(0);
+			salVacaCal1.setSlvcEstado(Estados.DesActivo.getId() );
+			salVacaCal1.setSlvcNumFinSemana(numFsTotal1);
+			salVacaCal2.setSlvcPeriodo(1);
 			saldoTotaldias= saldoTotaldias+saldoDias2;
 			if(saldoTotaldias<0) {
+				int numres=saldoTotaldias*(-1);
 				System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
-				saldoVacacion2.setSlvcDiasAnticipados((-1)*saldoTotaldias);
-				saldoVacacion2.setSlvcDiasRegistrados(totaldias2);
-				saldoVacacion2.setSlvcDiasRestantes(0);
+				salVacaCal2.setSlvcDiasAnticipados(numres);
+				salVacaCal2.setSlvcDiasRegistrados(totaldias2);
+				salVacaCal2.setSlvcDiasRestantes(0);
+				vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
+				salVacaCal2.setSlvcNumFinSemana(numFsTotal2);
+				
 				}
 			else{
-				
-				saldoVacacion2.setSlvcDiasRegistrados(diasReg2+num);
-				saldoVacacion2.setSlvcDiasRestantes(saldoTotaldias);
-				saldoVacacion2.setSlvcTotalHoras(saldoVacacion1.getSlvcTotalHoras());
-				saldoVacacion1.setSlvcTotalHoras("00:00");
-			
+
+				Map<String, Integer>resultado = CalcularNumDiasADescontar(saldoVacacion2,num);	
+				int n=resultado.get("diasDescontar");		
+				salVacaCal2.setSlvcDiasRegistrados(diasReg2+n);
+				salVacaCal2.setSlvcDiasRestantes(totaldias2-(diasReg2+n));
+				salVacaCal2.setSlvcTotalHoras(salVacaCal1.getSlvcTotalHoras());
+				salVacaCal1.setSlvcTotalHoras("00:00");
+				vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(),resultado.get("diasCalcularFecha")));	
+				salVacaCal2.setSlvcNumFinSemana(numFSem2+resultado.get("finSemana"));
 			}
-	
-		}   else {  
+		}
+		
+		else {  
+			Map<String, Integer>resultado = CalcularNumDiasADescontar(saldoVacacion1,num);	
+			int n=resultado.get("diasDescontar");	
+			salVacaCal1.setSlvcDiasRegistrados(diasReg1+n);
+			salVacaCal1.setSlvcDiasRestantes(totaldias1-(diasReg1+n));
+			salVacaCal1.setSlvcNumFinSemana(numFSem1+resultado.get("finSemana"));
 
-			int totalDias=saldoVacacion1.getSlvcTotalDias();
-			
-			String  vlNumf= srvParamVacaciones.buscarPorId(ParametrosVacacion.NumFinesSemana.getId(), seleccionPersona.getRgmId()).getPrvcrgValor();
-			int numFin=Integer.parseInt(vlNumf);
-			if(num==5) {
-				
-				if(saldoVacacion1.getSlvcNumFinSemana()<numFin) {
-					num=num+2;
-					saldoVacacion1.setSlvcNumFinSemana(saldoVacacion1.getSlvcNumFinSemana()+1);
-				}
-			
-				}else {
-					vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
-					if(num<5) {
-
-						vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));	
-						int f=saldoVacacion1.getSlvcNumFinSemana();
-						int dsFin=f*2;
-						int sumReg=saldoVacacion1.getSlvcDiasRegistrados()+num-dsFin;
-						
-						int fins=sumReg/5;
-						if(fins>saldoVacacion1.getSlvcNumFinSemana()) {
-							if(fins<numFin) {
-								saldoVacacion1.setSlvcNumFinSemana(fins);
-								num=num+2;
-							}
-						}
-							
-					}	else {
-						int numFinsem=saldoVacacion1.getSlvcNumFinSemana();
-						if(numFinsem<numFin) {
-							saldoVacacion1.setSlvcNumFinSemana(numFinsem+1);
-						}
-					}
-				}
-			
-				int finReg=saldoVacacion1.getSlvcDiasRegistrados()+num;
-				//vacacion.setVccFechaFin(calcularFechaFinal(fechaInicio, num));
-				saldoVacacion1.setSlvcDiasRegistrados(finReg);
-				saldoVacacion1.setSlvcDiasRestantes(totalDias-finReg);
+			vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(),resultado.get("diasCalcularFecha")));	
 				
 			}
 			
 		}else {
-			if(saldoVacacion1== null && saldoVacacion2!=null) {
-				int saldoDias2=saldoVacacion2.getSlvcDiasRestantes();
-				int totaldias2=saldoVacacion2.getSlvcTotalDias();
-				int diasReg2=saldoVacacion2.getSlvcDiasRegistrados();
+			if(salVacaCal1== null && salVacaCal2!=null) {
+				
 				int saldoTotaldias= saldoDias2-num;
 				if(saldoTotaldias<0) {
 					System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
-					saldoVacacion2.setSlvcDiasAnticipados((-1)*saldoTotaldias);
-					saldoVacacion2.setSlvcDiasRegistrados(totaldias2);
-					saldoVacacion2.setSlvcDiasRestantes(0);
+					salVacaCal2.setSlvcDiasAnticipados((-1)*saldoTotaldias);
+					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
+					salVacaCal2.setSlvcDiasRestantes(0);
+					salVacaCal2.setSlvcNumFinSemana(numFsTotal2);
+					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(),num));	
 					}
 				else{
 					
-					saldoVacacion2.setSlvcDiasRegistrados(diasReg2+num);
-					saldoVacacion2.setSlvcDiasRestantes(saldoTotaldias);
+					
+					Map<String, Integer>resultado = CalcularNumDiasADescontar(saldoVacacion2,num);	
+					int n=resultado.get("diasDescontar");	
+					salVacaCal2.setSlvcDiasRegistrados(diasReg1+n);
+					salVacaCal2.setSlvcDiasRestantes(totaldias1-(diasReg1+n));
+					salVacaCal2.setSlvcNumFinSemana(numFSem1+resultado.get("finSemana"));
+					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(),resultado.get("diasCalcularFecha")));	
+					
 				
 				}
 		
@@ -322,21 +469,82 @@ public class VacacionForm implements   Serializable{
 		
 	} 
 	
+	/***
+	 * calcula el numero de dias a Descontar totales;
+	 * @param saldoVacacion
+	 * @param num
+	 * @return
+	 */
+	public Map<String, Integer> CalcularNumDiasADescontar(SaldoVacacion saldoVacacion, int num) {
+		
+		Map<String, Integer>retorno = new HashMap<String, Integer>();
+		int n=0;
+		int n1=0;
+		int nAñF=0;
+		int numFReg=saldoVacacion.getSlvcNumFinSemana();
+		int finSemana=saldoVacacion.getSlvcTotalDias()/7;
+		if(finSemana!=0) {
+			if(num<=5) {
+			
+					if(numFReg<finSemana) {
+						
+						int dsFin=numFReg*2;
+						int sumReg=saldoVacacion.getSlvcDiasRegistrados()+num-dsFin; 
+						
+						int fins=sumReg/5;
+						if(numFReg<fins) {
+							
+							n=num+2;
+							nAñF=1;
+							if(num==5) {
+								n1=n;
+							}
+							else {
+								n1=num;
+							}
+					
+						}else {
+							n=num;
+							n1=num;
+						}
+							
+					}else {
+
+						n=num;
+						n1=num;
+					}	
+					
+			}
+			else {
+				n=num;
+				n1=num;
+				int dSobrantes=saldoVacacion.getSlvcDiasRegistrados()%7;
+				int sumReg=num+dSobrantes; 
+				nAñF=sumReg/7;	
+				}
+				
+			}
+			retorno.put("diasDescontar", n);
+			retorno.put("diasCalcularFecha", n1);
+			retorno.put("finSemana", nAñF);
+			
+	
+		return retorno;
+		
+	
+}
 	public String regresar() {
 		String ruta="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml";
-		//limpiar();
+		vacacion=null;
+		saldoVacacion=null; 
+		cargarVariables(null);
 		return ruta;
 	}
 	
-	public void limpiar() {
-		
-		vacacion=null;
-		esActualizacion=false;
-	}
+
 	
 	
-	
-	public void cargarVariables(Vacacion seleccionVacacion ) {
+	public void cargarVariablesVacacion() {
 		
 		if(seleccionVacacion==null){
 			esActualizacion=false;
@@ -350,7 +558,33 @@ public class VacacionForm implements   Serializable{
 			vacacion=seleccionVacacion;
 		}
 		
+		salVacaCal1=saldoVacacion1;
+		salVacaCal2=saldoVacacion2;	
+				
+	
+
+	
+	}
+	
+
+	
+	public void limpiar() {
+		seleccionPersona=null;
+		listaVacacion=null;
+		saldoVacacion1=null;
+		saldoVacacion2 =null;
+		dependencia=null;
+		regimen=null;
+		puesto=null;
+		vacacion=null; 
 		
+	}
+	
+	public void cargarVariables(PersonaDto persona) {
+		limpiar();
+		if(persona!=null) {
+			seleccionPersona=persona;
+		}
 		saldoVacacion=srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionPersona.getDtpsId());
 		if(saldoVacacion.size()>1) {
 			for(SaldoVacacion  s:  saldoVacacion ) {
@@ -366,11 +600,11 @@ public class VacacionForm implements   Serializable{
 			for(SaldoVacacion  s:  saldoVacacion ) {		
 					saldoVacacion2=s;	
 		}		
-	}
-
 	
+		
+		}
 	}
-	
-
 }
+
+
 
