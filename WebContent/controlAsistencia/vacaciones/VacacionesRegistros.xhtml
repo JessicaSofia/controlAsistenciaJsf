@@ -121,7 +121,8 @@
 											value="Saldo Vacacion (Periodo Anterior): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones1" rendered="#{vacacionForm.saldoVacacion1!=null}"
+										<p:outputLabel id="txtSaldovacaciones1"
+											rendered="#{vacacionForm.saldoVacacion1!=null}"
 											value="#{vacacionForm.saldoVacacion1.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
@@ -138,7 +139,8 @@
 											value="Saldo Vacacion (Periodo Actual): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones2" rendered="#{vacacionForm.saldoVacacion2!=null}"
+										<p:outputLabel id="txtSaldovacaciones2"
+											rendered="#{vacacionForm.saldoVacacion2!=null}"
 											value="#{vacacionForm.saldoVacacion2.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
@@ -148,41 +150,85 @@
 
 						</div>
 					</div>
-					<div id="divTblRegistrosVacaciones">
-						<p:dataTable var="listVac"
-							value="#{vacacionForm.listaVacacion}">
-							<p:column headerText="N° Autorizión">
-								<h:outputText value="#{listVac.vccNumAutorizacion}" />
-							</p:column>
-							<p:column headerText="Fecha Emisión">
-								<h:outputText value="#{listVac.vccFechaEmision}" />
-							</p:column>
-							<p:column headerText="Fecha Desde">
-								<h:outputText value="#{listVac.vccFechaInicio}" />
-							</p:column>
-							<p:column headerText="Fecha Hasta">
-								<h:outputText value="#{listVac.vccFechaFin}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<i class="fa fa-check-square-o" />
-								</f:facet>
-								<p:commandButton value="Ver/Editar"
-									action="/controlAsistencia/vacaciones/Vacacion.xhtml" actionListener="#{vacacionForm.cargarVariablesVacacion()}">
-									<f:setPropertyActionListener value="#{listVac}"
-										target="#{vacacionForm.seleccionVacacion}" />
-								</p:commandButton>
-								<p:commandButton value="Imprimir"></p:commandButton>
-							</p:column>
-							
-						</p:dataTable>
+					<p:tabView>
+						<p:tab title="AUTORIZACION DE VACIONES ANUAL">
+							<div id="divTblRegistrosVacaciones">
+								<p:dataTable var="listVac" value="#{vacacionForm.listaVacacion}">
+									<p:column headerText="N° Autorizión">
+										<h:outputText value="#{listVac.vccNumAutorizacion}" />
+									</p:column>
+									<p:column headerText="Fecha Emisión">
+										<h:outputText value="#{listVac.vccFechaEmision}" />
+									</p:column>
+									<p:column headerText="Fecha Desde">
+										<h:outputText value="#{listVac.vccFechaInicio}" />
+									</p:column>
+									<p:column headerText="Fecha Hasta">
+										<h:outputText value="#{listVac.vccFechaFin}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<i class="fa fa-check-square-o" />
+										</f:facet>
+										<p:commandButton value="Ver/Editar"
+											action="/controlAsistencia/vacaciones/Vacacion.xhtml"
+											actionListener="#{vacacionForm.cargarVariablesVacacion()}">
+											<f:setPropertyActionListener value="#{listVac}"
+												target="#{vacacionForm.seleccionVacacion}" />
+										</p:commandButton>
+										<p:commandButton value="Imprimir"></p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+								<div>
+						<center>
+							<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
+								action="/controlAsistencia/vacaciones/Vacacion.xhtml"
+								actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
+						</center>
 					</div>
-					<div>
-					<center>
-						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/vacaciones/Vacacion.xhtml"  actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
-							</center>
+							</div>
+
+						</p:tab>
+						<p:tab title="PERMISO PERSONAL">
+						<div id="divTblRegistrosPermisos">
+								<p:dataTable var="permiso" value="#{vacacionForm.listaPermisos}">
+									<p:column headerText="Fecha Permiso">
+										<h:outputText value="#{permiso.prmFechaPermiso}" />
+									</p:column>
+									<p:column headerText="Nº Días">
+										<h:outputText value="#{permiso.prmNumDias}" />
+									</p:column>
+									<p:column headerText="Nº Horas">
+										<h:outputText value="#{permiso.prmNumHoras}" />
+									</p:column>
+									<p:column headerText="A partir de">
+										<h:outputText value="#{permiso.prmHoraInicio}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<i class="fa fa-check-square-o" />
+										</f:facet>
+										<p:commandButton value="Ver/Editar">
+											
+										</p:commandButton>
+										<p:commandButton value="Imprimir"></p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+								<div>
+						<center>
+							<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
+								action="/controlAsistencia/vacaciones/Vacacion.xhtml"
+								actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
+						</center>
 					</div>
+							</div>
+						
+						</p:tab>
+
+					</p:tabView>
+					
 				</p:panel>
 
 			</h:form>

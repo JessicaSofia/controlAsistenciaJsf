@@ -26,6 +26,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ParametroVacacionesServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PermisoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
@@ -33,6 +34,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Permiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
@@ -64,6 +66,8 @@ public class VacacionForm implements   Serializable{
 	private PersonaDto seleccionPersona;
 	private  SaldoVacacion  salVacaCal1;
 	private  SaldoVacacion  salVacaCal2;
+	private Permiso permiso;
+	private List<Permiso> listaPermisos;
 	
 	
 	/***
@@ -91,6 +95,9 @@ public class VacacionForm implements   Serializable{
 	@EJB 
 	private ParametroVacacionesServicio srvParamVacaciones;
 	
+	@EJB
+	private PermisoServicio srvPermiso;
+	
 	
 	                      
 	
@@ -98,12 +105,26 @@ public class VacacionForm implements   Serializable{
 /**
  * Getters and setters
  */
+	
+	
+	
 	public Dependencia getDependencia() {
 		if(dependencia==null){
 			dependencia=srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
 		}
 		return dependencia;
 	}
+
+	public List<Permiso> getListaPermisos() {
+		if(seleccionPersona !=null ){
+			listaPermisos=srvPermiso.ListaPermisoPorDetallePuestoId(seleccionPersona.getDtpsId());	
+		}
+	return listaPermisos;
+}
+
+public void setListaPermisos(List<Permiso> listaPermisos) {
+	this.listaPermisos = listaPermisos;
+}
 
 	public void setDependencia(Dependencia dependencia) {
 		this.dependencia = dependencia;
@@ -210,6 +231,16 @@ public class VacacionForm implements   Serializable{
 
 	public void setSalVacaCal2(SaldoVacacion salVacaCal2) {
 		 this.salVacaCal2 = salVacaCal2;
+	}
+	
+	
+
+	public Permiso getPermiso() {
+		return permiso;
+	}
+
+	public void setPermiso(Permiso permiso) {
+		this.permiso = permiso;
 	}
 
 	@PostConstruct
