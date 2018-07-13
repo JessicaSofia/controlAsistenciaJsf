@@ -40,7 +40,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:outputLabel id="txtCedula"
-											value="#{registrosVacacion.seleccionPersona.prsIdentificacion}"
+											value="#{vacacionForm.seleccionPersona.prsIdentificacion}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -56,7 +56,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:outputLabel id="txtNombres"
-											value="#{registrosVacacion.seleccionPersona.nombresCompetos()}"
+											value="#{vacacionForm.seleccionPersona.nombresCompetos()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -72,7 +72,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:outputLabel id="txtDependencia"
-											value="#{registrosVacacion.dependencia.dpnDescripcion}"
+											value="#{vacacionForm.dependencia.dpnDescripcion}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -88,7 +88,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:outputLabel id="txtDenominacion"
-											value="#{registrosVacacion.puesto.pstDenominacion}"
+											value="#{vacacionForm.puesto.pstDenominacion}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -104,7 +104,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:outputLabel id="txtRegimen"
-											value="#{registrosVacacion.regimen.rgmDescripcion}"
+											value="#{vacacionForm.regimen.rgmDescripcion}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -121,8 +121,8 @@
 											value="Saldo Vacacion (Periodo Anterior): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones1" rendered="#{registrosVacacion.saldoVacacion1!=null}"
-											value="#{registrosVacacion.saldoVacacion1.toString()}"
+										<p:outputLabel id="txtSaldovacaciones1" rendered="#{vacacionForm.saldoVacacion1!=null}"
+											value="#{vacacionForm.saldoVacacion1.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -138,8 +138,8 @@
 											value="Saldo Vacacion (Periodo Actual): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones2" rendered="#{registrosVacacion.saldoVacacion2!=null}"
-											value="#{registrosVacacion.saldoVacacion2.toString()}"
+										<p:outputLabel id="txtSaldovacaciones2" rendered="#{vacacionForm.saldoVacacion2!=null}"
+											value="#{vacacionForm.saldoVacacion2.toString()}"
 											style="font-weight: Normal !important;">
 										</p:outputLabel>
 									</ui:define>
@@ -150,7 +150,7 @@
 					</div>
 					<div id="divTblRegistrosVacaciones">
 						<p:dataTable var="listVac"
-							value="#{registrosVacacion.listaVacacion}">
+							value="#{vacacionForm.listaVacacion}">
 							<p:column headerText="N° Autorizión">
 								<h:outputText value="#{listVac.vccNumAutorizacion}" />
 							</p:column>
@@ -168,9 +168,9 @@
 									<i class="fa fa-check-square-o" />
 								</f:facet>
 								<p:commandButton value="Ver/Editar"
-									action="/controlAsistencia/vacaciones/Vacacion.xhtml" actionListener="#{vacacionForm.cargarVariables(listVac)}">
+									action="/controlAsistencia/vacaciones/Vacacion.xhtml" actionListener="#{vacacionForm.cargarVariablesVacacion()}">
 									<f:setPropertyActionListener value="#{listVac}"
-										target="#{registrosVacacion.seleccionVacacion}" />
+										target="#{vacacionForm.seleccionVacacion}" />
 								</p:commandButton>
 								<p:commandButton value="Imprimir"></p:commandButton>
 							</p:column>
@@ -180,7 +180,7 @@
 					<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/vacaciones/Vacacion.xhtml"  actionListener="#{vacacionForm.cargarVariables(null, registrosVacacion.seleccionPersona)}"></p:commandButton>
+							action="/controlAsistencia/vacaciones/Vacacion.xhtml"  actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
 							</center>
 					</div>
 				</p:panel>
