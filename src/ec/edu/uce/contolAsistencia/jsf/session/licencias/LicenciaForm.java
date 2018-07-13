@@ -21,11 +21,11 @@ import javax.faces.view.facelets.FaceletContext;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaPermisoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.TipoLicenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
-import ec.edu.uce.controlAsistencia.jpa.entidades.LicenciaYPermiso;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
 
 @ManagedBean(name = "licenciaForm")
@@ -41,7 +41,7 @@ public class LicenciaForm implements Serializable {
 	 */
 
 	private DetallePuesto detallePuesto;
-	private LicenciaYPermiso licenciaPermiso;
+	private Licencia licencia;
 	private boolean esActualizacion = false;
 	private List<TipoLicencia> listaTipoLicencia = new ArrayList<>();
 	private String tipoLicencia;
@@ -75,7 +75,7 @@ public class LicenciaForm implements Serializable {
 	private DetallePuestoServicio srvDetallePuesto;
 
 	@EJB
-	private LicenciaPermisoServicio srvLicenciaPermiso;
+	private LicenciaServicio srvlicencia;
 
 	@EJB
 	private TipoLicenciaServicio srvTipoLicencia;
@@ -99,8 +99,8 @@ public class LicenciaForm implements Serializable {
 	 */
 	public int generarNumAutorizacion() {
 		int numAutorizacion = 0;
-		if (srvLicenciaPermiso.MaximaNumAutorizacion() != 0) {
-			numAutorizacion = srvLicenciaPermiso.MaximaNumAutorizacion() + 1;
+		if (srvlicencia.MaximaNumAutorizacion() != 0) {
+			numAutorizacion = srvlicencia.MaximaNumAutorizacion() + 1;
 		} else {
 			numAutorizacion = 1;
 		}
@@ -119,9 +119,9 @@ public class LicenciaForm implements Serializable {
 	}
 
 	public void calcularPeriodoLicencia() {
-		if (licenciaPermiso.getLcprNumDias() > 0 && licenciaPermiso.getLcprFechaInicio() != null) {
-			licenciaPermiso.setLcprFechaFin(
-					calcularFechaFinal(licenciaPermiso.getLcprFechaInicio(), licenciaPermiso.getLcprNumDias()));
+		if (licencia.getLcnNumDias() > 0 && licencia.getLcnFechaInicio() != null) {
+			licencia.setLcnFechaFin(
+					calcularFechaFinal(licencia.getLcnFechaInicio(), licencia.getLcnNumDias()));
 		}
 
 		/*
@@ -135,33 +135,6 @@ public class LicenciaForm implements Serializable {
 
 	}
 	
-	public void calcularHoras() {
-		String horas = licenciaPermiso.getLcprNumHoras();
-		String[] divH1=horas.split(":");
-		int h1=Integer.parseInt(divH1[0]);
-		int m1=Integer.parseInt(divH1[1]);
-		
-		String horaInicio = licenciaPermiso.getLcprHoraInicio();
-		String[] divH2=horaInicio.split(":");
-		int h2=Integer.parseInt(divH2[0]);
-		int m2=Integer.parseInt(divH2[1]);
-		
-		int res1 = h1+h2;
-		int res2 = m1+m2;
-		
-		licenciaPermiso.setLcprHoraFin(res1+":"+res2);
-		
-		
-		}
-
-		/*
-		 * if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null)
-		 * {
-		 * vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio
-		 * (), vacacion.getVccNumDias()));
-		 * CalcularSaldoVacacion(vacacion.getVccNumDias()); } else {
-		 * //implementacion de mensajes }
-		 */
 
 	
 
@@ -175,31 +148,33 @@ public class LicenciaForm implements Serializable {
 
 	public void limpiar() {
 
-		licenciaPermiso = null;
+		licencia = null;
 		esActualizacion = false;
 	}
 
-	public void cargarVariables(LicenciaYPermiso seleccionLicencia) {
+	public void cargarVariables(Licencia seleccionLicencia) {
 		if (seleccionLicencia == null) {
 			esActualizacion = false;
-			licenciaPermiso = new LicenciaYPermiso();
-			licenciaPermiso.setLcprNumLicencia(generarNumAutorizacion());
+			licencia = new Licencia();
+			licencia.setLcnNumLicencia(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
-			licenciaPermiso.setLcprFechaEmision(fechaEmision);
+			licencia.setLcnFechaEmision(fechaEmision);
+			this.tabEditDias = true;
+			this.tabEditHora = true;
 
 		} else {
 			esActualizacion = true;
-			licenciaPermiso = seleccionLicencia;
-			this.tipoLicencia = String.valueOf(this.licenciaPermiso.getTipoLicencia().getTplcId()); 
+			licencia = seleccionLicencia;
+			this.tipoLicencia = String.valueOf(this.licencia.getTipoLicencia().getTplcId()); 
 			if(this.tipoLicencia.equals("2")){
 				this.panelPermiso = true;
 				this.panelLicencia = false;
-				if(this.licenciaPermiso.getLcprNumDias() != 0){
-					this.tabEditHora = true;
-					this.tabEditDias = false;
-				}else{
+				if(this.licencia.getLcnNumDias() != 0){
 					this.tabEditHora = false;
 					this.tabEditDias = true;
+				}else{
+					this.tabEditHora = true;
+					this.tabEditDias = false;
 				}
 				
 			}else{
@@ -214,49 +189,30 @@ public class LicenciaForm implements Serializable {
 		boolean retorno = false;
 
 		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
-		licenciaPermiso.setDetallePuesto(detallePuesto);
+		licencia.setDetallePuesto(detallePuesto);
 		
 		tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
-		licenciaPermiso.setTipoLicencia(tipoLicenciaEntidad);
+		licencia.setTipoLicencia(tipoLicenciaEntidad);
 
 		if (esActualizacion) {
-			LicenciaYPermiso lp = srvLicenciaPermiso.LicenciaYPermisoActualizar(licenciaPermiso);
+			Licencia lp = srvlicencia.LicenciaActualizar(licencia);
 			if (lp != null) {
 				retorno = true;
 			} else {
 				retorno = false;
 			}
 		} else {
-			licenciaPermiso.setTplcEstado(Estados.Activo.getId());
+			licencia.setLcnEstado(Estados.Activo.getId());
 			if(this.tipoLicenciaEntidad.getTplcId()==2){
-				licenciaPermiso.setLcprNumLicencia(0);
+				licencia.setLcnNumLicencia(0);
 			}
-			retorno = srvLicenciaPermiso.LicenciaPermisoInsertar(licenciaPermiso);
-			if(srvVacacion.contarRegistros(seleccionPersona.getDpnId()) == 0){
-				
-			}
+			retorno = srvlicencia.LicenciaInsertar(licencia);
+			
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
 		}
 	}
 	
-	public void mostrarPanel(){
-		if(this.tipoLicencia.equals("2")){
-			this.panelPermiso = true;
-			this.panelLicencia = false;
-		}else{
-			this.panelLicencia = true;
-			this.panelPermiso = false;
-		}
-	}
 	
-	public void cargarAVacaciones(){
-		if(this.btnConCargoVacaciones == true){
-			this.licenciaPermiso.setLcprCargoVacaciones(1);
-		}else{
-			this.licenciaPermiso.setLcprCargoVacaciones(0);
-		}
-	}
-
 	/**
 	 * =============Getters and Setters==============
 	 */
@@ -285,12 +241,12 @@ public class LicenciaForm implements Serializable {
 		this.esActualizacion = esActualizacion;
 	}
 
-	public LicenciaYPermiso getLicenciaPermiso() {
-		return licenciaPermiso;
+	public Licencia getlicencia() {
+		return licencia;
 	}
 
-	public void setLicenciaPermiso(LicenciaYPermiso licenciaPermiso) {
-		this.licenciaPermiso = licenciaPermiso;
+	public void setlicencia(Licencia licencia) {
+		this.licencia = licencia;
 	}
 
 	public List<TipoLicencia> getListaTipoLicencia() {

@@ -119,25 +119,26 @@
 							<p:column headerText="Tipo Licencia">
 								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
 							</p:column>
+							<p:column headerText="Nº días">
+								<h:outputText value="#{licencia.lcnNumDias}" />
+							</p:column>
 							<p:column headerText="Fecha Inicio">
-								<h:outputText value="#{licencia.lcprFechaInicio}" />
+								<h:outputText value="#{licencia.lcnFechaInicio}" />
 							</p:column>
 							<p:column headerText="Fecha Fin">
-								<h:outputText value="#{licencia.lcprFechaFin}" />
+								<h:outputText value="#{licencia.lcnFechaFin}" />
 							</p:column>
-							<p:column headerText="Hora Inicio">
-								<h:outputText value="#{licencia.lcprHoraInicio}" />
+							<p:column headerText="Explicación">
+								<h:outputText value="#{licencia.lcnExplicacion}" />
 							</p:column>
-							<p:column headerText="Hora Fin">
-								<h:outputText value="#{licencia.lcprHoraFin}" />
-							</p:column>
+							
 							<p:column>
 								<f:facet name="header">
 									<i class="fa fa-check-square-o" />
 								</f:facet>
 								<p:commandButton value="Ver/Editar"
-									action="/controlAsistencia/licencias/Licencia.xhtml" actionListener="#{licenciaForm.cargarVariables(licencia)}">
-									<f:setPropertyActionListener value="#{listVac}"
+									action="/controlAsistencia/licencias/Licencia.xhtml" actionListener="#{registrosLicencia.cargarVariables(licencia)}">
+									<f:setPropertyActionListener value="#{licencia}"
 										target="#{registrosLicencia.seleccionLicencia}" />
 								</p:commandButton>
 								
@@ -149,7 +150,7 @@
 					<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/licencias/Licencia.xhtml"  actionListener="#{licenciaForm.cargarVariables(null)}"></p:commandButton>
+							action="/controlAsistencia/licencias/Licencia.xhtml"  actionListener="#{registrosLicencia.cargarVariables(null)}"></p:commandButton>
 							</center>
 					</div>
 					

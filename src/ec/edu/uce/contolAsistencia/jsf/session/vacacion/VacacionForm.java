@@ -49,7 +49,7 @@ public class VacacionForm implements   Serializable{
 	
 	
 
-	@ManagedProperty(value="#{busquedaEmpleado.seleccionPersona}")
+	
 	private PersonaDto seleccionPersona;
 	private SaldoVacacion saldoVacacion1;
 	private SaldoVacacion saldoVacacion2;  
@@ -252,8 +252,8 @@ public class VacacionForm implements   Serializable{
 	
 	
 	
-	public void cargarVariables(Vacacion seleccionVacacion ) {
-		
+	public void cargarVariables(Vacacion seleccionVacacion, PersonaDto persona ) {
+		this.seleccionPersona = persona;
 		if(seleccionVacacion==null){
 			esActualizacion=false;
 			vacacion=new Vacacion();
