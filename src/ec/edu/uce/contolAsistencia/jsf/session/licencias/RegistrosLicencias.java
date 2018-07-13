@@ -41,6 +41,10 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 @ManagedBean(name = "registrosLicencia")
 @SessionScoped
@@ -189,13 +193,10 @@ public class RegistrosLicencias implements Serializable {
 		}
 	}
 	
-	/*public void verPDF(ActionEvent actionEvent) throws IOException{
+	public void verPDF(ActionEvent actionEvent) throws Exception{
 		Map<String, Object> parametros = new HashMap<>();
             parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
-            parametros.put("txt_nombres", licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsPrimerApellido()+
-            		licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsSegundoApellido()+
-            		licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsNombres());
-            parametros.put("txt_dependencia", licencia.getDetallePuesto().getDependencia().getDpnDescripcion());
+            parametros.put("txt_nombres", "la mar");
             parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
             String resumen = "EXPLICACIÓN:\n\n"+licencia.getLcnExplicacion()+"\n\n Registra: "+licencia.getLcnNumDias()+" días\n"+
             "Desde: "+licencia.getLcnFechaInicio()+" 	Hasta: "+licencia.getLcnFechaFin()+"\n\n OBSERVACIÓN:\n"+licencia.getLcnObservacion();
@@ -204,18 +205,17 @@ public class RegistrosLicencias implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             
             File jasper = new File("C:\\ireports\\licencias.jasper");
-            //JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            response.addHeader("Content-disposition", "attachment; filename=licencia_" + licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsPrimerApellido()+
-            		"_"+licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsSegundoApellido()+"_"+
-            		licencia.getDetallePuesto().getFichaEmpleado().getPersona().getPrsNombres()+"_" + sdf.format(new Date()) + ".pdf");
+            response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()) + ".pdf");
             ServletOutputStream stream = response.getOutputStream();
-            //JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+            JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
             stream.flush();
             stream.close();
             FacesContext.getCurrentInstance().responseComplete();
+            System.out.println("finaliza");
 		
-	}*/
+	}
 	/**
 	 * GETTER & SETTER
 	 * 

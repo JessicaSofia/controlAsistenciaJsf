@@ -198,12 +198,12 @@
 								<p:commandButton id="btnGuardarVacion"
 									value="Guardar"
 									actionListener="#{registrosLicencia.guardadLicencia()}"></p:commandButton>
-									<p:commandButton id="btnPDFLicenia"
-									value="Imprimir"
-									actionListener="#{registrosLicencia.verPDF}"></p:commandButton>
+									
 							</div>
 
-
+	<p:commandButton id="btnPDFLicenia" immediate="true"
+									value="Imprimir"
+									actionListener="#{registrosLicencia.verPDF}"></p:commandButton>
 						</div>
 					</center>
 
