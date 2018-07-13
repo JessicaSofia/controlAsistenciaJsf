@@ -39,8 +39,8 @@
             <h:outputText value="#{busquedaEmpleado.ObtenerNombreDependencia(emp.dpnId)}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml"  actionListener="#{registrosVacacion.cargarVariables(emp)}">
-                <f:setPropertyActionListener value="#{emp}" target="#{busquedaEmpleado.seleccionPersona}" />
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/vacaciones/VacacionesRegistros.xhtml"  actionListener="#{vacacionForm.cargarVariables(emp)}">
+                <f:setPropertyActionListener value="#{emp}" target="#{vacacionForm.seleccionPersona}" />
             </p:commandButton>
         </p:column>
 	</p:dataTable>

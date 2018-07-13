@@ -135,6 +135,37 @@ public class LicenciaForm implements Serializable {
 
 	}
 	
+/*<<<<<<< HEAD
+=======
+	public void calcularHoras() {
+		String horas = licenciaPermiso.getLcprNumHoras();
+		
+		String[] divH1=horas.split(":");
+		int h1=Integer.parseInt(divH1[0]);
+		int m1=Integer.parseInt(divH1[1]);
+		
+		String horaInicio = licenciaPermiso.getLcprHoraInicio();
+		String[] divH2=horaInicio.split(":");
+		int h2=Integer.parseInt(divH2[0]);
+		int m2=Integer.parseInt(divH2[1]);
+		
+		int res1 = h1+h2;
+		int res2 = m1+m2;
+		
+		licenciaPermiso.setLcprHoraFin(res1+":"+res2);
+		
+		
+		}
+
+		/*
+		 * if(vacacion.getVccNumDias()>0 && vacacion.getVccFechaInicio()!=null)
+		 * {
+		 * vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio
+		 * (), vacacion.getVccNumDias()));
+		 * CalcularSaldoVacacion(vacacion.getVccNumDias()); } else {
+		 * //implementacion de mensajes }
+		 */
+//>>>>>>> branch 'master' of https://github.com/JessicaSofia/controlAsistenciaJsf.git
 
 	
 
