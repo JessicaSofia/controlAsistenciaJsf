@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+      
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+		<ui:define name="cuerpo">
+	<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
+	<p:panel id="pnlBusquedaEmpleado"  header="Búsqueda Empleado" style="margin-bottom: 10px;">
+	<div class="grid condensed" style="margin:0 !important">
+	<div class="row cells8" style="width: fit-content;"> 
+						<div class="cell colspan2" >
+		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado" value="Nombres: "/>
+		       			</div>
+		       			<div class="cell colspan4">	
+		       					<p:inputText  id="txtBusquedaEmpleado" value="#{busquedaEmpleadoSancion.txtBusquedaEmpleado}" 
+		       									style=" font-weight: Normal !important; with: 100%"  ></p:inputText> 
+		       			</div>
+		       					<div class="cell colspan2">	
+		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleadoSancion.buscarEmpleado()}" update="tblEmpleados" action="controlAsistencia/vacaciones/VacacionesRegistros.xhtml" style="margin-left: 50%;"></p:commandButton>
+		       					</div>
+		       	
+	</div>				
+	<div id="divTblEmpleados" >
+	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleadoSancion.lstPersona}">
+	 
+        <p:column headerText="Cédula">
+            <p:outputLabel value="#{emp.prsIdentificacion}"></p:outputLabel>  
+        </p:column>
+        <p:column headerText="Nombres">
+            <h:outputText value="#{emp.prsNombres}" />
+        </p:column>                                                                                                                                               
+        <p:column headerText="Apellidos">
+            <h:outputText value="#{emp.toString()}" />
+        </p:column>
+        <p:column headerText="Dependencia">
+            <h:outputText value="#{busquedaEmpleadoSancion.ObtenerNombreDependencia(emp.dpnId)}" />
+        </p:column>
+        <p:column style="width:32px;text-align: center">
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  >
+                <f:setPropertyActionListener value="#{emp}" target="#{sancionForm.seleccionPersona}" />
+            </p:commandButton>
+        </p:column>
+	</p:dataTable>
+	</div>
+</div>
+	</p:panel>
+	</h:form>
+	
+	</ui:define> 
+	</ui:composition>
+</html>

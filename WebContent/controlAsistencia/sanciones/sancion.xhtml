@@ -1,0 +1,229 @@
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+	<ui:define name="cuerpo">
+	<h:form  id="sancionForm">
+	<p:panel  id="panelSancion" header="Nuevo Registro" style="width: 80%; left: 10%" >
+	<div class="grid condensed">
+				<!-- ******************** FILA NUMERO 1 ************************ -->
+				<div class="row cells8"> 
+					<div class="cell colspan4"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtNAutorizacion" value="#{SancionForm.dtSancion.dtpssnNumaccion}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan4"><!-- Fecha Elaboracion -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtFechaElaboracion" value="#{sancionForm.dtSancion.dtpssnFechaEmision}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				</div>
+				<div class="row cells8"> 
+					<div class="cell colspan2"><!-- AÑO DE SANCION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblAnioSancion" for="txtAnioSancion" value="Año:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtAnioSancion" value="#{sancionForm.dtSancion.dtpssnAno}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:inputText>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan2"><!-- MES  DE SANCION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblMesSancion" for="txtMesSancion" value="Mes: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtMesSancion" value="#{sancionForm.dtSancion.dtpssnMes}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:inputText>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan4"><!-- DIAS DE SANCION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblDiasSancion" for="txtDiasSancion" value="Días: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtDiasSancion" value="#{sancionForm.dtSancion.dtpssnDias}"  
+		       									style="font-weight: Normal !important; width: 100%;">
+		       					</p:inputText>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				</div>
+				
+				
+				 <div class="row cells8" > 
+					<div class="cell colspan4"><!--TIPO DE FALTA  --> 
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblTipoFalta" for="tipoFalta" value="Falta: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:selectOneMenu id="tipoFalta"
+											value="#{sancionForm.tipoFalta}" effect="fold">
+											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
+											<f:selectItems value="#{sancionForm.tipoFaltas}"  />
+
+										</p:selectOneMenu>
+		       					
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgTipoFalta" for="tipoFalta" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				<div class="cell colspan4"><!--NUMERO EN MINUTOS  --> 
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblMinutos" for="txtMinutos" value="Minutos: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       				<p:inputText id="txtMinutos" value="#{sancionForm.dtSancion.dtpssnMinutos}" 
+		       									style="font-weight: Normal !important;  ">
+		       					</p:inputText>
+		       					
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgNumMin" for="txtMinutos" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				
+				
+					
+				</div>
+				<br/>
+				<p:commandButton id="btnCalcularSancion"  value="Calcular" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
+				<br/>
+				<p:separator></p:separator>
+				<div class="row cells8"> 
+					<div class="cell colspan2"><!-- FRECUENCIA DE SANCION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblFrecuenciaSancion" for="txtFrecuenciaSancion" value="Frecuencia:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtFrecuenciaSancion" value="#{sancionForm.dtSancion.dtpssnFrecuencia}" disabled="true"
+		       									style="font-weight: Normal !important;">
+		       					</p:inputText>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan3"><!--  VALOR SANCION -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblValorSancion" for="txtValorSancion" value="Valor: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" disabled="true"
+		       									style="font-weight: Normal !important;">
+		       					</p:inputText>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan3"><!-- DESCUENTO -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblDescuentoSancion" for="checkDescuento" value="Efectuar Descuento: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				
+		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}" />
+ 		
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				</div>
+				<div class="cell colspan8"><!--TIPO DE SANCION  --> 
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblTipoSancion" for="tipoSancion" value="Sanción: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:selectOneMenu id="tipoSancion"
+											value="#{sancionForm.tipoSancion}" effect="fold">
+											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
+											<f:selectItems value="#{sancionForm.tiposSanciones}"  />
+
+										</p:selectOneMenu>
+		       					
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgtipoSancion" for="tipoSancion" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+				
+				
+				 <div class="row cells8" > 
+					<div class="cell colspan8"><!-- Observaciones  -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputTextarea id="txtObservacion" value="#{sancionForm.dtSancion.dtpssnObservacion}" 
+		       									style="font-weight: Normal !important;width: 200%;">
+		       					</p:inputTextarea>
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>  
+					  
+					</div>
+					<p:separator></p:separator>
+					<center>       
+				<div  class="row cells8">
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir" actionListener="#{sancionForm.guardarSancion()}"  ></p:commandButton>
+				</div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{sancionForm.anularSancion()}"></p:commandButton>
+				</div>
+				<div class="cell colpan3">
+                <p:commandButton id="btnCancelarVacion" value="Cancelar" action="#{sancionForm.regresar()}"></p:commandButton>
+				</div>
+				
+				</div>
+				</center>
+					
+		</div>
+					
+	</p:panel>
+	
+	</h:form>
+	</ui:define>
+	  
+	</ui:composition>
+</html>                                                                                                               
