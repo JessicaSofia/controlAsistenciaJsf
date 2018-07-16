@@ -239,7 +239,7 @@ public class LicenciaForm implements Serializable {
 			}
 			retorno = srvlicencia.LicenciaInsertar(licencia);
 			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Licencia guardada"));
 		}
 	}
 	
