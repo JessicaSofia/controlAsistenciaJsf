@@ -68,11 +68,24 @@ public class RegistrosLicencias implements Serializable {
 	private Licencia licencia;
 	private boolean esActualizacion = false;
 	private List<TipoLicencia> listaTipoLicencia = new ArrayList<>();
+	private List<TipoLicencia> listaTipoLicenciaHijos = new ArrayList<>();
+	private List<TipoLicencia> listaTipoLicenciaHijos2 = new ArrayList<>();
 	private String tipoLicencia;
+	private String tipoLicenciaHijo;
+	private String tipoLicenciaHijo2;
 	private Map<String, String> tiposLicencias;
+	private Map<String, String> tiposLicenciasHijos;
+	private Map<String, String> tiposLicenciasHijos2;
 	private Estados estado;
 	private TipoLicencia tipoLicenciaEntidad;
 	private boolean btnConCargoVacaciones = false;
+	private String nombreEtiqueta;
+	private boolean YesNoEtiqueta = false;
+	private boolean renderEtiqueta;
+
+	private boolean btnComboHijo = false;
+	private boolean btnComboHijo2 = false;
+	private boolean disableNumDias = true;
 
 	@ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
@@ -118,10 +131,101 @@ public class RegistrosLicencias implements Serializable {
 	 * METODOS
 	 */
 
+	public void cargarHijos() {
+		// tipoLicenciaEntidad =
+		// srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
+		this.listaTipoLicenciaHijos = srvTipoLicencia.buscarTipoLicenciaPorPadre(Integer.parseInt(this.tipoLicencia));
+		if (this.listaTipoLicenciaHijos.isEmpty()) {
+			// compruebo si la licencia es de tipo enfermedad
+			if (Integer.parseInt(this.tipoLicencia) == 1) {
+				this.btnComboHijo = false;
+				this.disableNumDias = false;
+				this.renderEtiqueta = false;
+				this.btnComboHijo2 = false;
+			} else {
+				if (Integer.parseInt(this.tipoLicencia) == 2) {
+					this.renderEtiqueta = true;
+					this.nombreEtiqueta = "Nacimiento multiple o Cesaria?";
+					this.btnComboHijo2 = false;
+					this.disableNumDias = true;
+				} else {
+					this.renderEtiqueta = false;
+					this.btnComboHijo2 = false;
+					this.disableNumDias = true;
+				}
+				setNumeroDias(Integer.parseInt(this.tipoLicencia));
+				this.btnComboHijo = false;
+				this.disableNumDias = true;
+
+			}
+
+		} else {
+
+			this.tiposLicenciasHijos = new LinkedHashMap<>();
+			this.listaTipoLicenciaHijos.forEach((tipoLicenciaHijoEach) -> {
+				tiposLicenciasHijos.put(tipoLicenciaHijoEach.getTplcNombre(),
+						String.valueOf(tipoLicenciaHijoEach.getTplcId()));
+			});
+			this.renderEtiqueta = false;
+			this.btnComboHijo = true;
+			this.btnComboHijo2 = false;
+			this.disableNumDias = true;
+		}
+
+	}
+
+	public void cargarHijos2() {
+		// tipoLicenciaEntidad =
+		// srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
+		this.listaTipoLicenciaHijos2 = srvTipoLicencia
+				.buscarTipoLicenciaPorPadre(Integer.parseInt(this.tipoLicenciaHijo));
+		if (this.listaTipoLicenciaHijos2.isEmpty()) {
+			if (Integer.parseInt(this.tipoLicenciaHijo) == 4 || Integer.parseInt(this.tipoLicenciaHijo) == 5) {
+				this.renderEtiqueta = true;
+				this.nombreEtiqueta = "Nacimiento prematuro?";
+				this.disableNumDias = true;
+			} else {
+				this.renderEtiqueta = false;
+				this.disableNumDias = true;
+			}
+			setNumeroDias(Integer.parseInt(this.tipoLicenciaHijo));
+			this.btnComboHijo2 = false;
+			this.disableNumDias = true;
+		} else {
+
+			this.tiposLicenciasHijos2 = new LinkedHashMap<>();
+			this.listaTipoLicenciaHijos2.forEach((tipoLicenciaHijoEach2) -> {
+				tiposLicenciasHijos2.put(tipoLicenciaHijoEach2.getTplcNombre(),
+						String.valueOf(tipoLicenciaHijoEach2.getTplcId()));
+			});
+			this.renderEtiqueta = false;
+			this.btnComboHijo2 = true;
+			this.disableNumDias = true;
+		}
+
+	}
+
+	public void setNumeroDias(int id_tl) {
+		int valor = id_tl;
+		this.tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(valor);
+		this.licencia.setLcnNumDias(this.tipoLicenciaEntidad.getTplcMinDias());
+	}
+	
+	public void setNumDias(){
+		setNumeroDias(Integer.parseInt(this.tipoLicenciaHijo2));
+	}
+
+	public void cambiarValorNumMax() {
+		if (this.YesNoEtiqueta) {
+			this.licencia.setLcnNumDias(this.tipoLicenciaEntidad.getTplcMaxDias());
+		} else {
+			this.licencia.setLcnNumDias(this.tipoLicenciaEntidad.getTplcMinDias());
+		}
+	}
+
 	public void calcularPeriodoLicencia() {
 		if (licencia.getLcnNumDias() > 0 && licencia.getLcnFechaInicio() != null) {
-			licencia.setLcnFechaFin(
-					calcularFechaFinal(licencia.getLcnFechaInicio(), licencia.getLcnNumDias()));
+			licencia.setLcnFechaFin(calcularFechaFinal(licencia.getLcnFechaInicio(), licencia.getLcnNumDias()));
 		}
 
 	}
@@ -129,7 +233,7 @@ public class RegistrosLicencias implements Serializable {
 	public Date calcularFechaFinal(Date fechaInicio, int numDias) {
 		Calendar fechaFinal = Calendar.getInstance();
 		fechaFinal.setTime(fechaInicio);
-		fechaFinal.add(Calendar.DAY_OF_YEAR, numDias);
+		fechaFinal.add(Calendar.DAY_OF_YEAR, numDias - 1);
 
 		return (Date) fechaFinal.getTime();
 	}
@@ -174,7 +278,7 @@ public class RegistrosLicencias implements Serializable {
 
 		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		licencia.setDetallePuesto(detallePuesto);
-		
+
 		tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 		licencia.setTipoLicencia(tipoLicenciaEntidad);
 
@@ -187,35 +291,39 @@ public class RegistrosLicencias implements Serializable {
 			}
 		} else {
 			licencia.setLcnEstado(Estados.Activo.getId());
-			
+
 			retorno = srvlicencia.LicenciaInsertar(licencia);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
 		}
 	}
-	
-	public void verPDF(ActionEvent actionEvent) throws Exception{
+
+	public void verPDF(ActionEvent actionEvent) throws Exception {
 		Map<String, Object> parametros = new HashMap<>();
-            parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
-            parametros.put("txt_nombres", "la mar");
-            parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
-            String resumen = "EXPLICACIÓN:\n\n"+licencia.getLcnExplicacion()+"\n\n Registra: "+licencia.getLcnNumDias()+" días\n"+
-            "Desde: "+licencia.getLcnFechaInicio()+" 	Hasta: "+licencia.getLcnFechaFin()+"\n\n OBSERVACIÓN:\n"+licencia.getLcnObservacion();
-            parametros.put("txt_resumen", resumen);
-            parametros.put("txt_copia", licencia.getLcnCopia());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            
-            File jasper = new File("C:\\ireports\\licencias.jasper");
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
-            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()) + ".pdf");
-            ServletOutputStream stream = response.getOutputStream();
-            JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
-            stream.flush();
-            stream.close();
-            FacesContext.getCurrentInstance().responseComplete();
-            System.out.println("finaliza");
-		
+		parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
+		parametros.put("txt_nombres", "la mar");
+		parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
+		String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
+				+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
+				+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
+		parametros.put("txt_resumen", resumen);
+		parametros.put("txt_copia", licencia.getLcnCopia());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+		File jasper = new File("C:\\ireports\\licencias.jasper");
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
+		response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()) + ".pdf");
+		ServletOutputStream stream = response.getOutputStream();
+		JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+		stream.flush();
+		stream.close();
+		FacesContext.getCurrentInstance().responseComplete();
+		System.out.println("finaliza");
+
 	}
+
 	/**
 	 * GETTER & SETTER
 	 * 
@@ -339,7 +447,85 @@ public class RegistrosLicencias implements Serializable {
 	public void setlicencia(Licencia licencia) {
 		this.licencia = licencia;
 	}
-	
-	
+
+	public String getTipoLicenciaHijo() {
+		return tipoLicenciaHijo;
+	}
+
+	public void setTipoLicenciaHijo(String tipoLicenciaHijo) {
+		this.tipoLicenciaHijo = tipoLicenciaHijo;
+	}
+
+	public Map<String, String> getTiposLicenciasHijos() {
+		return tiposLicenciasHijos;
+	}
+
+	public void setTiposLicenciasHijos(Map<String, String> tiposLicenciasHijos) {
+		this.tiposLicenciasHijos = tiposLicenciasHijos;
+	}
+
+	public boolean isBtnComboHijo() {
+		return btnComboHijo;
+	}
+
+	public void setBtnComboHijo(boolean btnComboHijo) {
+		this.btnComboHijo = btnComboHijo;
+	}
+
+	public String getTipoLicenciaHijo2() {
+		return tipoLicenciaHijo2;
+	}
+
+	public void setTipoLicenciaHijo2(String tipoLicenciaHijo2) {
+		this.tipoLicenciaHijo2 = tipoLicenciaHijo2;
+	}
+
+	public Map<String, String> getTiposLicenciasHijos2() {
+		return tiposLicenciasHijos2;
+	}
+
+	public void setTiposLicenciasHijos2(Map<String, String> tiposLicenciasHijos2) {
+		this.tiposLicenciasHijos2 = tiposLicenciasHijos2;
+	}
+
+	public boolean isBtnComboHijo2() {
+		return btnComboHijo2;
+	}
+
+	public void setBtnComboHijo2(boolean btnComboHijo2) {
+		this.btnComboHijo2 = btnComboHijo2;
+	}
+
+	public boolean isDisableNumDias() {
+		return disableNumDias;
+	}
+
+	public void setDisableNumDias(boolean disableNumDias) {
+		this.disableNumDias = disableNumDias;
+	}
+
+	public String getNombreEtiqueta() {
+		return nombreEtiqueta;
+	}
+
+	public void setNombreEtiqueta(String nombreEtiqueta) {
+		this.nombreEtiqueta = nombreEtiqueta;
+	}
+
+	public boolean isYesNoEtiqueta() {
+		return YesNoEtiqueta;
+	}
+
+	public void setYesNoEtiqueta(boolean yesNoEtiqueta) {
+		YesNoEtiqueta = yesNoEtiqueta;
+	}
+
+	public boolean isRenderEtiqueta() {
+		return renderEtiqueta;
+	}
+
+	public void setRenderEtiqueta(boolean renderEtiqueta) {
+		this.renderEtiqueta = renderEtiqueta;
+	}
 
 }
