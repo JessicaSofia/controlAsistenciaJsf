@@ -12,6 +12,8 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.poi.hssf.record.formula.eval.StringValueEval;
+
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.Faltas;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
@@ -182,15 +184,19 @@ public class SancionForm implements   Serializable{
 	public DetallePuestoSancion getDtSancion() {
 		if(seleccionDtSancion!=null) {
 			dtSancion=seleccionDtSancion;
-			esActualizacion=true;
-		}else {
-			
-			esActualizacion=false;
-			dtSancion.setDtpssnNumaccion(generarNumAutorizacion());
-			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
-			dtSancion.setDtpssnFechaEmision(fechaEmision);
-			dtSancion.setDtpssnDescontar(0);
-		}
+			cargarSancionFormEdit();
+		esActualizacion=true;
+	}else {
+		
+		esActualizacion=false;
+		dtSancion.setDtpssnNumaccion(generarNumAutorizacion());
+		Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
+		dtSancion.setDtpssnFechaEmision(fechaEmision);
+		dtSancion.setDtpssnDescontar(0);
+	}
+
+		
+		
 		return dtSancion;
 	}
 	public void setDtSancion(DetallePuestoSancion dtSancion) {
@@ -393,6 +399,21 @@ public class SancionForm implements   Serializable{
 		return retorno;
 		
 	}
+	public void cargarSancionFormEdit() {
+		
+			if(seleccionDtSancion.getDtpssnDescontar()==1) {
+
+				EsDescuento=true;
+			}else {
+				EsDescuento=false;
+			}
+			falta=seleccionDtSancion.getCategoriaFalta().getFalta();
+			sancion=seleccionDtSancion.getSancion();
+			tipoFalta=String.valueOf(falta.getFlId());
+			tipoSancion=String.valueOf(sancion.getSnId());
+
+			
+						}
 
 	public void guardarSancion() {
 		
@@ -404,14 +425,19 @@ public class SancionForm implements   Serializable{
 			 dtSancion.setDtpssnDescontar(0);
 		 }
 		
-		
-		 detallePuesto=srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		 dtSancion.setCategoriaFalta(categoriaFaltaAplicar);
-		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
 		 dtSancion.setSancion(sancion);
+		 
+		if(esActualizacion) {
+			srvSanciones.actualizarSancion(dtSancion);
+		}else {
+		 detallePuesto=srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		 dtSancion.setDetallePuesto(detallePuesto); 
+		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
 		 srvSanciones.insertaSancion(dtSancion);
-		 limpiarFormSancion();
+		 
+		}
+		limpiarFormSancion();
 
 	}
 
@@ -419,6 +445,8 @@ public class SancionForm implements   Serializable{
 		dtSancion.setDtpssnEstado(Estados.Anulado.getId());
 		srvSanciones .insertaSancion(dtSancion);
 	}
+	
+	
 	
 	public void regresar() {
 		
