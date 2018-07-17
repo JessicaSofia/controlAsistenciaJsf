@@ -12,6 +12,8 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
+import ec.edu.uce.controlAsistencia.ejb.datos.Faltas;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
@@ -21,6 +23,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.SancionesServicio;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Categoria;
 import ec.edu.uce.controlAsistencia.jpa.entidades.CategoriaFalta;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
@@ -42,7 +45,7 @@ public class SancionForm implements   Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private List<DetallePuestoSancion>  lstSanciones = new ArrayList<>();
-	private DetallePuestoSancion  seleccionDtSancion;
+	private DetallePuestoSancion  seleccionDtSancion=null;
 	private PersonaDto seleccionPersona;
 	private Dependencia dependencia;
 	private Puesto puesto = null;
@@ -52,10 +55,11 @@ public class SancionForm implements   Serializable{
 	private List<Falta> listaFaltas=null;
 	private Sancion sancion;
 	private Map<String, String> tipoFaltas;
+	private CategoriaFalta categoriaFaltaAplicar;
 
 	private DetallePuesto detallePuesto;
-	private DetallePuestoSancion dtSancion;
-	private boolean esActualizacion = false;
+	private DetallePuestoSancion dtSancion=new DetallePuestoSancion();
+	private boolean esActualizacion = false; 
 	private List<Sancion> lstTipSanciones = null;
 	private String tipoSancion;
 	private int faltaId;
@@ -121,6 +125,12 @@ public class SancionForm implements   Serializable{
 	}
 	
 	
+	public CategoriaFalta getCategoriaFaltaAplicar() {
+		return categoriaFaltaAplicar;
+	}
+	public void setCategoriaFaltaAplicar(CategoriaFalta categoriaFaltaAplicar) {
+		this.categoriaFaltaAplicar = categoriaFaltaAplicar;
+	}
 	public PersonaDto getSeleccionPersona() {
 		return seleccionPersona;
 	}
@@ -174,7 +184,7 @@ public class SancionForm implements   Serializable{
 			dtSancion=seleccionDtSancion;
 			esActualizacion=true;
 		}else {
-			dtSancion=new DetallePuestoSancion();
+			
 			esActualizacion=false;
 			dtSancion.setDtpssnNumaccion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
@@ -281,14 +291,11 @@ public class SancionForm implements   Serializable{
 	 * Metodos
 	 */
 	
-	public void limpiar() {
-		seleccionPersona=null;
-		lstSanciones=null;
+	public void limpiarFormSancion() {
 		seleccionDtSancion=null;
-		dtSancion =null;
-		dependencia=null;
-		regimen=null;
-		puesto=null;
+		dtSancion =  new DetallePuestoSancion();
+		tipoSancion="";
+		tipoFalta="";
 		
 	}
 	
@@ -308,34 +315,113 @@ public class SancionForm implements   Serializable{
 	} 
 	
 	public void calcularSancion() {
+		 
 		String txtDias=dtSancion.getDtpssnDias();
+		float valor=0;
+		int min=dtSancion.getDtpssnMinutos();
+		
 		String[] Dias  = txtDias.split("-");
 		int frecuencia=Dias.length;
-		System.out.println("esta mi persona" + seleccionPersona.getFcemId() + " tamaño " +frecuencia);
+		
 		FichaEmpleado empleado= srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
 		falta=srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
-		System.out.println("Imprimir " + empleado.getCategoria().getCtgId());
-		List<CategoriaFalta> parametros= srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(empleado.getCategoria().getCtgId(), falta.getFlId());
-		dtSancion.setDtpssnDescontar(1);
+		 categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), falta.getFlId() , min);
 		
-		
+		if(categoriaFaltaAplicar==null) {
+			if(Faltas.Atrasos.getId()==falta.getFlId()) {
+				categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), Faltas.AbandonodeTrabajo.getId() , min);
+				
+			}
+		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
+		  int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
+		  if(idTiposancion==1) {
+			valor=dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase();
+			EsDescuento=true;
+			
+		  }
+		  else {
+			  EsDescuento =false;
+					  
+		  }
+		  
+
+			dtSancion.setDtpssnValor(valor);
+			
+			 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getTipoSancion().getTpsnId());
+
+			 this.tipoSancion=String.valueOf(sancion.getSnId());
+			 
+				}
+	
+	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min) {
+		CategoriaFalta categoriaFalta= null;
+		List<CategoriaFalta> parametros= srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(ctgId,flId);
+		for(CategoriaFalta s: parametros) {
+			if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()!=-1) {
+
+				if(s.getCtgflMinuntosMin()<=min && min <=s.getCtgflMinutosMax()) {
+					categoriaFalta=s;
+					break;
+				}
+			}
+			else  {
+				
+
+				if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()==-1 ) {
+					if( min>s.getCtgflMinuntosMin()) {
+					categoriaFalta=s;	
+				}
+		}
+			}
+		}
 		
-		
-		
+		return categoriaFalta;
 		
 	}
 	
-	
-	public void guardarSancion() {
+	public  Sancion  obtenerSancionAplicar(int tpSnId) {
+		Sancion retorno =null;
+		int nivel=1;
+		List<Sancion> sanciones= new ArrayList<>();
+		sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(tpSnId);
+		for(Sancion s:sanciones) {
+			if(s.getSnNivel()==nivel) {
+				retorno=s;
+			}
+		}
+		return retorno;
 		
 	}
 
-	public void anularSancion() {
+	public void guardarSancion() {
 		
+		 if(EsDescuento) {
+			 dtSancion.setDtpssnDescontar(1);
+		 }
+		 else {
+
+			 dtSancion.setDtpssnDescontar(0);
+		 }
+		
+		
+		 detallePuesto=srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		 dtSancion.setCategoriaFalta(categoriaFaltaAplicar);
+		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
+		 dtSancion.setSancion(sancion);
+		 dtSancion.setDetallePuesto(detallePuesto); 
+		 srvSanciones.insertaSancion(dtSancion);
+		 limpiarFormSancion();
+
+	}
+
+	public void anularSancion() {
+		dtSancion.setDtpssnEstado(Estados.Anulado.getId());
+		srvSanciones .insertaSancion(dtSancion);
 	}
 	
 	public void regresar() {
 		
 	}
+	
 }
