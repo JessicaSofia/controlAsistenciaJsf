@@ -5,10 +5,16 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia / Sanciones / Listas" />
+		</ui:include>
+		</ui:define>
 	<ui:define name="cuerpo">
 	<h:form  id="sancionForm">
-	<p:panel  id="panelSancion" header="Nuevo Registro" style="width: 80%; left: 10%" >
+	<p:panel  id="panelSancion" header="Nuevo Registro"  >
 	<div class="grid condensed">
 				<!-- ******************** FILA NUMERO 1 ************************ -->
 				<div class="row cells8"> 

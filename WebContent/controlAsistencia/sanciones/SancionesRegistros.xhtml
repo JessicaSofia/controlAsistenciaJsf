@@ -1,27 +1,17 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<ui:include src="/componentesGenerales/plantillas/pltHead.xhtml" />
-</h:head>
-<h:body class="dtic">
-	<div id="cabecera">
-		<ui:include src="/componentesGenerales/plantillas/pltCabecera.xhtml" />
-	</div>
-	<div id="wrapper" class="wrapper">
-
-		<div id="menu">
-			<ui:include src="/componentesGenerales/plantillas/pltMenu.xhtml" />
-			<ui:insert name="paginacion"></ui:insert>
-		</div>
-		<div id="mensajeGlobal">
-			<p:messages autoUpdate="true" globalOnly="true" />
-		</div>
-		<div id="contenido">
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia / Sanciones / Listas" />
+		</ui:include>
+		</ui:define>
+<ui:define name="cuerpo">
 			<h:form id="frmRegistroSanciones" enctype="multipart/form-data"
 				acceptcharset="UTF-8">
 
@@ -113,20 +103,29 @@
 						</div>
 					</div>
 					<div id="divTblRegistrosSanciones">
-						<p:dataTable var="listSanc"
+						<p:dataTable var="listSanc" rows="10" paginator="true"
 							value="#{sancionForm.lstSanciones}">
-							<p:column headerText="N° Autorizión">
+							<p:column headerText="N°">
 								<h:outputText value="#{listSanc.dtpssnNumaccion}" />
 							</p:column>
-							<p:column headerText="Fecha Emisión">
-								<h:outputText value="#{listSanc.dtpssnFechaEmision}" />
+							<p:column headerText="Falta">
+								<h:outputText value="#{listSanc.categoriaFalta.falta.flNombre}" />
 							</p:column>
-							<p:column headerText="Mes">
-								<h:outputText value="#{listSanc.dtpssnMes}" />
+							<p:column headerText="Sancion">
+								<h:outputText value="#{listSanc.sancion.snNombre}" />
 							</p:column>
 							<p:column headerText="Año">
 								<h:outputText value="#{listSanc.dtpssnAno}" />
 							</p:column>  
+							<p:column headerText="Mes">
+								<h:outputText value="#{listSanc.dtpssnMes}" />
+							</p:column> 
+							<p:column headerText="Días">
+								<h:outputText value="#{listSanc.dtpssnDias}" />
+							</p:column>
+							<p:column headerText="Observacion">
+								<h:outputText value="#{listSanc.dtpssnObservacion}" />
+							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<i class="fa fa-check-square-o" />
@@ -150,14 +149,6 @@
 				</p:panel>
 
 			</h:form>
-			<ui:include
-				src="/componentesGenerales/plantillas/dialogos/dialogoTrabajando.xhtml" />
-			<ui:insert name="cuerpo">
-			</ui:insert>
-		</div>
-	</div>
-	<div id="pie">
-		<ui:include src="/componentesGenerales/plantillas/pltPie.xhtml" />
-	</div>
-</h:body>
-</html>
+</ui:define>
+	</ui:composition>
+	</html>

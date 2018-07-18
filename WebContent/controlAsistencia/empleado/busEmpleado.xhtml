@@ -5,7 +5,13 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"> 
       
-<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia / Licencias" />
+		</ui:include>
+</ui:define>
 		<ui:define name="cuerpo">
 	<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
 	<p:panel id="pnlBusquedaEmpleado"  header="Búsqueda Empleado" style="margin-bottom: 10px;">
@@ -24,7 +30,8 @@
 		       	
 	</div>				
 	<div id="divTblEmpleados" >
-	<p:dataTable id="tblEmpleados" var="emp" value="#{busEmpleado.lstPersona}">
+	<p:dataTable id="tblEmpleados" var="emp" value="#{busEmpleado.lstPersona}" 
+	rows="10" paginator="true">
 	 
         <p:column headerText="Cédula">
             <p:outputLabel value="#{emp.prsIdentificacion}"></p:outputLabel>  
@@ -39,7 +46,7 @@
             <h:outputText value="#{busEmpleado.ObtenerNombreDependencia(emp.dpnId)}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/licencias/LicenciasRegistros.xhtml">
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/licencias/LicenciasRegistros.xhtml" >
                 <f:setPropertyActionListener value="#{emp}" target="#{busEmpleado.seleccionPersona}" />
             </p:commandButton>
         </p:column>

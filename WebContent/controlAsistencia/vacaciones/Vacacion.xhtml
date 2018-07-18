@@ -5,8 +5,14 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
-	<ui:define name="cuerpo">
+	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia / Vacaciones/ Listas / Agregar" />
+		</ui:include>
+		</ui:define>
+<ui:define name="cuerpo">
 	<h:form  id="VacacionForm">
 	<p:panel  id="panelVacacion" header="Nuevo Registro">
 	<div class="grid condensed">
@@ -60,7 +66,7 @@
 		       					<p:outputLabel id="lblFechaInicio" for="CalFechaInicio" value="Desde: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:calendar id="CalFechaInicio" value="#{vacacionForm.vacacion.vccFechaInicio}" ></p:calendar>	
+		       					<p:calendar id="CalFechaInicio" value="#{vacacionForm.vacacion.vccFechaInicio}" showOn="button"></p:calendar>	
 		       				</ui:define>
 		       				
 		       					<ui:define name="etiquetaError">
@@ -81,9 +87,9 @@
 		       					<p:outputLabel id="lblFechaFinal" for="txtFechaFinal" value="Hasta: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtFechaFinal" value="#{vacacionForm.vacacion.vccFechaFin}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
+		       					<p:calendar id="txtFechaFinal" value="#{vacacionForm.vacacion.vccFechaFin}" 
+		       									style="font-weight: Normal !important;" showOn="button"  disabled="true"
+		       					></p:calendar>	
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>

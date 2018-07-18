@@ -6,8 +6,13 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition
-	template="/componentesGenerales/plantillas/pltPrincipal.xhtml">
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia / Licencias/ Listas / Agregar" />
+		</ui:include>
+		</ui:define>
 	<ui:define name="cuerpo">
 		<h:form id="VacacionForm">
 			<p:panel id="panelVacacion" header="Nuevo Registro">
