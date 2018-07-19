@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+      
+<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+
+<ui:define name="paginacion">
+		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
+			<ui:param name="pagina"
+				value="Control de Asistencia /Vacaciones/Reporte" />
+		</ui:include>
+</ui:define>
+		<ui:define name="cuerpo">
+		<style type="text/css">
+
+.ui-datepicker-calendar {
+    display: none;
+}
+
+
+
+</style>
+<script language="JavaScript">
+function regenererCal(){
+    year = $("#frmReporteVacaciones\\:calendrierDateDebut .ui-datepicker-year").val();
+    month = $("#frmReporteVacaciones\\:calendrierDateDebut .ui-datepicker-month").val();
+    $('#frmReporteVacaciones\\:calendrierDateDebut_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
+}
+</script>
+	<h:form  id="frmReporteVacaciones" enctype="multipart/form-data" acceptcharset="UTF-8" >
+	<p:panel id="pnlReporteVacaciones"  header="Generar Reporte" style="margin-bottom: 10px;">
+	
+<div class="grid condensed">
+				<!-- ******************** FILA NUMERO 1 ************************ -->
+				<div class="row cells8"> 
+					<div class="cell colspan4"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblAnioRepVac" for="calendrierDateDebut" value="Año:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				 <p:calendar  id="calendrierDateDebut" value="#{reporteVacaciones.fecha}"
+                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
+                  />
+     	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgAnioReporteVac" for="calendrierDateDebut" />
+		       				</ui:define>
+		       				
+		       			</ui:decorate>
+					</div>
+									<div class="cell colspan4"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblAusenciaRepVac" for="calendrierDateDebut" value="Ausencias:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				 <p:selectManyCheckbox id="ausencias" value="#{reporteVacaciones.ausencias}">
+        <f:selectItem itemLabel="Vacaciones" itemValue="vacacion" />
+        <f:selectItem itemLabel="Permisos" itemValue="permiso" />
+        <f:selectItem itemLabel="Licencias" itemValue="licencia" />
+    </p:selectManyCheckbox>
+     	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgAusencReporteVac" for="ausencias" />
+		       				</ui:define>
+		       				
+		       			</ui:decorate>
+					</div>
+					</div>
+					
+	<br/>
+				<p:commandButton id="btnCalcularVacacion"  value="Buscar" onclick="regenererCal()"  actionListener="#{reporteVacaciones.BuscarVacacionesFiltros()}" update="frmReporteVacaciones tblRepVacaciones" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
+				<br/>
+						<div id="divTblReportesVac" >
+	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" 
+	widgetVar="reportAuscenTable"
+	rows="10" paginator="true">
+	 
+        <p:column headerText="Cédula">
+            <p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>  
+        </p:column>
+        <p:column headerText="Nombres">
+            <h:outputText value="#{repVac.detallePuesto.dtpsId}" />
+        </p:column>                                                                                                                                               
+        <p:column headerText="Apellidos">
+            <h:outputText value=""/>
+        </p:column>
+          <p:column headerText="Fecha Emisión">
+            <h:outputText value="#{repVac.vccFechaEmision}"/>
+        </p:column> 
+        <p:column headerText="Fecha Inicio">
+            <h:outputText value="#{repVac.vccFechaInicio}" />
+        </p:column>
+         
+        <p:column headerText="Fecha Fin">
+            <h:outputText value="#{repVac.vccFechaFin}" />
+        </p:column>
+        <p:column headerText="Fecha Fin">
+            <h:outputText value="#{repVac.vccFechaFin}" />
+        </p:column>
+        
+        <p:column headerText="Dependencia">
+         <f:facet name="filter">
+                <p:selectCheckboxMenu label="Dependencias" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                    <f:selectItems value="#{reporteVacaciones.dependencia}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+            <h:outputText value="Dependencia" />
+        </p:column>
+         <p:column headerText="Regimen">
+           <f:facet name="filter">
+                <p:selectCheckboxMenu label="Regimen" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                    <f:selectItems value="#{reporteVacaciones.regimen}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+            <h:outputText value="Regimen"/>
+        </p:column>
+        
+         <p:column headerText=" Tipo Ausencia">
+            <h:outputText value="Regimen"/>
+        </p:column>
+       
+	</p:dataTable>
+	<h:commandLink>
+        <p:graphicImage name="/img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Ausencias" pageOnly="true"/>
+    </h:commandLink>
+	</div>
+</div>
+	</p:panel>
+	</h:form>
+	
+	</ui:define> 
+	</ui:composition>
+</html>

@@ -302,7 +302,7 @@ public class RegistrosLicencias implements Serializable {
 		Map<String, Object> parametros = new HashMap<>();
 		parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
 		parametros.put("txt_nombres", "la mar");
-		parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
+		parametros.put("txt_licencia", "la Mar");
 		String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
 				+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
 				+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
