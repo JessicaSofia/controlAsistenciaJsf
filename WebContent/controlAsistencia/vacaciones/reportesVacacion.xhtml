@@ -80,13 +80,22 @@ function regenererCal(){
 						<div id="divTblReportesVac" >
 	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" 
 	widgetVar="reportAuscenTable"
-	rows="10" paginator="true">
+	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
+                 <f:facet name="{Exporters}">
+                <h:commandLink value="Exportar">
+        <p:graphicImage name="img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Ausencias" pageOnly="true"/>
+    </h:commandLink>
+    </f:facet>
+                 
+
 	 
         <p:column headerText="Cédula">
             <p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>  
         </p:column>
         <p:column headerText="Nombres">
-            <h:outputText value="#{repVac.detallePuesto.dtpsId}" />
+            <h:outputText value="#{repVac.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
         </p:column>                                                                                                                                               
         <p:column headerText="Apellidos">
             <h:outputText value=""/>
@@ -105,21 +114,21 @@ function regenererCal(){
             <h:outputText value="#{repVac.vccFechaFin}" />
         </p:column>
         
-        <p:column headerText="Dependencia">
+        <p:column headerText="Dependencia" >
          <f:facet name="filter">
-                <p:selectCheckboxMenu label="Dependencias" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                <p:selectCheckboxMenu label="Dependencias" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150"  footerText="in" filterMatchMode="in">
                     <f:selectItems value="#{reporteVacaciones.dependencia}" />
                 </p:selectCheckboxMenu>
             </f:facet>
-            <h:outputText value="Dependencia" />
+            <h:outputText value="#{repVac.detallePuesto.dependencia.dpnDescripcion}" />
         </p:column>
-         <p:column headerText="Regimen">
+         <p:column headerText="Regimen" >
            <f:facet name="filter">
-                <p:selectCheckboxMenu label="Regimen" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                <p:selectCheckboxMenu label="Regimen" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150" footerText="in" filterMatchMode="in">
                     <f:selectItems value="#{reporteVacaciones.regimen}" />
                 </p:selectCheckboxMenu>
             </f:facet>
-            <h:outputText value="Regimen"/>
+            <h:outputText value="#{repVac.detallePuesto.puesto.grupoOcupacional.regimen.rgmDescripcion}"/>
         </p:column>
         
          <p:column headerText=" Tipo Ausencia">
@@ -127,11 +136,69 @@ function regenererCal(){
         </p:column>
        
 	</p:dataTable>
-	<h:commandLink>
-        <p:graphicImage name="/img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Ausencias" pageOnly="true"/>
-    </h:commandLink>
+	
 	</div>
+	
+	<div id="divTblRegistrosLicencias">
+						<p:dataTable var="licencia"
+							value="#{reporteVacaciones.lstLicencias}">
+							<p:column headerText="Tipo Licencia">
+								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
+							</p:column>
+							<p:column headerText="Nº días">
+								<h:outputText value="#{licencia.lcnNumDias}" />
+							</p:column>
+							<p:column headerText="Fecha Inicio">
+								<h:outputText value="#{licencia.lcnFechaInicio}" />
+							</p:column>
+							<p:column headerText="Fecha Fin">
+								<h:outputText value="#{licencia.lcnFechaFin}" />
+							</p:column>
+							<p:column headerText="Explicación">
+								<h:outputText value="#{licencia.lcnExplicacion}" />
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<i class="fa fa-check-square-o" />
+								</f:facet>
+								<p:commandButton value="Ver/Editar"
+									action="/controlAsistencia/licencias/Licencia.xhtml" actionListener="#{registrosLicencia.cargarVariables(licencia)}">
+									<f:setPropertyActionListener value="#{licencia}"
+										target="#{registrosLicencia.seleccionLicencia}" />
+								</p:commandButton>
+								
+								<p:commandButton value="Imprimir"></p:commandButton>
+							</p:column>
+							
+						</p:dataTable>
+					</div>
+							<div id="divTblRegistrosPermisos">
+								<p:dataTable var="permiso" value="#{reporteVacaciones.lstPermisos}">
+									<p:column headerText="Fecha Permiso">
+										<h:outputText value="#{permiso.prmFechaPermiso}" />
+									</p:column>
+									<p:column headerText="Nº Días">
+										<h:outputText value="#{permiso.prmNumDias}" />
+									</p:column>
+									<p:column headerText="Nº Horas">
+										<h:outputText value="#{permiso.prmNumHoras}" />
+									</p:column>
+									<p:column headerText="A partir de">
+										<h:outputText value="#{permiso.prmHoraInicio}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<i class="fa fa-check-square-o" />
+										</f:facet>
+										<p:commandButton value="Ver/Editar">
+
+										</p:commandButton>
+										<p:commandButton value="Imprimir"></p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+								</div>	
 </div>
 	</p:panel>
 	</h:form>

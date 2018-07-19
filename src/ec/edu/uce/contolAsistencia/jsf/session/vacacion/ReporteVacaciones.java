@@ -20,6 +20,8 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Permiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
 
@@ -37,21 +39,22 @@ public class ReporteVacaciones implements Serializable{
 	private List<Vacacion> lstVacacion  = new ArrayList<>();
 	private  Date fecha;
 	private  List<String> ausencias=null;
-	private List<String> dependencia;
-	private List<String> regimen;
+	private List<String> dependencia=null;
+	private List<String> regimen=null;
+	private boolean vacActivar=false;
+	private boolean LicActivar=false;
+	private boolean PermActivar=false;
+	private List<Licencia> lstLicencias= new ArrayList<>();
+	private List<Permiso> lstPermisos= new ArrayList<>();
+	
+	
 	
 	
 	
 	@PostConstruct
 	public void init() {
-		List<Dependencia> lstDependecia=srvDependencia.obtenerListTodo();
-		for(Dependencia d: lstDependecia) {
-			dependencia.add(d.getDpnDescripcion());
-		}
-		List<Regimen> lstRegimen=srvRegimen.ObtenerLstTodos();
-		for(Regimen d: lstRegimen) {
-			dependencia.add(d.getRgmDescripcion());
-		}
+		
+		
 		
 		
 	}
@@ -104,16 +107,68 @@ public class ReporteVacaciones implements Serializable{
 	
 	
 	public List<String> getDependencia() {
+		if(dependencia==null) {
+			List<Dependencia> lstDependecia=srvDependencia.obtenerListTodo();
+			for(Dependencia d: lstDependecia) {
+			
+				dependencia.add(d.getDpnDescripcion());
+			}
+		}
 		return dependencia;
 	}
 	public void setDependencia(List<String> dependencia) {
 		this.dependencia = dependencia;
 	}
 	public List<String> getRegimen() {
+		if(regimen==null) {
+			List<Regimen> lstRegimen=srvRegimen.ObtenerLstTodos();
+			for(Regimen d: lstRegimen) {
+				regimen.add(d.getRgmDescripcion());
+			}
+		}
 		return regimen;
 	}
 	public void setRegimen(List<String> regimen) {
 		this.regimen = regimen;
+	}
+	
+	
+	
+	public boolean isVacActivar() {
+		return vacActivar;
+	}
+	public void setVacActivar(boolean vacActivar) {
+		this.vacActivar = vacActivar;
+	}
+	public boolean isLicActivar() {
+		return LicActivar;
+	}
+	public void setLicActivar(boolean licActivar) {
+		LicActivar = licActivar;
+	}
+	public boolean isPermActivar() {
+		return PermActivar;
+	}
+	public void setPermActivar(boolean permActivar) {
+		PermActivar = permActivar;
+	}
+	
+	
+	
+	
+	//*
+	
+	public List<Licencia> getLstLicencias() {
+		return lstLicencias;
+	}
+	public void setLstLicencias(List<Licencia> lstLicencias) {
+		this.lstLicencias = lstLicencias;
+	}
+	public List<Permiso> getLstPermisos() {
+		return lstPermisos;
+	}
+	public void setLstPermisos(List<Permiso> lstPermisos) {
+		this.lstPermisos = lstPermisos;
 	}
 	public void BuscarVacacionesFiltros() {
 		Calendar c=Calendar.getInstance();
