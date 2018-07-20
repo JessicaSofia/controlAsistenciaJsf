@@ -17,6 +17,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PermisoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
@@ -67,6 +69,12 @@ public class ReporteVacaciones implements Serializable{
 	
 	@EJB
 	private RegimenServicio srvRegimen;
+	
+	@EJB
+	private LicenciaServicio srvLicencia;
+	
+	@EJB
+	private PermisoServicio srvPermiso;
 	
 	
 	public int getAnio() {
@@ -193,13 +201,22 @@ public class ReporteVacaciones implements Serializable{
 						
 					}else {
 						if(ausencias.contains("vacacion")){
-							lstVacacion=srvVacacion.ObtenerLstDtSancionesPorAnioMes(mes, anio);
+							vacActivar=true;
+							PermActivar=false;
+							LicActivar=false;
+							lstVacacion=srvVacacion.ObtenerLstPorAnioMes(mes, anio);
 						}
 						if(ausencias.contains("permiso")){
-							lstVacacion=srvVacacion.ObtenerLstDtSancionesPorAnioMes(mes, anio);
+							vacActivar=false;
+							PermActivar=true;
+							LicActivar=false;
+							lstPermisos=srvPermiso.obtenerLstPorAniomes(anio, mes);
 						}
 						if(ausencias.contains("licencia")){
-							lstVacacion=srvVacacion.ObtenerLstDtSancionesPorAnioMes(mes, anio);
+							vacActivar=false;
+							PermActivar=false;
+							LicActivar=true;
+							lstLicencias=srvLicencia.ObtenerLstPorAnioMes(anio, mes);
 						}
 					}
 					}

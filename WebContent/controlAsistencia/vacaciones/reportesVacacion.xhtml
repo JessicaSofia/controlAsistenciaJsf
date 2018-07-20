@@ -78,14 +78,14 @@ function regenererCal(){
 				<p:commandButton id="btnCalcularVacacion"  value="Buscar" onclick="regenererCal()"  actionListener="#{reporteVacaciones.BuscarVacacionesFiltros()}" update="frmReporteVacaciones tblRepVacaciones" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
 				<br/>
 						<div id="divTblReportesVac" >
-	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" 
+	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" rendered="#{reporteVacaciones.vacActivar}"
 	widgetVar="reportAuscenTable"
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px">
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Ausencias" pageOnly="true"/>
+        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Vacaciones" pageOnly="true"/>
     </h:commandLink>
     </f:facet>
                  
@@ -140,8 +140,18 @@ function regenererCal(){
 	</div>
 	
 	<div id="divTblRegistrosLicencias">
-						<p:dataTable var="licencia"
-							value="#{reporteVacaciones.lstLicencias}">
+						<p:dataTable var="licencia" rendered="#{reporteVacaciones.licActivar}"
+							value="#{reporteVacaciones.lstLicencias}"
+							widgetVar="reportAuscenTableLic"
+	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px"
+							>
+							   <f:facet name="{Exporters}">
+                <h:commandLink value="Exportar">
+        <p:graphicImage name="img/excel.jpg"/>
+        <p:dataExporter type="xls" target="reportAuscenTableLic" fileName="Licencias" pageOnly="true"/>
+    </h:commandLink>
+    </f:facet>
 							<p:column headerText="Tipo Licencia">
 								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
 							</p:column>
@@ -174,7 +184,17 @@ function regenererCal(){
 						</p:dataTable>
 					</div>
 							<div id="divTblRegistrosPermisos">
-								<p:dataTable var="permiso" value="#{reporteVacaciones.lstPermisos}">
+								<p:dataTable var="permiso" value="#{reporteVacaciones.lstPermisos}" rendered="#{reporteVacaciones.permActivar}"
+								widgetVar="reportAuscenTablePerm"
+	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
+								
+								<f:facet name="{Exporters}">
+                <h:commandLink value="Exportar">
+        <p:graphicImage name="img/excel.jpg"/>
+        <p:dataExporter type="xls" target="reportAuscenTablePerm" fileName="Permisos" pageOnly="true"/>
+    </h:commandLink>
+    </f:facet>
 									<p:column headerText="Fecha Permiso">
 										<h:outputText value="#{permiso.prmFechaPermiso}" />
 									</p:column>
@@ -205,4 +225,5 @@ function regenererCal(){
 	
 	</ui:define> 
 	</ui:composition>
+	
 </html>
