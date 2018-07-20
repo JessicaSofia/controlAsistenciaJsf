@@ -69,10 +69,8 @@ public class VacacionForm implements Serializable {
 	private Permiso permiso;
 	private List<Permiso> listaPermisos;
 	private Permiso seleccionPermiso;
-	// Si es false, el permiso es por horas
-	private boolean diasHoras = false;
-	private boolean disableHoras = true;
-	private boolean disableDias = false;
+	private boolean YesNoEtiqueta = false;
+	private boolean renderEtiqueta;
 
 	/***
 	 * Declaracion de servicios
@@ -105,6 +103,8 @@ public class VacacionForm implements Serializable {
 	/**
 	 * Getters and setters
 	 */
+	
+	
 
 	public Dependencia getDependencia() {
 		if (dependencia == null) {
@@ -112,6 +112,8 @@ public class VacacionForm implements Serializable {
 		}
 		return dependencia;
 	}
+
+	
 
 	public List<Permiso> getListaPermisos() {
 		if (seleccionPersona != null) {
@@ -254,28 +256,22 @@ public class VacacionForm implements Serializable {
 		return vacacion;
 	}
 
-	public boolean isDisableHoras() {
-		return disableHoras;
+
+
+	public boolean isYesNoEtiqueta() {
+		return YesNoEtiqueta;
 	}
 
-	public void setDisableHoras(boolean disableHoras) {
-		this.disableHoras = disableHoras;
+	public void setYesNoEtiqueta(boolean yesNoEtiqueta) {
+		YesNoEtiqueta = yesNoEtiqueta;
 	}
 
-	public boolean isDisableDias() {
-		return disableDias;
+	public boolean isRenderEtiqueta() {
+		return renderEtiqueta;
 	}
 
-	public void setDisableDias(boolean disableDias) {
-		this.disableDias = disableDias;
-	}
-
-	public boolean isDiasHoras() {
-		return diasHoras;
-	}
-
-	public void setDiasHoras(boolean diasHoras) {
-		this.diasHoras = diasHoras;
+	public void setRenderEtiqueta(boolean renderEtiqueta) {
+		this.renderEtiqueta = renderEtiqueta;
 	}
 
 	public void setVacacion(Vacacion vacacion) {
@@ -671,13 +667,12 @@ public class VacacionForm implements Serializable {
 		}
 	}
 	
-	public void cambiarValorDiasHoras(){
-		if(this.diasHoras){
-			this.disableDias = false;
-			this.disableHoras = true;
-		}else{
-			this.disableDias = true;
-			this.disableHoras = false;
+	public void cambiarValorNumMax() {
+		if (this.YesNoEtiqueta) {
+			this.renderEtiqueta = false;
+		} else {
+			this.renderEtiqueta = true;
 		}
 	}
+	
 }

@@ -270,45 +270,8 @@
 								</ui:decorate>
 							</div>
 							
-							<div class="cell colspan8">
-								<!-- Fecha Inicio de Vacaciones -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDiasHoras" 
-											value="Permiso por dias?: " />
-									</ui:define>
-									<ui:define name="valor">
-									<p:selectBooleanCheckbox
-										value="#{vacacionForm.diasHoras}">
-										<p:ajax listener="#{vacacionForm.cambiarValorDiasHoras()}"
-											update="panelPermiso"></p:ajax>
-									</p:selectBooleanCheckbox>
-
-								</ui:define>
-
-								</ui:decorate>
-							</div>
 						
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblTiempoSolicitadoDias" for="txtTiempoSolicitadoDias"
-											value="Dias solicitados: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtTiempoSolicitadoDias" disabled="#{vacacionForm.disableDias}"
-											value="#{vacacionForm.permiso.prmNumDias}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgTiempoSolicitadoDias" for="txtTiempoSolicitadoDias" />
-									</ui:define>
-								</ui:decorate>
-							</div>
+							
 							
 							<div class="cell colspan8">
 								<!--Numero de  dias de vacaciones  -->
@@ -316,10 +279,10 @@
 									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 									<ui:define name="etiqueta">
 										<p:outputLabel id="lblTiempoSolicitadoHoras" for="txtTiempoSolicitadoHoras"
-											value="Horas solicitadas (HH:mm): " />
+											value="Tiempo solicitado (HH:mm): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:inputText id="txtTiempoSolicitadoHoras" disabled="#{vacacionForm.diasHoras}"
+										<p:inputText id="txtTiempoSolicitadoHoras" 
 											value="#{vacacionForm.permiso.prmNumHoras}"
 											style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
@@ -336,10 +299,10 @@
 									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 									<ui:define name="etiqueta">
 										<p:outputLabel id="lblApartir" for="txtApartir"
-											value="A parir de (HH:mm): " />
+											value="A partir de (HH:mm): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:inputText id="txtApartir" disabled="#{vacacionForm.diasHoras}"
+										<p:inputText id="txtApartir"
 											value="#{vacacionForm.permiso.prmHoraInicio}"
 											style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
@@ -350,15 +313,34 @@
 								</ui:decorate>
 							</div>
 							<div class="cell colspan8">
+								<!-- Fecha Inicio de Vacaciones -->
+								<ui:decorate
+									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+									<ui:define name="etiqueta">
+										<p:outputLabel id="lblCargoVacaciones" 
+											value="¿Justifica horas?: " />
+									</ui:define>
+									<ui:define name="valor">
+									<p:selectBooleanCheckbox
+										value="#{vacacionForm.yesNoEtiqueta}">
+										<p:ajax listener="#{vacacionForm.cambiarValorNumMax()}"
+											update="panelPermiso"></p:ajax>
+									</p:selectBooleanCheckbox>
+
+								</ui:define>
+
+								</ui:decorate>
+							</div>
+							<div class="cell colspan8">
 								<!--Numero de  dias de vacaciones  -->
 								<ui:decorate
 									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 									<ui:define name="etiqueta">
-										<p:outputLabel id="lblJustifica" for="txtJustifica"
+										<p:outputLabel id="lblJustifica" for="txtJustifica" rendered="#{vacacionForm.renderEtiqueta}"
 											value="Horas justificadas (HH:mm): " />
 									</ui:define>
 									<ui:define name="valor">
-										<p:inputText id="txtJustifica" disabled="#{vacacionForm.diasHoras}"
+										<p:inputText id="txtJustifica"  rendered="#{vacacionForm.renderEtiqueta}"
 											value="#{vacacionForm.permiso.prmJustificacion}"
 											style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
@@ -369,7 +351,7 @@
 								</ui:decorate>
 							</div>
 							
-							<div class="cell colspan8">
+							<div class="cell colspan4">
 								<!--Numero de  dias de vacaciones  -->
 								<ui:decorate
 									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
@@ -379,7 +361,7 @@
 									</ui:define>
 									<ui:define name="valor">
 										<p:inputText id="txtDescripMotivo" 
-											value="#{vacacionForm.permiso.prmHoraInicio}"
+											value="#{vacacionForm.permiso.prmDescripcionMotivo}"
 											style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
 									</ui:define>
@@ -392,25 +374,7 @@
 							
 							
 							
-							<div class="cell colspan8">
-								<!-- Fecha Inicio de Vacaciones -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblCargoVacaciones" 
-											value="Con cargo a vacaciones?: " />
-									</ui:define>
-									<ui:define name="valor">
-									<p:selectBooleanCheckbox
-										value="#{vacacionForm.diasHoras}">
-										<p:ajax listener="#{vacacionForm.cambiarValorDiasHoras()}"
-											update="panelPermiso"></p:ajax>
-									</p:selectBooleanCheckbox>
-
-								</ui:define>
-
-								</ui:decorate>
-							</div>
+							
 
 						</div>
 						<br />

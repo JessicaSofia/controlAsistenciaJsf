@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
+import ec.edu.uce.controlAsistencia.ejb.datos.LicenciaPDF;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
@@ -45,6 +46,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @ManagedBean(name = "registrosLicencia")
 @SessionScoped
@@ -86,6 +88,7 @@ public class RegistrosLicencias implements Serializable {
 	private boolean btnComboHijo = false;
 	private boolean btnComboHijo2 = false;
 	private boolean disableNumDias = true;
+	private boolean renderBtnImprimir = false;
 
 	@ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
@@ -294,24 +297,44 @@ public class RegistrosLicencias implements Serializable {
 
 			retorno = srvlicencia.LicenciaInsertar(licencia);
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Licencia registrada exitosamente."));
+			this.renderBtnImprimir = true;
 		}
 	}
 
 	public void verPDF(ActionEvent actionEvent) throws Exception {
-		Map<String, Object> parametros = new HashMap<>();
-		parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
-		parametros.put("txt_nombres", "la mar");
-		parametros.put("txt_licencia", "la Mar");
-		String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
-				+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
-				+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
-		parametros.put("txt_resumen", resumen);
-		parametros.put("txt_copia", licencia.getLcnCopia());
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		
+		List<LicenciaPDF> lista = new ArrayList<>();
+		LicenciaPDF licenciaPDF = new LicenciaPDF();
+		licenciaPDF.setTxt_num_auto(String.valueOf(this.licencia.getLcnNumLicencia()));
+		licenciaPDF.setTxt_nombres("Pruebas");
+		licenciaPDF.setTxt_licencia(this.licencia.getTipoLicencia().getTplcNombre());
+		licenciaPDF.setTxt_dias(String.valueOf(this.licencia.getLcnNumDias()));
+		String fechaDesde = sdf.format(this.licencia.getLcnFechaInicio());
+		String fechaFin = sdf.format(this.licencia.getLcnFechaFin());
+		licenciaPDF.setTxt_fecha_inicio(fechaDesde);
+		licenciaPDF.setTxt_fecha_fin(fechaFin);
+		licenciaPDF.setTxt_explicacion(this.licencia.getLcnExplicacion());
+		licenciaPDF.setTxt_observacion(this.licencia.getLcnObservacion());
+		licenciaPDF.setTxt_copia(this.licencia.getLcnCopia());
+		lista.add(licenciaPDF);
+		
+		/*parametros Jasper*/
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("txt_num_auto", licenciaPDF.getTxt_num_auto());
+		parametros.put("txt_nombres", licenciaPDF.getTxt_nombres());
+		parametros.put("txt_licencia", licenciaPDF.getTxt_licencia());
+		String resumen = "EXPLICACIÓN:\n\n" + licenciaPDF.getTxt_explicacion() + "\n\n Registra: "
+				+ licenciaPDF.getTxt_dias() + " días\n" + "Desde: " + licenciaPDF.getTxt_fecha_inicio() + " 	Hasta: "
+				+ licenciaPDF.getTxt_fecha_fin()+ "\n\n OBSERVACIÓN:\n" + licenciaPDF.getTxt_observacion();
+		parametros.put("txt_resumen", resumen);
+		parametros.put("txt_copia", licenciaPDF.getTxt_copia());
+		
 
 		File jasper = new File("C:\\ireports\\licencias.jasper");
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros,new JRBeanCollectionDataSource(lista));
 		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 				.getResponse();
 		response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()) + ".pdf");
@@ -528,4 +551,12 @@ public class RegistrosLicencias implements Serializable {
 		this.renderEtiqueta = renderEtiqueta;
 	}
 
+	public boolean isRenderBtnImprimir() {
+		return renderBtnImprimir;
+	}
+
+	public void setRenderBtnImprimir(boolean renderBtnImprimir) {
+		this.renderBtnImprimir = renderBtnImprimir;
+	}
+	
 }
