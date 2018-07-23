@@ -298,30 +298,34 @@ public class RegistrosLicencias implements Serializable {
 		}
 	}
 
-	public void verPDF(ActionEvent actionEvent) throws Exception {
-		Map<String, Object> parametros = new HashMap<>();
-		parametros.put("txt_num_auto", licencia.getLcnNumLicencia());
-		parametros.put("txt_nombres", "la mar");
-		parametros.put("txt_licencia", "la Mar");
-		String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
-				+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
-				+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
-		parametros.put("txt_resumen", resumen);
-		parametros.put("txt_copia", licencia.getLcnCopia());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+	public void verPDF()  {
+		try {
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
+			parametros.put("txt_nombres", "la mar");
+			parametros.put("txt_licencia", "la Mar");
+			String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
+					+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
+					+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
+			parametros.put("txt_resumen", "resumen");
+			parametros.put("txt_copia", licencia.getLcnCopia());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
-		File jasper = new File("C:\\ireports\\licencias.jasper");
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
-		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-				.getResponse();
-		response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()) + ".pdf");
-		ServletOutputStream stream = response.getOutputStream();
-		JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
-		stream.flush();
-		stream.close();
-		FacesContext.getCurrentInstance().responseComplete();
-		System.out.println("finaliza");
-
+			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/controlAsistencia/reportes/licencias.jasper"));
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()).toString() + ".pdf");
+			ServletOutputStream stream = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			stream.flush();
+			stream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -334,6 +338,7 @@ public class RegistrosLicencias implements Serializable {
 			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
 		}
 		return dependencia;
+		
 	}
 
 	public void setDependencia(Dependencia dependencia) {

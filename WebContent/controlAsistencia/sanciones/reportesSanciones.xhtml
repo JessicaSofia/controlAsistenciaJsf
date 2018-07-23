@@ -10,7 +10,7 @@
 <ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
-				value="Control de Asistencia /Vacaciones/Reporte" />
+				value="Control de Asistencia /Sancion/Reporte" />
 		</ui:include>
 </ui:define>
 		<ui:define name="cuerpo">
@@ -39,64 +39,94 @@ function regenererCal(){
 					<div class="cell colspan4"><!-- NNOMBRES -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioRepVac" for="calendrierDateDebut" value="Año:"/>	
+		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicio" value="Año:"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendrierDateDebut" value="#{reporteVacaciones.fecha}"
+		       				 <p:calendar  id="calendarSanInicio" value="#{reporteSanciones.fecha}"
                 pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
                   />
      	
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgAnioReporteVac" for="calendrierDateDebut" />
+		       				<p:message id="msgAnioReporteVac" for="calendarSanInicio" />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
 					</div>
-									<div class="cell colspan4"><!-- NNOMBRES -->
+					
+									<div class="cell colspan4"><!-- Sanciones -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAusenciaRepVac" for="calendrierDateDebut" value="Ausencias:"/>	
+		       					<p:outputLabel id="lblAusenciaRepVac" for="tpSanciones" value="Tipo de Sanció n"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:selectManyCheckbox id="ausencias" value="#{reporteVacaciones.ausencias}">
-        <f:selectItem itemLabel="Vacaciones" itemValue="vacacion" />
-        <f:selectItem itemLabel="Permisos" itemValue="permiso" />
-        <f:selectItem itemLabel="Licencias" itemValue="licencia" />
-    </p:selectManyCheckbox>
-     	
+		       				 <p:selectOneMenu id="tpSanciones"
+										value="#{reporteSanciones.tpSacion}" effect="fold">
+										<f:selectItem itemLabel="Seleccionar" itemValue="0" />
+										<f:selectItems value="#{reporteSanciones.tpSanciones}" />
+									
+									</p:selectOneMenu>
+		       				 
+    
+
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgAusencReporteVac" for="ausencias" />
+		       				<p:message id="msgAusencReporteVac" for="tpSanciones" />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
 					</div>
+					<div class="cell colspan4"><!-- Sanciones -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblRegienRepSan" for="cmbRegimenRepSan" value="Régimen"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				 <p:selectOneMenu id="cmbRegimenRepSan"
+										value="#{reporteSanciones.regimen}" effect="fold">
+										<f:selectItem itemLabel="Seleccionar" itemValue="0" />
+										<f:selectItems value="#{reporteSanciones.regimens}" />
+									
+									</p:selectOneMenu>
+		       				 
+    
+
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgAusencReporteVac" for="cmbRegimenRepSan" />
+		       				</ui:define>
+		       				
+		       			</ui:decorate>
+					</div>
+					
 					</div>
 					
 	<br/>
 				<p:commandButton id="btnCalcularVacacion"  value="Buscar" onclick="regenererCal()"  actionListener="#{reporteVacaciones.BuscarVacacionesFiltros()}" update="frmReporteVacaciones tblRepVacaciones" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
 				<br/>
-						<div id="divTblReportesVac" >
-	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" rendered="#{reporteVacaciones.vacActivar}"
-	widgetVar="reportAuscenTable"
+						<div id="divTblReportesSanc" >
+	<p:dataTable id="tblRepSanciones" var="repSanc" value="#{reporteSanciones.lstDtSanciones}"
+	widgetVar="reportSancTable"
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px">
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Vacaciones" pageOnly="true"/>
+        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
     </h:commandLink>
     </f:facet>
                  
 
 	 
-        <p:column headerText=" N°">
+        <p:column headerText="Cédula">
             <p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>  
         </p:column>
         <p:column headerText="Nombres">
             <h:outputText value="#{repVac.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
         </p:column>                                                                                                                                               
+        <p:column headerText="Apellidos">
+            <h:outputText value=""/>
+        </p:column>
           <p:column headerText="Fecha Emisión">
             <h:outputText value="#{repVac.vccFechaEmision}"/>
         </p:column> 
@@ -106,7 +136,11 @@ function regenererCal(){
          
         <p:column headerText="Fecha Fin">
             <h:outputText value="#{repVac.vccFechaFin}" />
-        </p:column>  
+        </p:column>
+        <p:column headerText="Fecha Fin">
+            <h:outputText value="#{repVac.vccFechaFin}" />
+        </p:column>
+        
         <p:column headerText="Dependencia" >
          <f:facet name="filter">
                 <p:selectCheckboxMenu label="Dependencias" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150"  footerText="in" filterMatchMode="in">
@@ -145,14 +179,6 @@ function regenererCal(){
         <p:dataExporter type="xls" target="reportAuscenTableLic" fileName="Licencias" pageOnly="true"/>
     </h:commandLink>
     </f:facet>
-    						
-							<p:column headerText="N° Lic.">
-								<h:outputText value="#{licencia.lcnNumLicencia}" />
-							</p:column>
-							
-							<p:column headerText="Nombres">
-								<h:outputText value="#{licencia.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
-							</p:column>
 							<p:column headerText="Tipo Licencia">
 								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
 							</p:column>
@@ -164,14 +190,6 @@ function regenererCal(){
 							</p:column>
 							<p:column headerText="Fecha Fin">
 								<h:outputText value="#{licencia.lcnFechaFin}" />
-							</p:column>
-							
-							<p:column headerText="Dependencia">
-								<h:outputText value="#{licencia.detallePuesto.dependencia.dpnDescripcion}" />
-							</p:column>
-							
-							<p:column headerText="Regimen">
-								<h:outputText value="#{licencia.detallePuesto.puesto.grupoOcupacional.regimen.rgmDescripcion}" />
 							</p:column>
 							<p:column headerText="Explicación">
 								<h:outputText value="#{licencia.lcnExplicacion}" />
@@ -205,7 +223,15 @@ function regenererCal(){
 									<p:column headerText="A partir de">
 										<h:outputText value="#{permiso.prmHoraInicio}" />
 									</p:column>
-								
+									<p:column>
+										<f:facet name="header">
+											<i class="fa fa-check-square-o" />
+										</f:facet>
+										<p:commandButton value="Ver/Editar">
+
+										</p:commandButton>
+										<p:commandButton value="Imprimir"></p:commandButton>
+									</p:column>
 
 								</p:dataTable>
 								</div>	

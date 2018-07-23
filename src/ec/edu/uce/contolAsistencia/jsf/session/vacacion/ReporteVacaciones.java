@@ -186,17 +186,37 @@ public class ReporteVacaciones implements Serializable{
 		lstVacacion= new ArrayList<>();
 		if(ausencias!=null) {
 			if(ausencias.contains("vacacion")&&  ausencias.contains("permiso") && ausencias.contains("licencia")) {
+				vacActivar=true;
+				PermActivar=true;
+				LicActivar=true;
+				lstVacacion=srvVacacion.ObtenerLstPorAnioMes(mes, anio);
+				lstLicencias=srvLicencia.ObtenerLstPorAnioMes(anio, mes);
+				lstPermisos=srvPermiso.obtenerLstPorAniomes(anio, mes);
 				
 			}else {
 				if(ausencias.contains("vacacion")&&  ausencias.contains("permiso")) {
-				
+					vacActivar=true;
+					PermActivar=true;
+					LicActivar=false;
+					lstVacacion=srvVacacion.ObtenerLstPorAnioMes(mes, anio);
+					lstPermisos=srvPermiso.obtenerLstPorAniomes(anio, mes);
 				
 			}
 				else {
 					if(ausencias.contains("vacacion") && ausencias.contains("licencia")) {
+						vacActivar=true;
+						PermActivar=false;
+						LicActivar=true;
+						lstVacacion=srvVacacion.ObtenerLstPorAnioMes(mes, anio);
+						lstLicencias=srvLicencia.ObtenerLstPorAnioMes(anio, mes);
 					}
 					else {
 						if(ausencias.contains("permiso") && ausencias.contains("licencia")) {
+							vacActivar=false;
+							PermActivar=true;
+							LicActivar=true;
+							lstLicencias=srvLicencia.ObtenerLstPorAnioMes(anio, mes);
+							lstPermisos=srvPermiso.obtenerLstPorAniomes(anio, mes);
 							
 						
 					}else {
