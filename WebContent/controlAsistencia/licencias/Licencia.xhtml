@@ -285,10 +285,8 @@
 
 							</div>
 
-
-							<p:commandButton id="btnPDFLicenia" immediate="true"
-								value="Imprimir" actionListener="#{registrosLicencia.verPDF}" target="_blanck" ajax="false"></p:commandButton>
-
+							<p:commandButton id="btnPDFLicenia" rendered="#{registrosLicencia.renderBtnImprimir}"
+								value="Imprimir" actionListener="#{registrosLicencia.verPDF}"></p:commandButton>
 						</div>
 					</center>
 

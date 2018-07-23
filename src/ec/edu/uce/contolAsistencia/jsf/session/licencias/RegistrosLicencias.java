@@ -312,7 +312,7 @@ public class RegistrosLicencias implements Serializable {
 			String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
 					+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
 					+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
-			parametros.put("txt_resumen", "resumen");
+			parametros.put("txt_resumen", resumen);
 			parametros.put("txt_copia", licencia.getLcnCopia());
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
