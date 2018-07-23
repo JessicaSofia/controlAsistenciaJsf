@@ -41,6 +41,7 @@ public class ReporteSanciones implements Serializable{
 	private int mes;
 	private List<DetallePuestoSancion> lstDtSanciones= new ArrayList<>();
 	private  Date fecha;
+	private Date fechaFin;
 	private  Map<String, String> tpSanciones;
 	private  Map<String, String> regimens;
 	private String regimen="0";
@@ -48,14 +49,12 @@ public class ReporteSanciones implements Serializable{
 	private List<TipoSancion>  lstTipoSancion;
 	private List<Regimen> lstRegimen;
 	private boolean desgloce=false;
-	
 	private List<String> dependencia=null;
-	private boolean vacActivar=false;
-	private boolean LicActivar=false;
-	private boolean PermActivar=false;
+	private String tipoReporte="1";
+	private  boolean AnualActv=false;
 	
 	
-	
+	 
 	
 	
 	@PostConstruct
@@ -134,25 +133,6 @@ public class ReporteSanciones implements Serializable{
 		this.dependencia = dependencia;
 	}
 	
-	public boolean isVacActivar() {
-		return vacActivar;
-	}
-	public void setVacActivar(boolean vacActivar) {
-		this.vacActivar = vacActivar;
-	}
-	public boolean isLicActivar() {
-		return LicActivar;
-	}
-	public void setLicActivar(boolean licActivar) {
-		LicActivar = licActivar;
-	}
-	public boolean isPermActivar() {
-		return PermActivar;
-	}
-	public void setPermActivar(boolean permActivar) {
-		PermActivar = permActivar;
-	}
-	
 	public List<DetallePuestoSancion> getLstDtSanciones() {
 		//lstDtSanciones=srvSancion.listarDtSancionTodos();
 		return lstDtSanciones;
@@ -205,6 +185,39 @@ public class ReporteSanciones implements Serializable{
 	public void setDesgloce(boolean desgloce) {
 		this.desgloce = desgloce;
 	}
+	
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+	
+	
+	public String getTipoReporte() {
+		return tipoReporte;
+	}
+	public void setTipoReporte(String tipoReporte) {
+		this.tipoReporte = tipoReporte;
+	}
+	
+	
+	public boolean isAnualActv() {
+		int valor=Integer.parseInt(tipoReporte);
+		if(valor==1) {
+			AnualActv=false;
+			
+		}else{
+			if(valor==2) 
+			AnualActv=true;
+		}
+			
+		
+		return AnualActv;
+	}
+	public void setAnualActv(boolean anualActv) {
+		AnualActv = anualActv;
+	}
 	/**
 	 * Metodos
 	 */
@@ -232,4 +245,6 @@ public class ReporteSanciones implements Serializable{
 			}	
 	}	
 }
+	
+	
 }

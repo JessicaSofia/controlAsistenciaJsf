@@ -36,28 +36,29 @@ function regenererCalSancion(){
 <div class="grid condensed">
 				<!-- ******************** FILA NUMERO 1 ************************ -->
 				<div class="row cells8"> 
-					<div class="cell colspan4"><!-- NNOMBRES -->
+					<div class="cell colspan4"><!-- Tipo Reporte -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicio" value="Año:"/>	
+		       					<p:outputLabel id="lbltipoRepSan" for="calendarSanInicio" value="Tipo de Reporte:"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanInicio" value="#{reporteSanciones.fecha}"
-                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
-                  />
-     	
+		       				  <p:selectOneRadio id="rdTipoReporte" value="#{reporteSanciones.tipoReporte}">
+            <f:selectItem itemLabel="Mensual" itemValue="1" />
+            <f:selectItem itemLabel="Anual" itemValue="2" />
+            <p:ajax update="frmReporteSanciones" />
+           
+        </p:selectOneRadio>
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgAnioReporteVac" for="calendarSanInicio" />
+		       				<p:message id="msgTipoReporteReporteVac" for="rdTipoReporte" />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
 					</div>
-					
-									<div class="cell colspan4"><!-- Sanciones -->
+					<div class="cell colspan4"><!-- Sanciones -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAusenciaRepVac" for="tpSanciones" value="Tipo de Sanció n"/>	
+		       					<p:outputLabel id="lblAusenciaRepVac" for="tpSanciones" value="Tipo de Sanción"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
 		       				 <p:selectOneMenu id="tpSanciones"
@@ -76,7 +77,47 @@ function regenererCalSancion(){
 		       				
 		       			</ui:decorate>
 					</div>
-					<div class="cell colspan4"><!-- Sanciones -->
+					
+					</div>
+		
+				<div class="row cells8"> 
+					<div class="cell colspan2"  ><!-- segunda fila-->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml" >
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicio" value="Desde:"  />	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				 <p:calendar  id="calendarSanInicio" value="#{reporteSanciones.fecha}" 
+                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
+                  />
+     	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgSanInicionReporteVac" for="calendarSanInicio" />
+		       				</ui:define>
+		       				
+		       			</ui:decorate>
+					</div>
+					
+					<div class="cell colspan2"><!-- Fecha Fin-->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblFinRepSan" for="calendarSanFin" value="Hasta:" rendered="#{reporteSanciones.anualActv}" />	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				 <p:calendar  id="calendarSanFin" value="#{reporteSanciones.fecha}" rendered="#{reporteSanciones.anualActv}"
+                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
+                  />
+     	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgSanFinReporteVac" for="calendarSanFin" rendered="#{reporteSanciones.anualActv}" />
+		       				</ui:define>
+		       				
+		       			</ui:decorate>
+					</div>
+					
+														<div class="cell colspan4"><!-- Sanciones -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
 		       					<p:outputLabel id="lblRegienRepSan" for="cmbRegimenRepSan" value="Régimen"/>	
@@ -108,17 +149,17 @@ function regenererCalSancion(){
 				<div class="cell colspan2"><!-- DESGLOCE -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDesgloceRepSan" for="checkDescgloce" value="Desgloce:"/>	
+		       					<p:outputLabel id="lblDesgloceRepSan" for="checkDescgloce" value="Desgloce:" rendered="#{!reporteSanciones.anualActv}"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:selectBooleanCheckbox id="checkDescgloce" value="#{reporteSanciones.desgloce}">
+		       				 <p:selectBooleanCheckbox id="checkDescgloce" value="#{reporteSanciones.desgloce}" rendered="#{!reporteSanciones.anualActv}">
             <p:ajax update="tblRepSanciones" />
         </p:selectBooleanCheckbox>
                   
      	
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgDesgloceReporteSan" for="checkDescgloce" />
+		       				<p:message id="msgDesgloceReporteSan" for="checkDescgloce" rendered="#{!reporteSanciones.anualActv}" />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
@@ -128,7 +169,7 @@ function regenererCalSancion(){
 				</div>
 						<div id="divTblReportesSanc" >
 	<p:dataTable id="tblRepSanciones" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
-	widgetVar="reportSancTable"
+	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px">
                  <f:facet name="{Exporters}">
@@ -139,40 +180,49 @@ function regenererCalSancion(){
     
     </f:facet>
                  
-			<p:column headerText="N°" >
+			<p:column headerText="N°" style="width: 3%" >
 								<h:outputText value="#{listSanc.dtpssnNumaccion}" />
 							</p:column>
-							<p:column headerText="Cedula" >
+							<p:column headerText="Cedula" style="width: 8%">
 								<h:outputText value="#{listSanc.detallePuesto.fichaEmpleado.persona.prsIdentificacion}" />
 							</p:column>
-							<p:column headerText="Cedula" >
+							<p:column headerText="Nombres" >
 								<h:outputText value="#{listSanc.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
 							</p:column>
 							<p:column headerText="Falta" rendered="#{reporteSanciones.desgloce}">
 								<h:outputText value="#{listSanc.categoriaFalta.falta.flNombre}" />
 							</p:column>
-							<p:column headerText="Sancion">
+							<p:column headerText="Sancion" rendered="#{reporteSanciones.desgloce}">
 								<h:outputText value="#{listSanc.sancion.snNombre}" />
 							</p:column>
-							<p:column headerText="Año">
+							<p:column headerText="Año" rendered="false">
 								<h:outputText value="#{listSanc.dtpssnAno}" />
 							</p:column>  
-							<p:column headerText="Mes">
+							<p:column headerText="Mes" rendered="false">
 								<h:outputText value="#{listSanc.dtpssnMes}" />
 							</p:column> 
 							<p:column headerText="Días" rendered="#{reporteSanciones.desgloce}">
 								<h:outputText value="#{listSanc.dtpssnDias}" />
 							</p:column>
+							<p:column headerText="valor" style="width: 8%">
+								<h:outputText value="#{listSanc.dtpssnValor}" />
+							</p:column>
 							<p:column headerText="Descripcion" rendered="#{reporteSanciones.desgloce}">
 								<h:outputText value="#{listSanc.dtpssnObservacion}" />
+							</p:column>
+							<p:column headerText="Puesto">
+								<h:outputText value="#{listSanc.detallePuesto.puesto.pstDenominacion}" />
+							</p:column>
+							<p:column headerText="Dependencia" >
+								<h:outputText value="#{listSanc.detallePuesto.dependencia.dpnDescripcion}" />
 							</p:column>
 						       
 	</p:dataTable>
 	
 	</div>
 	
-	<div id="divTblRegistrosLicencias">
-						<p:dataTable var="licencia" rendered="#{reporteVacaciones.licActivar}"
+	<div id="divTblReporteSancionAnual">
+						<p:dataTable var="licencia" rendered="#{reporteSanciones.anualActv}"
 							value="#{reporteVacaciones.lstLicencias}"
 							widgetVar="reportAuscenTableLic"
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
