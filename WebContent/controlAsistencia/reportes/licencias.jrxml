@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptCerBr1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4bd0f6a-fd0f-498e-9138-87b38e71cc54">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="txt_nombres" class="java.lang.String"/>
+	<parameter name="txt_dependencia" class="java.lang.String"/>
+	<parameter name="txt_num_auto" class="java.lang.String"/>
+	<parameter name="txt_licencia" class="java.lang.String"/>
+	<parameter name="txt_resumen" class="java.lang.String"/>
+	<parameter name="txt_copia" class="java.lang.String"/>
+	<field name="txt_num_auto" class="java.lang.String"/>
+	<field name="txt_nombres" class="java.lang.String"/>
+	<field name="txt_licencia" class="java.lang.String"/>
+	<field name="txt_explicacion" class="java.lang.String"/>
+	<field name="txt_dias" class="java.lang.String"/>
+	<field name="txt_fecha_inicio" class="java.lang.String"/>
+	<field name="txt_fecha_fin" class="java.lang.String"/>
+	<field name="txt_observacion" class="java.lang.String"/>
+	<field name="txt_copia" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="123" splitType="Stretch">
+			<image>
+				<reportElement x="189" y="14" width="155" height="65" uuid="f7d19899-5c95-453d-aa70-15a0b088f619"/>
+				<imageExpression><![CDATA[]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="79" width="555" height="19" uuid="969d5034-9740-4f93-b8e3-53783dfc464d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD CENTRAL DEL ECUADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="103" width="555" height="20" uuid="5ea44743-bafa-489d-9ba3-fd2a46d4c9d7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[UNIDAD DE GESTION DEL PERSONAL DOCENTE, ADMINISTRATIVO Y DE SERVICIOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="119" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="eb26c2ac-5bb2-4dc9-a84f-298bef4965ae"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="0" y="15" width="139" height="52" uuid="5131a8a1-f150-4738-a75f-e9657eb17019"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="139" y="15" width="276" height="52" uuid="47aef742-4658-4cc2-8217-2e467aaf60ca"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="16" width="139" height="51" uuid="f228b69d-e034-4bc9-b161-2fb5244553fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD CENTRAL DEL ECUADOR]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="415" y="15" width="139" height="52" uuid="67aaaa16-8b09-4bcf-9943-7791f3055db0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="139" y="16" width="276" height="51" uuid="60117dfb-ffb6-4c29-97ed-18046ded845a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOVIMIENTO DE PERSONAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="425" y="16" width="129" height="26" uuid="9a0161f6-ac4a-456a-8273-08923beb588c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nº "+$P{txt_num_auto}+" - UGL"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="471" y="41" width="83" height="26" uuid="ef6aba33-71b4-46aa-86a0-9d2a87638453"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="425" y="41" width="46" height="14" uuid="2858ec8c-3e3e-42e8-94fe-3a053b57c1a6"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="67" width="275" height="51" uuid="1f1db98a-723e-4a92-9c19-a5ac9466ffba"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="275" y="67" width="279" height="51" uuid="84e85598-7d1b-4dd1-8c00-0c190ca24d56"/>
+			</rectangle>
+			<textField>
+				<reportElement x="11" y="67" width="254" height="51" uuid="37682c7c-eeb4-432e-86b8-d7e834a41c81"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["APELLIDOS Y NOMBRES\n"+
+$P{txt_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="67" width="258" height="51" uuid="3c1750ae-91f6-4b8b-a944-2551d906ea92"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FACULTAD O DEPENDENCIA\n"+
+$P{txt_dependencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="418" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="412" uuid="3ce484e9-879e-42a8-b31c-6ea0fbfaa247"/>
+				<rectangle>
+					<reportElement x="0" y="0" width="554" height="51" uuid="e4617562-e032-439c-9dd4-a9ca62ca558f"/>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="1" width="554" height="50" uuid="9b4d78d7-e3df-4c50-8c0e-4d569efc1a7b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["TIPO DE LICENCIA: "+$P{txt_licencia}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement x="0" y="51" width="554" height="361" uuid="34f4561e-88d7-4eb7-ba9d-84b5d9c40a84"/>
+				</rectangle>
+				<textField>
+					<reportElement x="23" y="71" width="521" height="219" uuid="d81b156a-d47d-47bf-8b27-690027214e30"/>
+					<textFieldExpression><![CDATA[$P{txt_resumen}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="196" y="333" width="158" height="1" uuid="52c39836-1616-480e-9cc3-a15912effb0c"/>
+				</line>
+				<staticText>
+					<reportElement x="0" y="334" width="554" height="20" uuid="4492cb8c-e57b-4143-8b7e-3a598ffc6714"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11"/>
+					</textElement>
+					<text><![CDATA[Dra. Jessica Kiomara Purcachi B.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="355" width="554" height="20" uuid="4a3ac85b-8ac2-476d-8be8-be5509151424"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11"/>
+					</textElement>
+					<text><![CDATA[COORDINADORA DE LA UNIDAD DE GESTIÓN DE PERSONAL (E)]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="1" y="392" width="553" height="20" uuid="948b0eac-6144-4fd2-86bd-b8c65749fd34"/>
+					<textFieldExpression><![CDATA["   CC: "+$P{txt_copia}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="ff47663e-69da-4548-9545-4be2aceb166d"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="139" y="0" width="306" height="35" uuid="9ca0ae90-000e-40a2-a222-da97a339bc8d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Ciudad Universitaria - Teléfonos: 2904-434 / 2904-435 / 2904-436 RUC: 1760005540001 - QUITO - ECUADOR]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

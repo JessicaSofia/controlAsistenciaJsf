@@ -43,10 +43,11 @@ public class ReporteSanciones implements Serializable{
 	private  Date fecha;
 	private  Map<String, String> tpSanciones;
 	private  Map<String, String> regimens;
-	private String regimen;
-	private String tpSacion;
+	private String regimen="0";
+	private String tpSacion="0";
 	private List<TipoSancion>  lstTipoSancion;
 	private List<Regimen> lstRegimen;
+	private boolean desgloce=false;
 	
 	private List<String> dependencia=null;
 	private boolean vacActivar=false;
@@ -153,6 +154,7 @@ public class ReporteSanciones implements Serializable{
 	}
 	
 	public List<DetallePuestoSancion> getLstDtSanciones() {
+		//lstDtSanciones=srvSancion.listarDtSancionTodos();
 		return lstDtSanciones;
 	}
 	public void setLstDtSanciones(List<DetallePuestoSancion> lstDtSanciones) {
@@ -194,15 +196,40 @@ public class ReporteSanciones implements Serializable{
 	public void setLstRegimen(List<Regimen> lstRegimen) {
 		this.lstRegimen = lstRegimen;
 	}
+	
+	
+	
+	public boolean isDesgloce() {
+		return desgloce;
+	}
+	public void setDesgloce(boolean desgloce) {
+		this.desgloce = desgloce;
+	}
+	/**
+	 * Metodos
+	 */
+	
 	public void BuscarSancionesFiltros() {
 		Calendar c=Calendar.getInstance();
 		c.setTime(fecha);
 		anio=c.get(Calendar.YEAR);
 		mes = c.get(Calendar.MONTH)+1;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Escoja al menos un tipo de Ausencia para generar el Reporte,"));
-		
-		
-	}
-
-	
+		int idTpSan=Integer.parseInt(tpSacion);
+		int idReg= Integer.parseInt(regimen);
+		lstDtSanciones= new ArrayList<>();
+		if(idTpSan!=0) {
+			if(idReg!=0) {
+				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesRegimenIdTipoSancionId(anio, mes, idReg, idTpSan);
+			}else {
+				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesTipoSancionId(anio, mes,idTpSan);
+			}
+			
+		}else {
+			if(idReg!=0) {
+				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesRegimenId(anio, mes, idTpSan);
+			}else {
+				lstDtSanciones=srvSancion.listarDtSancionPorAnioMes(anio, mes);
+			}	
+	}	
+}
 }
