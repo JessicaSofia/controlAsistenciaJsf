@@ -280,13 +280,15 @@
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3">
-								<p:commandButton id="btnGuardarVacion" value="Guardar"
+								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm"
 									actionListener="#{registrosLicencia.guardadLicencia()}"></p:commandButton>
 
 							</div>
 
+
 							<p:commandButton id="btnPDFLicenia" immediate="true"
 								value="Imprimir" actionListener="#{registrosLicencia.verPDF}" target="_blanck" ajax="false"></p:commandButton>
+
 						</div>
 					</center>
 

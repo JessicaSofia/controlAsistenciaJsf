@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
+import ec.edu.uce.controlAsistencia.ejb.datos.LicenciaPDF;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
@@ -45,6 +46,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @ManagedBean(name = "registrosLicencia")
 @SessionScoped
@@ -86,6 +88,7 @@ public class RegistrosLicencias implements Serializable {
 	private boolean btnComboHijo = false;
 	private boolean btnComboHijo2 = false;
 	private boolean disableNumDias = true;
+	private boolean renderBtnImprimir = false;
 
 	@ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
 	private PersonaDto seleccionPersona;
@@ -294,9 +297,11 @@ public class RegistrosLicencias implements Serializable {
 
 			retorno = srvlicencia.LicenciaInsertar(licencia);
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Licencia registrada exitosamente."));
+			this.renderBtnImprimir = true;
 		}
 	}
+
 
 	public void verPDF()  {
 		try {
@@ -533,4 +538,12 @@ public class RegistrosLicencias implements Serializable {
 		this.renderEtiqueta = renderEtiqueta;
 	}
 
+	public boolean isRenderBtnImprimir() {
+		return renderBtnImprimir;
+	}
+
+	public void setRenderBtnImprimir(boolean renderBtnImprimir) {
+		this.renderBtnImprimir = renderBtnImprimir;
+	}
+	
 }
