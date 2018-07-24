@@ -1,8 +1,11 @@
 package ec.edu.uce.contolAsistencia.jsf.session.vacacion;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +17,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
@@ -37,6 +43,11 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.SaldoVacacion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 @ManagedBean(name = "vacacionForm")
 @SessionScoped
@@ -680,4 +691,49 @@ public class VacacionForm implements Serializable {
 			this.disableHoras = false;
 		}
 	}
+	
+	
+	public void verPDF()  {
+		try {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_num_auto", String.valueOf(vacacion.getVccNumAutorizacion()));
+			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			String fecha_inicio = sdf.format(vacacion.getVccFechaInicio());
+			String fecha_fin = sdf.format(vacacion.getVccFechaFin());
+			
+			parametros.put("txt_dias", String.valueOf(vacacion.getVccNumDias()));
+			parametros.put("txt_desde", fecha_inicio);
+			parametros.put("txt_hasta", fecha_fin);
+			parametros.put("txt_saldo1", String.valueOf(salVacaCal1.getSlvcDiasRestantes()));
+			parametros.put("txt_saldo2", String.valueOf(salVacaCal2.getSlvcDiasRestantes()));
+			parametros.put("txt_copia", dependencia.getDpnDescripcion());
+			
+
+			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/controlAsistencia/reportes/vacaciones.jasper"));
+			
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+			
+			
+			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/controlAsistencia/reportes/vacaciones.jasper");
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.addHeader("Content-disposition", "attachment; filename=vacacion_" + sdf.format(new Date()).toString() + ".pdf");
+			ServletOutputStream stream = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			JasperRunManager.runReportToPdfStream(rptStream,stream, parametros, new JREmptyDataSource());
+			stream.flush();
+			stream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
 }

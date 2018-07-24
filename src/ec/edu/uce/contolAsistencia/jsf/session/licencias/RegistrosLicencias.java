@@ -2,6 +2,7 @@ package ec.edu.uce.contolAsistencia.jsf.session.licencias;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -42,10 +43,12 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @ManagedBean(name = "registrosLicencia")
@@ -305,24 +308,36 @@ public class RegistrosLicencias implements Serializable {
 
 	public void verPDF()  {
 		try {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
-			parametros.put("txt_nombres", "la mar");
-			parametros.put("txt_licencia", "la Mar");
+			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+			parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
+			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			String fecha_inicio = sdf.format(licencia.getLcnFechaInicio());
+			String fecha_fin = sdf.format(licencia.getLcnFechaFin());
+			
 			String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\n Registra: "
-					+ licencia.getLcnNumDias() + " días\n" + "Desde: " + licencia.getLcnFechaInicio() + " 	Hasta: "
-					+ licencia.getLcnFechaFin() + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
+					+ licencia.getLcnNumDias() + " días\n" + "Desde: " + fecha_inicio + " 	Hasta: "
+					+ fecha_fin + "\n\n OBSERVACIÓN:\n" + licencia.getLcnObservacion();
 			parametros.put("txt_resumen", resumen);
-			parametros.put("txt_copia", licencia.getLcnCopia());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			parametros.put("txt_copia", dependencia.getDpnDescripcion());
+			
 
 			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/controlAsistencia/reportes/licencias.jasper"));
+			
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+			
+			
+			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/controlAsistencia/reportes/licencias.jasper");
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			response.addHeader("Content-disposition", "attachment; filename=licencia_" + sdf.format(new Date()).toString() + ".pdf");
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			JasperRunManager.runReportToPdfStream(rptStream,stream, parametros, new JREmptyDataSource());
 			stream.flush();
 			stream.close();
 			FacesContext.getCurrentInstance().responseComplete();

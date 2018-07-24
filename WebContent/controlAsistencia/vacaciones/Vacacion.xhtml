@@ -1,172 +1,223 @@
-   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia / Vacaciones/ Listas / Agregar" />
 		</ui:include>
-		</ui:define>
-<ui:define name="cuerpo">
-	<h:form  id="VacacionForm">
-	<p:panel  id="panelVacacion" header="Nuevo Registro">
-	<div class="grid condensed">
-				<!-- ******************** FILA NUMERO 1 ************************ -->
-				<div class="row cells8"> 
-					<div class="cell colspan4"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNAutorizacion" value="#{vacacionForm.vacacion.vccNumAutorizacion}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>                                       
-					
-					<div class="cell colspan4"><!-- Fecha Elaboracion -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtFechaElaboracion" value="#{vacacionForm.vacacion.vccFechaEmision}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
+	</ui:define>
+	<ui:define name="cuerpo">
+		<h:form id="VacacionForm">
+			<p:panel id="panelVacacion" header="Nuevo Registro">
+				<div class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
+						<div class="cell colspan4">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion"
+										value="N° Autorizacion: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtNAutorizacion"
+										value="#{vacacionForm.vacacion.vccNumAutorizacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan4">
+							<!-- Fecha Elaboracion -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaElaboracion"
+										for="txtFechaElaboracion" value="Fecha Elaboración: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtFechaElaboracion"
+										value="#{vacacionForm.vacacion.vccFechaEmision}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
 					</div>
-				</div>
-				 <div class="row cells8" style="width: fit-content;"> 
-					<div class="cell colspan8"><!--Numero de  dias de vacaciones  --> 
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblNumDias" for="txtNumDias" value="N° Días: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtNumDias" value="#{vacacionForm.vacacion.vccNumDias}" 
-		       									style="font-weight: Normal !important;width: 200%;"></p:inputText>
-		       					
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgNumDias" for="txtNumDias" />
-		       				</ui:define>
-		       			</ui:decorate>
+					<div class="row cells8" style="width: fit-content;">
+						<div class="cell colspan8">
+							<!--Numero de  dias de vacaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNumDias" for="txtNumDias"
+										value="N° Días: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtNumDias"
+										value="#{vacacionForm.vacacion.vccNumDias}"
+										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgNumDias" for="txtNumDias" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Fecha Inicio de Vacaciones -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaInicio" for="CalFechaInicio"
+										value="Desde: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:calendar id="CalFechaInicio"
+										value="#{vacacionForm.vacacion.vccFechaInicio}"
+										showOn="button"></p:calendar>
+								</ui:define>
+
+								<ui:define name="etiquetaError">
+									<p:message id="msgCalFechaInicio" for="CalFechaInicio" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
 					</div>
-					<div class="cell colspan8"><!-- Fecha Inicio de Vacaciones -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblFechaInicio" for="CalFechaInicio" value="Desde: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:calendar id="CalFechaInicio" value="#{vacacionForm.vacacion.vccFechaInicio}" showOn="button"></p:calendar>	
-		       				</ui:define>
-		       				
-		       					<ui:define name="etiquetaError">
-		       				<p:message id="msgCalFechaInicio" for="CalFechaInicio" />
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					
-				</div>
-				<br/>
-				<p:commandButton id="btnCalcularVacacion"  value="Calcular" actionListener="#{vacacionForm.CalcularVacaciones()}" update="VacacionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
-				<br/>
-				<p:separator></p:separator>
-				 <div class="row cells8" style="width: fit-content;"> 
-				<div class="cell colspan8"><!-- Fecha Final -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblFechaFinal" for="txtFechaFinal" value="Hasta: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:calendar id="txtFechaFinal" value="#{vacacionForm.vacacion.vccFechaFin}" 
-		       									style="font-weight: Normal !important;" showOn="button"  disabled="true"
-		       					></p:calendar>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					<div class="cell colspan8"><!-- Saldo Vacaciones  Periodo1  -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblSaldo1" for="txtSaldo1" value="Saldo Vacaciones(Periodo anterior): "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldo1" value="#{vacacionForm.salVacaCal1.toString()}" rendered="#{vacacionForm.salVacaCal1!=null}"
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					<div class="cell colspan8"><!-- Saldo Vacaciones  Periodo2  -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblSaldo2" for="txtSaldo2" value="Saldo Vacaciones(Periodo actual): "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtSaldo2" value="#{vacacionForm.salVacaCal2.toString()}" rendered="#{vacacionForm.salVacaCal2!=null}"
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					
-					<div class="cell colspan8"><!-- Observaciones  -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtObservacion" value="#{vacacionForm.vacacion.vccObservacion}" 
-		       									style="font-weight: Normal !important;width: 200%;">
-		       					</p:inputTextarea>
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>  
-					<div class="cell colspan8"><!-- Con copia a -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtCopia" value="#{vacacionForm.vacacion.vccCopia}" 
-		       									style="font-weight: Normal !important;width: 200%;">
-		       					</p:inputTextarea>
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>  
+					<br />
+					<p:commandButton id="btnCalcularVacacion" value="Calcular"
+						actionListener="#{vacacionForm.CalcularVacaciones()}"
+						update="VacacionForm" style="margin-left: 9%;margin-bottom: 1%;">
+					</p:commandButton>
+					<br />
+					<p:separator></p:separator>
+					<div class="row cells8" style="width: fit-content;">
+						<div class="cell colspan8">
+							<!-- Fecha Final -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaFinal" for="txtFechaFinal"
+										value="Hasta: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:calendar id="txtFechaFinal"
+										value="#{vacacionForm.vacacion.vccFechaFin}"
+										style="font-weight: Normal !important;" showOn="button"
+										disabled="true"></p:calendar>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Saldo Vacaciones  Periodo1  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblSaldo1" for="txtSaldo1"
+										value="Saldo Vacaciones(Periodo anterior): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtSaldo1"
+										value="#{vacacionForm.salVacaCal1.toString()}"
+										rendered="#{vacacionForm.salVacaCal1!=null}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Saldo Vacaciones  Periodo2  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblSaldo2" for="txtSaldo2"
+										value="Saldo Vacaciones(Periodo actual): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtSaldo2"
+										value="#{vacacionForm.salVacaCal2.toString()}"
+										rendered="#{vacacionForm.salVacaCal2!=null}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan8">
+							<!-- Observaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblObservacion" for="txtObservacion"
+										value="Observación: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputTextarea id="txtObservacion"
+										value="#{vacacionForm.vacacion.vccObservacion}"
+										style="font-weight: Normal !important;width: 200%;">
+									</p:inputTextarea>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Con copia a -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputTextarea id="txtCopia"
+										value="#{vacacionForm.vacacion.vccCopia}"
+										style="font-weight: Normal !important;width: 200%;">
+									</p:inputTextarea>
+								</ui:define>
+							</ui:decorate>
+						</div>
 					</div>
 					<p:separator></p:separator>
-					<center>       
-				<div  class="row cells8">
-				<div class="cell colpan3"></div>
-				<div class="cell colpan3"></div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir" actionListener="#{vacacionForm.GuardarVacacion()}"  ></p:commandButton>
+					<center>
+						<div class="row cells8">
+							<div class="cell colpan3"></div>
+							<div class="cell colpan3"></div>
+							<div class="cell colpan3">
+								<p:commandButton id="btnGuardarVacion"
+									value="Guardar e Imprimir"
+									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
+							</div>
+							<div class="cell colpan3">
+								<p:commandButton id="btnAnularVacacion" value="Anular"
+									actionListener="#{vacacionForm.anularVacacion()}"></p:commandButton>
+							</div>
+							<div class="cell colpan3">
+								<p:commandButton id="btnCancelarVacion" value="Cancelar"
+									action="#{vacacionForm.regresar()}"></p:commandButton>
+							</div>
+							<div class="cell colpan3">
+								<p:commandButton id="btnPDFLicenia"
+									value="Imprimir" actionListener="#{vacacionForm.verPDF}"
+									target="_blank" ajax="false"></p:commandButton>
+							</div>
+						</div>
+					</center>
+
 				</div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{vacacionForm.anularVacacion()}"></p:commandButton>
-				</div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnCancelarVacion" value="Cancelar" action="#{vacacionForm.regresar()}"></p:commandButton>
-				</div>
-				
-				</div>
-				</center>
-					
-		</div>
-					
-	</p:panel>
-	
-	</h:form>
+
+			</p:panel>
+
+		</h:form>
 	</ui:define>
-	  
-	</ui:composition>
-</html>                                                                                                               
+
+</ui:composition>
+</html>

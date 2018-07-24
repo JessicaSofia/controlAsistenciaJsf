@@ -220,7 +220,11 @@
 				<div class="cell colpan3">
                 <p:commandButton id="btnCancelarVacion" value="Cancelar" action="#{sancionForm.regresar()}"></p:commandButton>
 				</div>
-				
+				<div class="cell colpan3">
+								<p:commandButton id="btnPDFLicenia"
+									value="Imprimir" actionListener="#{sancionForm.verPDF}"
+									target="_blank" ajax="false"></p:commandButton>
+							</div>
 				</div>
 				</center>
 					
