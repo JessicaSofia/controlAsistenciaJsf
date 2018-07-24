@@ -3,7 +3,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"> 
       
 <ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
 
@@ -61,7 +62,7 @@ function regenererCalSancion(){
 		       					<p:outputLabel id="lblAusenciaRepVac" for="tpSanciones" value="Tipo de Sanción"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:selectOneMenu id="tpSanciones"
+		       				 <p:selectOneMenu id="tpSanciones" required="true"
 										value="#{reporteSanciones.tpSacion}" effect="fold">
 										<f:selectItem itemLabel="Seleccionar" itemValue="0" />
 										<f:selectItems value="#{reporteSanciones.tpSanciones}" />
@@ -123,7 +124,7 @@ function regenererCalSancion(){
 		       					<p:outputLabel id="lblRegienRepSan" for="cmbRegimenRepSan" value="Régimen"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:selectOneMenu id="cmbRegimenRepSan"
+		       				 <p:selectOneMenu id="cmbRegimenRepSan" required="true"
 										value="#{reporteSanciones.regimen}" effect="fold">
 										<f:selectItem itemLabel="Seleccionar" itemValue="0" />
 										<f:selectItems value="#{reporteSanciones.regimens}" />
@@ -146,7 +147,7 @@ function regenererCalSancion(){
 				<p:commandButton id="btnCalcularVacacion"  value="Buscar" onclick="regenererCalSancion()"  actionListener="#{reporteSanciones.BuscarSancionesFiltros()}" update="frmReporteSanciones tblRepSanciones" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
 				<br/>
 				<div class="row cells8"> 
-				<div class="cell colspan2"><!-- DESGLOCE -->
+				<div class="  cell colspan2"><!-- DESGLOCE -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
 		       					<p:outputLabel id="lblDesgloceRepSan" for="checkDescgloce" value="Desgloce:" rendered="#{!reporteSanciones.anualActv}"/>	
@@ -171,7 +172,8 @@ function regenererCalSancion(){
 	<p:dataTable id="tblRepSanciones" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
 	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px">
+                 paginator="true" rows="10" style="margin-bottom:20px" 
+                 rowIndexVar="rowIndex">
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="img/excel.jpg"/>
@@ -181,40 +183,71 @@ function regenererCalSancion(){
     </f:facet>
                  
 			<p:column headerText="N°" style="width: 3%" >
-								<h:outputText value="#{listSanc.dtpssnNumaccion}" />
+								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
 							<p:column headerText="Cedula" style="width: 8%">
-								<h:outputText value="#{listSanc.detallePuesto.fichaEmpleado.persona.prsIdentificacion}" />
+								<h:outputText value="#{listSanc.identificacion}" />
 							</p:column>
 							<p:column headerText="Nombres" >
-								<h:outputText value="#{listSanc.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
-							</p:column>
-							<p:column headerText="Falta" rendered="#{reporteSanciones.desgloce}">
-								<h:outputText value="#{listSanc.categoriaFalta.falta.flNombre}" />
-							</p:column>
-							<p:column headerText="Sancion" rendered="#{reporteSanciones.desgloce}">
-								<h:outputText value="#{listSanc.sancion.snNombre}" />
-							</p:column>
-							<p:column headerText="Año" rendered="false">
-								<h:outputText value="#{listSanc.dtpssnAno}" />
-							</p:column>  
-							<p:column headerText="Mes" rendered="false">
-								<h:outputText value="#{listSanc.dtpssnMes}" />
-							</p:column> 
-							<p:column headerText="Días" rendered="#{reporteSanciones.desgloce}">
-								<h:outputText value="#{listSanc.dtpssnDias}" />
+								<h:outputText value="#{listSanc.nombres}" />
 							</p:column>
 							<p:column headerText="valor" style="width: 8%">
-								<h:outputText value="#{listSanc.dtpssnValor}" />
-							</p:column>
-							<p:column headerText="Descripcion" rendered="#{reporteSanciones.desgloce}">
-								<h:outputText value="#{listSanc.dtpssnObservacion}" />
+								<h:outputText value="#{listSanc.valor}" />
 							</p:column>
 							<p:column headerText="Puesto">
-								<h:outputText value="#{listSanc.detallePuesto.puesto.pstDenominacion}" />
+								<h:outputText value="#{listSanc.cargo}" />
 							</p:column>
 							<p:column headerText="Dependencia" >
-								<h:outputText value="#{listSanc.detallePuesto.dependencia.dpnDescripcion}" />
+								<h:outputText value="#{listSanc.dependencia}" />
+							</p:column>
+						       
+	</p:dataTable>
+	
+	</div>
+	
+	<div id="divTblDesgloceReportesSanc" >
+	<p:dataTable id="tblRepSancionesDesgloce" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
+	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.anualActv}" 
+	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px" 
+                 rowIndexVar="rowIndex" >
+                 <f:facet name="{Exporters}">
+                <h:commandLink value="Exportar">
+        <p:graphicImage name="img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
+    </h:commandLink>
+    
+    </f:facet>
+                 
+			<p:column headerText="N°" style="width: 3%" >
+								<h:outputText value="#{rowIndex+1}" />
+							</p:column>
+							<p:column headerText="Cedula" style="width: 8%">
+								<h:outputText value="#{listSanc.identificacion}" />
+							</p:column>
+							<p:column headerText="Nombres" >
+								<h:outputText value="#{listSanc.nombres}" />
+							</p:column>
+							<c:forEach items="#{reporteSanciones.faltas}"  var="item2" varStatus="i">
+                                
+                                <p:column  headerText="#{item2}" style="width:">
+                                    
+                                   
+                                        <p:outputLabel  value="1" ></p:outputLabel>
+                                               
+                                </p:column>
+                            </c:forEach>
+                            
+							
+							
+							<p:column headerText="valor" style="width: 8%">
+								<h:outputText value="#{listSanc.valor}" />
+							</p:column>
+							<p:column headerText="Puesto">
+								<h:outputText value="#{listSanc.cargo}" />
+							</p:column>
+							<p:column headerText="Dependencia" >
+								<h:outputText value="#{listSanc.dependencia}" />
 							</p:column>
 						       
 	</p:dataTable>

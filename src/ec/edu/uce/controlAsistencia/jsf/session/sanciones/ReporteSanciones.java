@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.ReporteSancion;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PermisoServicio;
@@ -24,7 +25,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.SancionesServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuestoSancion;
-
+import ec.edu.uce.controlAsistencia.jpa.entidades.Falta;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoSancion;
 
@@ -39,7 +40,7 @@ public class ReporteSanciones implements Serializable{
 	
 	private int anio;
 	private int mes;
-	private List<DetallePuestoSancion> lstDtSanciones= new ArrayList<>();
+	private List<ReporteSancion> lstDtSanciones= new ArrayList<>();
 	private  Date fecha;
 	private Date fechaFin;
 	private  Map<String, String> tpSanciones;
@@ -52,6 +53,8 @@ public class ReporteSanciones implements Serializable{
 	private List<String> dependencia=null;
 	private String tipoReporte="1";
 	private  boolean AnualActv=false;
+	private List<Falta> lstFaltas;
+	private List<String> faltas;
 	
 	
 	 
@@ -70,6 +73,12 @@ public class ReporteSanciones implements Serializable{
 		this.regimens = new LinkedHashMap<>();
 		this.lstRegimen.forEach((regimenEach) -> {
 			regimens.put(regimenEach.getRgmDescripcion(), String.valueOf(regimenEach.getRgmId() ));
+		});
+		
+		this.lstFaltas=srvSancion.listarFalta();
+		this.faltas=new ArrayList<>();
+		this.lstFaltas.forEach((fal)->{
+			faltas.add(fal.getFlNombre());
 		});
 	
 	}
@@ -133,11 +142,11 @@ public class ReporteSanciones implements Serializable{
 		this.dependencia = dependencia;
 	}
 	
-	public List<DetallePuestoSancion> getLstDtSanciones() {
+	public List<ReporteSancion> getLstDtSanciones() {
 		//lstDtSanciones=srvSancion.listarDtSancionTodos();
 		return lstDtSanciones;
 	}
-	public void setLstDtSanciones(List<DetallePuestoSancion> lstDtSanciones) {
+	public void setLstDtSanciones(List<ReporteSancion> lstDtSanciones) {
 		this.lstDtSanciones = lstDtSanciones;
 	}
 	public Map<String, String> getTpSanciones() {
@@ -218,6 +227,21 @@ public class ReporteSanciones implements Serializable{
 	public void setAnualActv(boolean anualActv) {
 		AnualActv = anualActv;
 	}
+	
+	
+	
+	public List<Falta> getLstFaltas() {
+		return lstFaltas;
+	}
+	public void setLstFaltas(List<Falta> lstFaltas) {
+		this.lstFaltas = lstFaltas;
+	}
+	public List<String> getFaltas() {
+		return faltas;
+	}
+	public void setFaltas(List<String> faltas) {
+		this.faltas = faltas;
+	}
 	/**
 	 * Metodos
 	 */
@@ -234,15 +258,15 @@ public class ReporteSanciones implements Serializable{
 			if(idReg!=0) {
 				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesRegimenIdTipoSancionId(anio, mes, idReg, idTpSan);
 			}else {
-				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesTipoSancionId(anio, mes,idTpSan);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Debe seleccionar el Regimen."));
 			}
 			
 		}else {
-			if(idReg!=0) {
-				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesRegimenId(anio, mes, idTpSan);
-			}else {
-				lstDtSanciones=srvSancion.listarDtSancionPorAnioMes(anio, mes);
-			}	
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Debe seleccionar El Tipo de Sancion"));
+			
+			
 	}	
 }
 	
