@@ -1,8 +1,13 @@
 package ec.edu.uce.controlAsistencia.jsf.session.sanciones;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +16,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.record.formula.eval.StringValueEval;
 
@@ -36,6 +44,11 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Sancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 @ManagedBean(name="sancionForm")
 @SessionScoped
@@ -451,5 +464,49 @@ public class SancionForm implements   Serializable{
 	public void regresar() {
 		
 	}
+	
+	public void verPDF()  {
+		try {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_num_auto", String.valueOf(dtSancion.getDtpssnNumaccion()));
+			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			parametros.put("txt_cedula", seleccionPersona.getPrsIdentificacion());
+			parametros.put("txt_explicacion", dtSancion.getDtpssnObservacion());
+			parametros.put("txt_puesto", puesto.getPstDenominacion());
+			parametros.put("txt_renumeracion", "896.00");
+			parametros.put("txt_partida", "1234567890000000000");
+			parametros.put("txt_individual", "123456");
+			//parametros.put("txt_remuneracion", detallePuesto.getFichaEmpleado().);
+			//parametros.put("txt_partida", String.valueOf(salVacaCal1.getSlvcDiasRestantes()));
+			//parametros.put("txt_individual", String.valueOf(salVacaCal2.getSlvcDiasRestantes()));
+			
+
+			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/controlAsistencia/reportes/sanciones.jasper"));
+			
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+			
+			
+			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/controlAsistencia/reportes/sanciones.jasper");
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.addHeader("Content-disposition", "attachment; filename=vacacion_" + sdf.format(new Date()).toString() + ".pdf");
+			ServletOutputStream stream = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			JasperRunManager.runReportToPdfStream(rptStream,stream, parametros, new JREmptyDataSource());
+			stream.flush();
+			stream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
 	
 }
