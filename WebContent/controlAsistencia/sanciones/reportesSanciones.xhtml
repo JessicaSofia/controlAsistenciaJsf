@@ -28,8 +28,12 @@
 function regenererCalSancion(){
     year = $("#frmReporteSanciones\\:calendarSanInicio .ui-datepicker-year").val();
     month = $("#frmReporteSanciones\\:calendarSanInicio .ui-datepicker-month").val();
+    
     $('#frmReporteSanciones\\:calendarSanInicio_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
+      
 }
+
+
 </script>
 	<h:form  id="frmReporteSanciones" enctype="multipart/form-data" acceptcharset="UTF-8" >
 	<p:panel id="pnlReporteSanciones"  header="Generar Reporte" style="margin-bottom: 10px;">
@@ -106,7 +110,7 @@ function regenererCalSancion(){
 		       					<p:outputLabel id="lblFinRepSan" for="calendarSanFin" value="Hasta:" rendered="#{reporteSanciones.anualActv}" />	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanFin" value="#{reporteSanciones.fecha}" rendered="#{reporteSanciones.anualActv}"
+		       				 <p:calendar  id="calendarSanFin" value="#{reporteSanciones.fechaFin}" rendered="#{reporteSanciones.anualActv}"
                 pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
                   />
      	
@@ -154,7 +158,7 @@ function regenererCalSancion(){
 		       				</ui:define>
 		       				<ui:define name="valor">
 		       				 <p:selectBooleanCheckbox id="checkDescgloce" value="#{reporteSanciones.desgloce}" rendered="#{!reporteSanciones.anualActv}">
-            <p:ajax update="tblRepSanciones" />
+            <p:ajax update="frmReporteSanciones"/>
         </p:selectBooleanCheckbox>
                   
      	
@@ -170,13 +174,13 @@ function regenererCalSancion(){
 				</div>
 						<div id="divTblReportesSanc" >
 	<p:dataTable id="tblRepSanciones" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
-	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.anualActv}" 
+	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.desgloce}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px" 
                  rowIndexVar="rowIndex">
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
+        <p:graphicImage name="/img/excel.jpg"/>
         <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
     </h:commandLink>
     
@@ -207,14 +211,14 @@ function regenererCalSancion(){
 	
 	<div id="divTblDesgloceReportesSanc" >
 	<p:dataTable id="tblRepSancionesDesgloce" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
-	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.anualActv}" 
+	widgetVar="reportSancDesgTable"   rendered="#{reporteSanciones.desgloce}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px" 
                  rowIndexVar="rowIndex" >
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
+        <p:graphicImage name="/img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepSancionesDesgloce" fileName="Vacaciones" pageOnly="true"/>
     </h:commandLink>
     
     </f:facet>
@@ -233,7 +237,7 @@ function regenererCalSancion(){
                                 <p:column  headerText="#{item2}" style="width:">
                                     
                                    
-                                        <p:outputLabel  value="1" ></p:outputLabel>
+                                        <p:outputLabel  value="#{reporteSanciones.obtenerDiasPorFaltasPorDetallepuestoId(listSanc.dtpsId,item2)}" ></p:outputLabel>
                                                
                                 </p:column>
                             </c:forEach>
@@ -254,37 +258,42 @@ function regenererCalSancion(){
 	
 	</div>
 	
-	<div id="divTblReporteSancionAnual">
-						<p:dataTable var="licencia" rendered="#{reporteSanciones.anualActv}"
-							value="#{reporteVacaciones.lstLicencias}"
-							widgetVar="reportAuscenTableLic"
+<div id="divTblReportesSancAnual" >
+	<p:dataTable id="tblRepSancionesAnual" var="listSanc" value="#{reporteSanciones.lstDtSancionesAnual}"
+	widgetVar="reportSancTable"  rendered="#{reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px"
-							>
-							   <f:facet name="{Exporters}">
+                 paginator="true" rows="10" style="margin-bottom:20px" 
+                 rowIndexVar="rowIndex">
+                 <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="reportAuscenTableLic" fileName="Licencias" pageOnly="true"/>
+        <p:graphicImage name="/img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
     </h:commandLink>
+    
     </f:facet>
-							<p:column headerText="Tipo Licencia">
-								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
+                 
+			<p:column headerText="N°" style="width: 3%" >
+								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
-							<p:column headerText="Nº días">
-								<h:outputText value="#{licencia.lcnNumDias}" />
+							<p:column headerText="Cedula" style="width: 8%">
+								<h:outputText value="#{listSanc.identificacion}" />
 							</p:column>
-							<p:column headerText="Fecha Inicio">
-								<h:outputText value="#{licencia.lcnFechaInicio}" />
+							<p:column headerText="Nombres" >
+								<h:outputText value="#{listSanc.nombres}" />
 							</p:column>
-							<p:column headerText="Fecha Fin">
-								<h:outputText value="#{licencia.lcnFechaFin}" />
+							<p:column headerText="valor" style="width: 8%">
+								<h:outputText value="#{listSanc.frecuencia}" />
 							</p:column>
-							<p:column headerText="Explicación">
-								<h:outputText value="#{licencia.lcnExplicacion}" />
+							<p:column headerText="Puesto">
+								<h:outputText value="#{listSanc.cargo}" />
 							</p:column>
-						</p:dataTable>
-					</div>
-
+							<p:column headerText="Dependencia" >
+								<h:outputText value="#{listSanc.dependencia}" />
+							</p:column>
+						       
+	</p:dataTable>
+	
+	</div>
 </div>
 	</p:panel>
 	</h:form>

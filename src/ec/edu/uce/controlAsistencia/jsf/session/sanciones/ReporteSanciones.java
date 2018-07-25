@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class ReporteSanciones implements Serializable{
 	
 	private int anio;
 	private int mes;
+	private int anioFin;
+	private int mesFin;
 	private List<ReporteSancion> lstDtSanciones= new ArrayList<>();
 	private  Date fecha;
 	private Date fechaFin;
@@ -55,11 +58,14 @@ public class ReporteSanciones implements Serializable{
 	private  boolean AnualActv=false;
 	private List<Falta> lstFaltas;
 	private List<String> faltas;
-	
+	private int idTpSan=0;
+	private int idReg= 0;
+	private List<ReporteSancion> lstDtSancionesDesglosado  =new ArrayList<>();
+	private Map <Integer, String> meses;
+	private List<String> mesesBusqueda= new ArrayList<>();
+	private List<ReporteSancion> lstDtSancionesAnual= new ArrayList<>();
 	
 	 
-	
-	
 	@PostConstruct
 	public void init() {
 		
@@ -80,6 +86,21 @@ public class ReporteSanciones implements Serializable{
 		this.lstFaltas.forEach((fal)->{
 			faltas.add(fal.getFlNombre());
 		});
+		
+		this.meses= new HashMap<Integer, String>();
+		
+		this.meses.put(1,"Enere");
+		this.meses.put(2,"Febrero");
+		this.meses.put(3,"Marzo");
+		this.meses.put(4,"Abril");
+		this.meses.put(5,"Mayo");
+		this.meses.put(6,"Junio");
+		this.meses.put(7,"Julio");
+		this.meses.put(8,"Agosto");
+		this.meses.put(9,"Septiembre");
+		this.meses.put(10,"Octubre");
+		this.meses.put(11,"Noviembre");
+		this.meses.put(12,"Diciembre");
 	
 	}
 		
@@ -186,8 +207,6 @@ public class ReporteSanciones implements Serializable{
 		this.lstRegimen = lstRegimen;
 	}
 	
-	
-	
 	public boolean isDesgloce() {
 		return desgloce;
 	}
@@ -228,8 +247,6 @@ public class ReporteSanciones implements Serializable{
 		AnualActv = anualActv;
 	}
 	
-	
-	
 	public List<Falta> getLstFaltas() {
 		return lstFaltas;
 	}
@@ -242,18 +259,81 @@ public class ReporteSanciones implements Serializable{
 	public void setFaltas(List<String> faltas) {
 		this.faltas = faltas;
 	}
+	
+	public int getIdTpSan() {
+		return idTpSan;
+	}
+	public void setIdTpSan(int idTpSan) {
+		this.idTpSan = idTpSan;
+	}
+	public int getIdReg() {
+		return idReg;
+	}
+	public void setIdReg(int idReg) {
+		this.idReg = idReg;
+	}
+	
+	public int getAnioFin() {
+		return anioFin;
+	}
+	public void setAnioFin(int anioFin) {
+		this.anioFin = anioFin;
+	}
+	public int getMesFin() {
+		return mesFin;
+	}
+	public void setMesFin(int mesFin) {
+		this.mesFin = mesFin;
+	}
+	
+	public List<ReporteSancion> getLstDtSancionesDesglosado() {
+		
+		lstDtSancionesDesglosado=srvSancion.listarDtSancionPorAnioMesRegimenIdTipoSancionIdNoAgrupado(anio, mes, idReg, idTpSan);
+		return lstDtSancionesDesglosado;
+	}
+	public void setLstDtSancionesDesglosado(List<ReporteSancion> lstDtSancionesDesglosado) {
+		this.lstDtSancionesDesglosado = lstDtSancionesDesglosado;
+	}
+	
+	public Map< Integer, String> getMeses() {
+		return meses;
+	}
+	public void setMeses(Map<Integer, String> meses) {
+		this.meses = meses;
+	}
+	public List<String> getMesesBusqueda() {
+		return mesesBusqueda;
+	}
+	public void setMesesBusqueda(List<String> mesesBusqueda) {
+		this.mesesBusqueda = mesesBusqueda;
+	}
+	
+	
+	public List<ReporteSancion> getLstDtSancionesAnual() {
+		return lstDtSancionesAnual;
+	}
+	public void setLstDtSancionesAnual(List<ReporteSancion> lstDtSancionesAnual) {
+		this.lstDtSancionesAnual = lstDtSancionesAnual;
+	}
 	/**
 	 * Metodos
 	 */
 	
 	public void BuscarSancionesFiltros() {
 		Calendar c=Calendar.getInstance();
+		Calendar cf=Calendar.getInstance();
 		c.setTime(fecha);
+		
+		
 		anio=c.get(Calendar.YEAR);
 		mes = c.get(Calendar.MONTH)+1;
-		int idTpSan=Integer.parseInt(tpSacion);
-		int idReg= Integer.parseInt(regimen);
+		anioFin= cf.get(Calendar.YEAR);
+		mesFin= cf.get(Calendar.MONTH)+1;
+		
+		idTpSan=Integer.parseInt(tpSacion);
+		idReg= Integer.parseInt(regimen);
 		lstDtSanciones= new ArrayList<>();
+		if(!AnualActv) {
 		if(idTpSan!=0) {
 			if(idReg!=0) {
 				lstDtSanciones=srvSancion.listarDtSancionPorAnioMesRegimenIdTipoSancionId(anio, mes, idReg, idTpSan);
@@ -268,7 +348,70 @@ public class ReporteSanciones implements Serializable{
 			
 			
 	}	
+		}else {
+			cf.setTime(fechaFin);
+			
+			
+			
+			anioFin= 2018;
+			mesFin= 7;
+			 
+	            int numMeses= mesFin - mes;
+	            
+	            int mesinicio=mes;
+	            for(int i=0; i<numMeses; i++) {
+	            	
+	            	mesesBusqueda.add(meses.get(mesinicio));
+	            	mesinicio++;
+	            }
+	            
+	            if(idTpSan!=0) {
+	    			if(idReg!=0) {
+	    				lstDtSancionesAnual=srvSancion. listarDtSancionAnualPorAnioMesRegimenIdTipoSancionId(anio,mes,idReg,idTpSan,mesFin);
+	    			}else {
+	    				FacesContext.getCurrentInstance().addMessage(null,
+	    						new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Debe seleccionar el Regimen."));
+	    			}
+	    			
+	    		}else {
+	    			FacesContext.getCurrentInstance().addMessage(null,
+	    					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Debe seleccionar El Tipo de Sancion"));
+	    			
+	    			
+	    	}	
+	            
+	            
+	            
+		}
+		
 }
 	
+	
+	
+	public List<ReporteSancion> listarDesglosado(){
+		List<ReporteSancion> list= new ArrayList<>();
+		ReporteSancion repDesglo=null;
+		if(lstDtSanciones!=null) {
+			for(ReporteSancion r:lstDtSanciones) {
+				repDesglo= new ReporteSancion(r.getDtpsId(),r.getIdentificacion(), r.getNombres(), r.getValor(), r.getCargo(), r.getDependencia(),null);
+			list.add(repDesglo);
+			}
+		}
+		
+		
+		
+		return list;
+		
+	}
+	
+	public String  obtenerDiasPorFaltasPorDetallepuestoId(int dtpsId, String falta) {
+		String retorno= "";
+		 Falta ft=srvSancion.ObtenerFaltaPorNombre(falta);
+		
+		retorno= srvSancion.DiasSancionPorTpSancionIdFaltaId(idTpSan, ft.getFlId(),dtpsId, anio, mes);
+		
+		return retorno;
+		
+	}
 	
 }
