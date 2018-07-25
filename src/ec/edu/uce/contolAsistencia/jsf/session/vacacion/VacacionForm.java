@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -38,6 +39,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Permiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
@@ -80,10 +82,8 @@ public class VacacionForm implements Serializable {
 	private Permiso permiso;
 	private List<Permiso> listaPermisos;
 	private Permiso seleccionPermiso;
-	// Si es false, el permiso es por horas
-	private boolean diasHoras = false;
-	private boolean disableHoras = true;
-	private boolean disableDias = false;
+	private boolean valorJustificaHoras = false;
+	private boolean horasJustificadas = false;
 
 	/***
 	 * Declaracion de servicios
@@ -112,243 +112,16 @@ public class VacacionForm implements Serializable {
 
 	@EJB
 	private PermisoServicio srvPermiso;
-
-	/**
-	 * Getters and setters
-	 */
-
-	public Dependencia getDependencia() {
-		if (dependencia == null) {
-			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
-		}
-		return dependencia;
-	}
-
-	public List<Permiso> getListaPermisos() {
-		if (seleccionPersona != null) {
-			listaPermisos = srvPermiso.ListaPermisoPorDetallePuestoId(seleccionPersona.getDtpsId());
-		}
-		return listaPermisos;
-	}
-
-	public void setListaPermisos(List<Permiso> listaPermisos) {
-		this.listaPermisos = listaPermisos;
-	}
-
-	public void setDependencia(Dependencia dependencia) {
-		this.dependencia = dependencia;
-	}
-
-	public DetallePuestoDto getDetallePuestoEmpleado() {
-		if (detallePuestoEmpleado == null) {
-			detallePuestoEmpleado = srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
-			if (detallePuestoEmpleado == null) {
-				System.out.println(" salio nulo");
-			}
-		}
-
-		return detallePuestoEmpleado;
-	}
-
-	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
-		this.detallePuestoEmpleado = detallePuestoEmpleado;
-	}
-
-	public FichaEmpleado getFichaEmpleado() {
-		fichaEmpleado = srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
-		return fichaEmpleado;
-	}
-
-	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
-		this.fichaEmpleado = fichaEmpleado;
-	}
-
-	public List<Vacacion> getListaVacacion() {
-		if (seleccionPersona != null) {
-			listaVacacion = srvVacacion.ListaVacacionesPorDetallePuestoId(seleccionPersona.getDtpsId());
-		}
-		return listaVacacion;
-	}
-
-	public void setListaVacacion(List<Vacacion> listaVacacion) {
-		this.listaVacacion = listaVacacion;
-	}
-
-	public Vacacion getSeleccionVacacion() {
-
-		return seleccionVacacion;
-	}
-
-	public void setSeleccionVacacion(Vacacion seleccionVacacion) {
-		this.seleccionVacacion = seleccionVacacion;
-	}
-
-	public VacacionServicio getSrvVacacion() {
-		return srvVacacion;
-	}
-
-	public void setSrvVacacion(VacacionServicio srvVacacion) {
-		this.srvVacacion = srvVacacion;
-	}
-
-	public Puesto getPuesto() {
-		if (puesto == null) {
-
-			puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
-
-		}
-		return puesto;
-	}
-
-	public void setPuesto(Puesto puesto) {
-		this.puesto = puesto;
-	}
-
-	public Regimen getRegimen() {
-
-		if (regimen == null) {
-			regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-		}
-		return regimen;
-	}
-
-	public void setRegimen(Regimen regimen) {
-		this.regimen = regimen;
-	}
-
-	public SaldoVacacion getSalVacaCal1() {
-		return salVacaCal1;
-	}
-
-	public void setSalVacaCal1(SaldoVacacion salVacaCal1) {
-		this.salVacaCal1 = salVacaCal1;
-	}
-
-	public SaldoVacacion getSalVacaCal2() {
-		return salVacaCal2;
-	}
-
-	public void setSalVacaCal2(SaldoVacacion salVacaCal2) {
-		this.salVacaCal2 = salVacaCal2;
-	}
-
-	public Permiso getPermiso() {
-		return permiso;
-	}
-
-	public void setPermiso(Permiso permiso) {
-		this.permiso = permiso;
-	}
-
 	
-
-	public Permiso getSeleccionPermiso() {
-		return seleccionPermiso;
-	}
-
-	public void setSeleccionPermiso(Permiso seleccionPermiso) {
-		this.seleccionPermiso = seleccionPermiso;
-	}
+	//==============================================POSTCONSTRUCT=============================================================//
 
 	@PostConstruct
 	public void init() {
 
 	}
 
-	/**
-	 * 
-	 * =============Getters and Setters==============
-	 */
+	//*=====================================================================METODOS====================================================================//
 	
-	
-	public Vacacion getVacacion() {
-		return vacacion;
-	}
-
-	public boolean isDisableHoras() {
-		return disableHoras;
-	}
-
-	public void setDisableHoras(boolean disableHoras) {
-		this.disableHoras = disableHoras;
-	}
-
-	public boolean isDisableDias() {
-		return disableDias;
-	}
-
-	public void setDisableDias(boolean disableDias) {
-		this.disableDias = disableDias;
-	}
-
-	public boolean isDiasHoras() {
-		return diasHoras;
-	}
-
-	public void setDiasHoras(boolean diasHoras) {
-		this.diasHoras = diasHoras;
-	}
-
-	public void setVacacion(Vacacion vacacion) {
-		this.vacacion = vacacion;
-	}
-
-	public List<SaldoVacacion> getSaldoVacacion() {
-		return saldoVacacion;
-	}
-
-	public void setSaldoVacacion(List<SaldoVacacion> saldoVacacion) {
-		this.saldoVacacion = saldoVacacion;
-	}
-
-	public Estados getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Estados estado) {
-		this.estado = estado;
-	}
-
-	public DetallePuesto getDetallePuesto() {
-		return detallePuesto;
-	}
-
-	public void setDetallePuesto(DetallePuesto detallePuesto) {
-		this.detallePuesto = detallePuesto;
-	}
-
-	public PersonaDto getSeleccionPersona() {
-		return seleccionPersona;
-	}
-
-	public void setSeleccionPersona(PersonaDto seleccionPersona) {
-		this.seleccionPersona = seleccionPersona;
-	}
-
-	public boolean isEsActualizacion() {
-		return esActualizacion;
-	}
-
-	public void setEsActualizacion(boolean esActualizacion) {
-		this.esActualizacion = esActualizacion;
-	}
-
-	public SaldoVacacion getSaldoVacacion1() {
-		return saldoVacacion1;
-	}
-
-	public void setSaldoVacacion1(SaldoVacacion saldoVacacion1) {
-		this.saldoVacacion1 = saldoVacacion1;
-	}
-
-	public SaldoVacacion getSaldoVacacion2() {
-		return saldoVacacion2;
-	}
-
-	public void setSaldoVacacion2(SaldoVacacion saldoVacacion2) {
-		this.saldoVacacion2 = saldoVacacion2;
-	}
-
 	public void CalcularVacaciones() {
 		if (vacacion.getVccNumDias() > 0 && vacacion.getVccFechaInicio() != null) {
 			CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
@@ -642,9 +415,6 @@ public class VacacionForm implements Serializable {
 			permiso = seleccionPermiso;
 		}
 
-		salVacaCal1 = saldoVacacion1;
-		salVacaCal2 = saldoVacacion2;
-
 	}
 
 	public void limpiar() {
@@ -682,15 +452,6 @@ public class VacacionForm implements Serializable {
 		}
 	}
 	
-	public void cambiarValorDiasHoras(){
-		if(this.diasHoras){
-			this.disableDias = false;
-			this.disableHoras = true;
-		}else{
-			this.disableDias = true;
-			this.disableHoras = false;
-		}
-	}
 	
 	
 	public void verPDF()  {
@@ -734,6 +495,260 @@ public class VacacionForm implements Serializable {
 		}
 		
 	}
+	
+	public void visualizarHorasJustificadas(){
+		if(this.valorJustificaHoras){
+			this.horasJustificadas = false;
+		}else{
+			this.horasJustificadas = true;
+			this.valorJustificaHoras = true;
+		}
+	}
+	
+	
+	public void guardadPermiso() {
+		boolean retorno = false;
 
+		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		permiso.setDetallePuesto(detallePuesto);
+
+		
+
+		if (esActualizacion) {
+			Permiso p = srvPermiso.ActualizarPermiso(permiso);
+			if (p != null) {
+				retorno = true;
+			} else {
+				retorno = false;
+			}
+		} else {
+			
+
+			retorno = srvPermiso.InsertarPermiso(permiso);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Licencia registrada exitosamente."));
+			
+		}
+	}
+	
+	
+	//================================================================GETTERS & SETTERS================================================================================//
+	
+
+	public Dependencia getDependencia() {
+		if (dependencia == null) {
+			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
+		}
+		return dependencia;
+	}
+
+	public List<Permiso> getListaPermisos() {
+		if (seleccionPersona != null) {
+			listaPermisos = srvPermiso.ListaPermisoPorDetallePuestoId(seleccionPersona.getDtpsId());
+		}
+		return listaPermisos;
+	}
+
+	public void setListaPermisos(List<Permiso> listaPermisos) {
+		this.listaPermisos = listaPermisos;
+	}
+
+	public void setDependencia(Dependencia dependencia) {
+		this.dependencia = dependencia;
+	}
+
+	public DetallePuestoDto getDetallePuestoEmpleado() {
+		if (detallePuestoEmpleado == null) {
+			detallePuestoEmpleado = srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
+			if (detallePuestoEmpleado == null) {
+				System.out.println(" salio nulo");
+			}
+		}
+
+		return detallePuestoEmpleado;
+	}
+
+	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
+		this.detallePuestoEmpleado = detallePuestoEmpleado;
+	}
+
+	public FichaEmpleado getFichaEmpleado() {
+		fichaEmpleado = srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
+		return fichaEmpleado;
+	}
+
+	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
+		this.fichaEmpleado = fichaEmpleado;
+	}
+
+	public List<Vacacion> getListaVacacion() {
+		if (seleccionPersona != null) {
+			listaVacacion = srvVacacion.ListaVacacionesPorDetallePuestoId(seleccionPersona.getDtpsId());
+		}
+		return listaVacacion;
+	}
+
+	public void setListaVacacion(List<Vacacion> listaVacacion) {
+		this.listaVacacion = listaVacacion;
+	}
+
+	public Vacacion getSeleccionVacacion() {
+
+		return seleccionVacacion;
+	}
+
+	public void setSeleccionVacacion(Vacacion seleccionVacacion) {
+		this.seleccionVacacion = seleccionVacacion;
+	}
+
+	public VacacionServicio getSrvVacacion() {
+		return srvVacacion;
+	}
+
+	public void setSrvVacacion(VacacionServicio srvVacacion) {
+		this.srvVacacion = srvVacacion;
+	}
+
+	public Puesto getPuesto() {
+		if (puesto == null) {
+
+			puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+
+		}
+		return puesto;
+	}
+
+	public void setPuesto(Puesto puesto) {
+		this.puesto = puesto;
+	}
+
+	public Regimen getRegimen() {
+
+		if (regimen == null) {
+			regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
+		}
+		return regimen;
+	}
+
+	public void setRegimen(Regimen regimen) {
+		this.regimen = regimen;
+	}
+
+	public SaldoVacacion getSalVacaCal1() {
+		return salVacaCal1;
+	}
+
+	public void setSalVacaCal1(SaldoVacacion salVacaCal1) {
+		this.salVacaCal1 = salVacaCal1;
+	}
+
+	public SaldoVacacion getSalVacaCal2() {
+		return salVacaCal2;
+	}
+
+	public void setSalVacaCal2(SaldoVacacion salVacaCal2) {
+		this.salVacaCal2 = salVacaCal2;
+	}
+
+	public Permiso getPermiso() {
+		return permiso;
+	}
+
+	public void setPermiso(Permiso permiso) {
+		this.permiso = permiso;
+	}
+
+	
+
+	public Permiso getSeleccionPermiso() {
+		return seleccionPermiso;
+	}
+
+	public void setSeleccionPermiso(Permiso seleccionPermiso) {
+		this.seleccionPermiso = seleccionPermiso;
+	}
+
+	
+	public Vacacion getVacacion() {
+		return vacacion;
+	}
+
+	public void setVacacion(Vacacion vacacion) {
+		this.vacacion = vacacion;
+	}
+
+	public List<SaldoVacacion> getSaldoVacacion() {
+		return saldoVacacion;
+	}
+
+	public void setSaldoVacacion(List<SaldoVacacion> saldoVacacion) {
+		this.saldoVacacion = saldoVacacion;
+	}
+
+	public Estados getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estados estado) {
+		this.estado = estado;
+	}
+
+	public DetallePuesto getDetallePuesto() {
+		return detallePuesto;
+	}
+
+	public void setDetallePuesto(DetallePuesto detallePuesto) {
+		this.detallePuesto = detallePuesto;
+	}
+
+	public PersonaDto getSeleccionPersona() {
+		return seleccionPersona;
+	}
+
+	public void setSeleccionPersona(PersonaDto seleccionPersona) {
+		this.seleccionPersona = seleccionPersona;
+	}
+
+	public boolean isEsActualizacion() {
+		return esActualizacion;
+	}
+
+	public void setEsActualizacion(boolean esActualizacion) {
+		this.esActualizacion = esActualizacion;
+	}
+
+	public SaldoVacacion getSaldoVacacion1() {
+		return saldoVacacion1;
+	}
+
+	public void setSaldoVacacion1(SaldoVacacion saldoVacacion1) {
+		this.saldoVacacion1 = saldoVacacion1;
+	}
+
+	public SaldoVacacion getSaldoVacacion2() {
+		return saldoVacacion2;
+	}
+
+	public void setSaldoVacacion2(SaldoVacacion saldoVacacion2) {
+		this.saldoVacacion2 = saldoVacacion2;
+	}
+
+	public boolean isValorJustificaHoras() {
+		return valorJustificaHoras;
+	}
+
+	public void setValorJustificaHoras(boolean valorJustificaHoras) {
+		this.valorJustificaHoras = valorJustificaHoras;
+	}
+
+	public boolean isHorasJustificadas() {
+		return horasJustificadas;
+	}
+
+	public void setHorasJustificadas(boolean horasJustificadas) {
+		this.horasJustificadas = horasJustificadas;
+	}
+
+	
 
 }

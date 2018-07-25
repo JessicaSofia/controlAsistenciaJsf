@@ -5,439 +5,401 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
-	
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia / Vacaciones/ Listas" />
 		</ui:include>
-		</ui:define>
-		<ui:define name="cuerpo">
-		
-			<h:form id="frmBusquedaEmpleado" enctype="multipart/form-data"
-				acceptcharset="UTF-8">
+	</ui:define>
+	<ui:define name="cuerpo">
+
+		<h:form id="frmBusquedaEmpleado" enctype="multipart/form-data"
+			acceptcharset="UTF-8">
 
 
-				<p:panel id="pnlVacacionesRegistros" header="Detalle Funcionario">
+			<p:panel id="pnlVacacionesRegistros" header="Detalle Funcionario">
 
-					<div id="divDetalleEmpl" class="grid condensed">
-						<!-- ******************** FILA NUMERO 1 ************************ -->
-						<div class="row cells8">
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtCedula"
-											value="#{vacacionForm.seleccionPersona.prsIdentificacion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblNombres" for="txtNombres"
-											value="Nombres: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtNombres"
-											value="#{vacacionForm.seleccionPersona.nombresCompetos()}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DEPENDENCIA -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDependencia" for="txtDependencia"
-											value="Dependencia: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDependencia"
-											value="#{vacacionForm.dependencia.dpnDescripcion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DENOMINACION -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDenominacion" for="txtDenominacion"
-											value="Denominación: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDenominacion"
-											value="#{vacacionForm.puesto.pstDenominacion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- REGIMEN -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblRegimen" for="txtRegimen"
-											value="Régimen: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtRegimen"
-											value="#{vacacionForm.regimen.rgmDescripcion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-
-							<div class="cell colspan8">
-								<!-- SALDO  VACIONES PERIODO ANTERIOR -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblSaldoVacaciones1"
-											for="txtSaldovacaciones1"
-											value="Saldo Vacacion (Periodo Anterior): " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones1"
-											rendered="#{vacacionForm.saldoVacacion1!=null}"
-											value="#{vacacionForm.saldoVacacion1.toString()}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- SALDO  VACIONES PERIODO ACTUAL -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblSaldoVacaciones2"
-											for="txtSaldovacaciones2"
-											value="Saldo Vacacion (Periodo Actual): " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtSaldovacaciones2"
-											rendered="#{vacacionForm.saldoVacacion2!=null}"
-											value="#{vacacionForm.saldoVacacion2.toString()}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-
-						</div>
-					</div>
-
-					<!-- TAB VIEW VACAIONES - PERMISOS PERSONALES -->
-					<p:tabView id="tabVacaciones">
-						<p:tab title="AUTORIZACION DE VACIONES ANUAL">
-							<div id="divTblRegistrosVacaciones">
-								<p:dataTable var="listVac" value="#{vacacionForm.listaVacacion}">
-									<p:column headerText="N° Autorizión">
-										<h:outputText value="#{listVac.vccNumAutorizacion}" />
-									</p:column>
-									<p:column headerText="Fecha Emisión">
-										<h:outputText value="#{listVac.vccFechaEmision}" />
-									</p:column>
-									<p:column headerText="Fecha Desde">
-										<h:outputText value="#{listVac.vccFechaInicio}" />
-									</p:column>
-									<p:column headerText="Fecha Hasta">
-										<h:outputText value="#{listVac.vccFechaFin}" />
-									</p:column>
-									<p:column>
-										<f:facet name="header">
-											<i class="fa fa-check-square-o" />
-										</f:facet>
-										<p:commandButton value="Ver/Editar"
-											action="/controlAsistencia/vacaciones/Vacacion.xhtml"
-											actionListener="#{vacacionForm.cargarVariablesVacacion()}">
-											<f:setPropertyActionListener value="#{listVac}"
-												target="#{vacacionForm.seleccionVacacion}" />
-										</p:commandButton>
-										<p:commandButton value="Imprimir"></p:commandButton>
-									</p:column>
-
-								</p:dataTable>
-								<div>
-									<center>
-										<p:commandButton value=" Nuevo Registro"
-											style="margin-top: 1%;"
-											action="/controlAsistencia/vacaciones/Vacacion.xhtml"
-											actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
-									</center>
-								</div>
-							</div>
-
-						</p:tab>
-						<p:tab title="PERMISO PERSONAL">
-							<div id="divTblRegistrosPermisos">
-								<p:dataTable var="permiso" value="#{vacacionForm.listaPermisos}">
-									<p:column headerText="Fecha Permiso">
-										<h:outputText value="#{permiso.prmFechaPermiso}" />
-									</p:column>
-									<p:column headerText="Nº Días">
-										<h:outputText value="#{permiso.prmNumDias}" />
-									</p:column>
-									<p:column headerText="Nº Horas">
-										<h:outputText value="#{permiso.prmNumHoras}" />
-									</p:column>
-									<p:column headerText="A partir de">
-										<h:outputText value="#{permiso.prmHoraInicio}" />
-									</p:column>
-									<p:column>
-										<f:facet name="header">
-											<i class="fa fa-check-square-o" />
-										</f:facet>
-										<p:commandButton value="Ver/Editar">
-
-										</p:commandButton>
-										<p:commandButton value="Imprimir"></p:commandButton>
-									</p:column>
-
-								</p:dataTable>
-								<div>
-									<center>
-										<p:commandButton value=" Nuevo Registro"
-											style="margin-top: 1%;" onclick="PF('dlg2').show();"
-											actionListener="#{vacacionForm.cargarVariablesPermiso()}"></p:commandButton>
-									</center>
-								</div>
-							</div>
-
-						</p:tab>
-
-					</p:tabView>
-
-				</p:panel>
-
-			</h:form>
-
-			<p:dialog header="AUTORIZACION DE AUSENCIA TEMPORAL" widgetVar="dlg2" modal="true"
-				height="500" width="820">
-				<p:panel id="panelPermiso" header="Nuevo Registro">
-					<div class="grid condensed">
-						<!-- ******************** FILA NUMERO 1 ************************ -->
-						<div class="row cells8" style="width: fit-content;">
-							<div class="cell colspan8">
-								<!-- Fecha Elaboracion -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblFechaRegistro"
-											for="txtFechaRegistro" value="Fecha Elaboración: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtFechaRegistro"
-											value="#{vacacionForm.permiso.prmFechaRegistro}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
+				<div id="divDetalleEmpl" class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
 						<div class="cell colspan8">
-								<!-- Fecha Inicio de Vacaciones -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblFechaPermiso" for="CalFechaPermiso"
-											value="Fecha Permiso: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:calendar id="CalFechaPermiso"
-											value="#{vacacionForm.permiso.prmFechaPermiso}"></p:calendar>
-									</ui:define>
-
-									<ui:define name="etiquetaError">
-										<p:message id="msgCalFechaPermiso" for="CalFechaPermiso" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							
-							<div class="cell colspan8">
-								<!-- Fecha Inicio de Vacaciones -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDiasHoras" 
-											value="Permiso por dias?: " />
-									</ui:define>
-									<ui:define name="valor">
-									<p:selectBooleanCheckbox
-										value="#{vacacionForm.diasHoras}">
-										<p:ajax listener="#{vacacionForm.cambiarValorDiasHoras()}"
-											update="panelPermiso"></p:ajax>
-									</p:selectBooleanCheckbox>
-
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
 								</ui:define>
-
-								</ui:decorate>
-							</div>
-						
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblTiempoSolicitadoDias" for="txtTiempoSolicitadoDias"
-											value="Dias solicitados: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtTiempoSolicitadoDias" disabled="#{vacacionForm.disableDias}"
-											value="#{vacacionForm.permiso.prmNumDias}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgTiempoSolicitadoDias" for="txtTiempoSolicitadoDias" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblTiempoSolicitadoHoras" for="txtTiempoSolicitadoHoras"
-											value="Horas solicitadas (HH:mm): " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtTiempoSolicitadoHoras" disabled="#{vacacionForm.diasHoras}"
-											value="#{vacacionForm.permiso.prmNumHoras}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgTiempoSolicitadoHoras" for="txtTiempoSolicitadoHoras" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblApartir" for="txtApartir"
-											value="A parir de (HH:mm): " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtApartir" disabled="#{vacacionForm.diasHoras}"
-											value="#{vacacionForm.permiso.prmHoraInicio}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgApartir" for="txtApartir" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblJustifica" for="txtJustifica"
-											value="Horas justificadas (HH:mm): " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtJustifica" disabled="#{vacacionForm.diasHoras}"
-											value="#{vacacionForm.permiso.prmJustificacion}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgJustifica" for="txtJustifica" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							
-							<div class="cell colspan8">
-								<!--Numero de  dias de vacaciones  -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDescrpMotivo" for="txtDescripMotivo"
-											value="Descripcion asunto oficial: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:inputText id="txtDescripMotivo" 
-											value="#{vacacionForm.permiso.prmHoraInicio}"
-											style="font-weight: Normal !important;width: 200%;"></p:inputText>
-
-									</ui:define>
-									<ui:define name="etiquetaError">
-										<p:message id="msgDescrpMotivo" for="txtDescripMotivo" />
-									</ui:define>
-								</ui:decorate>
-							</div>
-							
-							
-							
-							
-							<div class="cell colspan8">
-								<!-- Fecha Inicio de Vacaciones -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblCargoVacaciones" 
-											value="Con cargo a vacaciones?: " />
-									</ui:define>
-									<ui:define name="valor">
-									<p:selectBooleanCheckbox
-										value="#{vacacionForm.diasHoras}">
-										<p:ajax listener="#{vacacionForm.cambiarValorDiasHoras()}"
-											update="panelPermiso"></p:ajax>
-									</p:selectBooleanCheckbox>
-
+								<ui:define name="valor">
+									<p:outputLabel id="txtCedula"
+										value="#{vacacionForm.seleccionPersona.prsIdentificacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
 								</ui:define>
-
-								</ui:decorate>
-							</div>
-
+							</ui:decorate>
 						</div>
-						<br />
-						
-						<p:separator></p:separator>
-						<center>
-							<div class="row cells8">
-								<div class="cell colpan3"></div>
-								<div class="cell colpan3"></div>
-								<div class="cell colpan3">
-									<p:commandButton id="btnGuardarPermiso"
-										value="Guardar"
-										actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
-								</div>
-								
-								<div class="cell colpan3">
-									<p:commandButton id="btnCancelarPermiso" value="Cancelar"
-										action="#{vacacionForm.regresar()}"></p:commandButton>
-								</div>
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNombres" for="txtNombres"
+										value="Nombres: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtNombres"
+										value="#{vacacionForm.seleccionPersona.nombresCompetos()}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DEPENDENCIA -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDependencia" for="txtDependencia"
+										value="Dependencia: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDependencia"
+										value="#{vacacionForm.dependencia.dpnDescripcion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DENOMINACION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDenominacion" for="txtDenominacion"
+										value="Denominación: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDenominacion"
+										value="#{vacacionForm.puesto.pstDenominacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- REGIMEN -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblRegimen" for="txtRegimen"
+										value="Régimen: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtRegimen"
+										value="#{vacacionForm.regimen.rgmDescripcion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
 
-							</div>
-						</center>
+						<div class="cell colspan8">
+							<!-- SALDO  VACIONES PERIODO ANTERIOR -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblSaldoVacaciones1"
+										for="txtSaldovacaciones1"
+										value="Saldo Vacacion (Periodo Anterior): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtSaldovacaciones1"
+										rendered="#{vacacionForm.saldoVacacion1!=null}"
+										value="#{vacacionForm.saldoVacacion1.toString()}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- SALDO  VACIONES PERIODO ACTUAL -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblSaldoVacaciones2"
+										for="txtSaldovacaciones2"
+										value="Saldo Vacacion (Periodo Actual): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtSaldovacaciones2"
+										rendered="#{vacacionForm.saldoVacacion2!=null}"
+										value="#{vacacionForm.saldoVacacion2.toString()}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
 
 					</div>
+				</div>
 
-				</p:panel>
-			</p:dialog>
-		</ui:define>
-	</ui:composition>
+				<!-- TAB VIEW VACAIONES - PERMISOS PERSONALES -->
+				<p:tabView id="tabVacaciones">
+					<p:tab title="AUTORIZACION DE VACIONES ANUAL">
+						<div id="divTblRegistrosVacaciones">
+							<p:dataTable var="listVac" value="#{vacacionForm.listaVacacion}">
+								<p:column headerText="N° Autorizión">
+									<h:outputText value="#{listVac.vccNumAutorizacion}" />
+								</p:column>
+								<p:column headerText="Fecha Emisión">
+									<h:outputText value="#{listVac.vccFechaEmision}" />
+								</p:column>
+								<p:column headerText="Fecha Desde">
+									<h:outputText value="#{listVac.vccFechaInicio}" />
+								</p:column>
+								<p:column headerText="Fecha Hasta">
+									<h:outputText value="#{listVac.vccFechaFin}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<i class="fa fa-check-square-o" />
+									</f:facet>
+									<p:commandButton value="Ver/Editar"
+										action="/controlAsistencia/vacaciones/Vacacion.xhtml"
+										actionListener="#{vacacionForm.cargarVariablesVacacion()}">
+										<f:setPropertyActionListener value="#{listVac}"
+											target="#{vacacionForm.seleccionVacacion}" />
+									</p:commandButton>
+									<p:commandButton value="Imprimir"></p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+							<div>
+								<center>
+									<p:commandButton value=" Nuevo Registro"
+										style="margin-top: 1%;"
+										action="/controlAsistencia/vacaciones/Vacacion.xhtml"
+										actionListener="#{vacacionForm.cargarVariablesVacacion()}"></p:commandButton>
+								</center>
+							</div>
+						</div>
+
+					</p:tab>
+					<p:tab title="PERMISO PERSONAL">
+						<div id="divTblRegistrosPermisos">
+							<p:dataTable var="permiso" value="#{vacacionForm.listaPermisos}">
+								<p:column headerText="Fecha Permiso">
+									<h:outputText value="#{permiso.prmFechaPermiso}" />
+								</p:column>
+								
+								<p:column headerText="Nº Horas">
+									<h:outputText value="#{permiso.prmNumHoras}" />
+								</p:column>
+								<p:column headerText="A partir de">
+									<h:outputText value="#{permiso.prmHoraInicio}" />
+								</p:column>
+								<p:column headerText="Motivo">
+									<h:outputText value="#{permiso.prmDescripcionMotivo}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<i class="fa fa-check-square-o" />
+									</f:facet>
+									<p:commandButton value="Ver/Editar" oncomplete="PF('dlg2').show();"
+									actionListener="#{vacacionForm.cargarVariablesPermiso()}">
+									<f:setPropertyActionListener value="#{permiso}"
+											target="#{vacacionForm.seleccionPermiso}" />
+									</p:commandButton>
+									
+								</p:column>
+
+							</p:dataTable>
+							<div>
+								<center>
+									<p:commandButton value=" Nuevo Registro"
+										style="margin-top: 1%;" onclick="PF('dlg2').show();"
+										actionListener="#{vacacionForm.cargarVariablesPermiso()}"></p:commandButton>
+								</center>
+							</div>
+						</div>
+
+					</p:tab>
+
+				</p:tabView>
+
+			</p:panel>
+
+		</h:form>
+
+		<p:dialog header="AUTORIZACION DE AUSENCIA TEMPORAL" widgetVar="dlg2"
+			modal="true" id="dialogPermiso" height="500" width="820">
+			<p:panel id="panelPermiso" header="Nuevo Registro">
+				<div class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8" style="width: fit-content;">
+						<div class="cell colspan8">
+							<!-- Fecha Elaboracion -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaRegistro" for="txtFechaRegistro"
+										value="Fecha Elaboración: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtFechaRegistro"
+										value="#{vacacionForm.permiso.prmFechaRegistro}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Fecha Inicio de Vacaciones -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaPermiso" for="CalFechaPermiso"
+										value="Fecha Permiso: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:calendar id="CalFechaPermiso"
+										value="#{vacacionForm.permiso.prmFechaPermiso}"></p:calendar>
+								</ui:define>
+
+								<ui:define name="etiquetaError">
+									<p:message id="msgCalFechaPermiso" for="CalFechaPermiso" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan8">
+							<!--Numero de  dias de vacaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblTiempoSolicitadoHoras"
+										for="txtTiempoSolicitadoHoras"
+										value="Tiempo solicitado (HH:mm): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtTiempoSolicitadoHoras"
+										value="#{vacacionForm.permiso.prmNumHoras}"
+										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgTiempoSolicitadoHoras"
+										for="txtTiempoSolicitadoHoras" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan8">
+							<!--Numero de  dias de vacaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblApartir" for="txtApartir"
+										value="A parir de (HH:mm): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtApartir"
+										value="#{vacacionForm.permiso.prmHoraInicio}"
+										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgApartir" for="txtApartir" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- Fecha Inicio de Vacaciones -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblCargoVacaciones"
+										value="¿Justifica horas?: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:selectBooleanCheckbox id="booleanValue"
+										value="#{vacacionForm.valorJustificaHoras}">
+										<p:ajax
+											listener="#{vacacionForm.visualizarHorasJustificadas()}" 
+											update=":panelPermiso" ></p:ajax>
+									</p:selectBooleanCheckbox>
+
+								</ui:define>
+
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!--Numero de  dias de vacaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblJustifica" for="txtJustifica"
+										rendered="#{vacacionForm.horasJustificadas}"
+										value="Horas justificadas (HH:mm): " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtJustifica"
+										value="#{vacacionForm.permiso.prmJustificacion}"
+										rendered="#{vacacionForm.horasJustificadas}"
+										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgJustifica" for="txtJustifica" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan8">
+							<!--Numero de  dias de vacaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDescrpMotivo" for="txtDescripMotivo"
+										value="Descripcion asunto oficial: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtDescripMotivo"
+										value="#{vacacionForm.permiso.prmDescripcionMotivo}"
+										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgDescrpMotivo" for="txtDescripMotivo" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+					</div>
+					<br />
+
+					<p:separator></p:separator>
+					<center>
+						<div class="row cells8">
+							<div class="cell colpan3"></div>
+							<div class="cell colpan3"></div>
+							<div class="cell colpan3">
+								<p:commandButton id="btnGuardarPermiso" value="Guardar"
+								process="@this"
+                                      oncomplete="PF('dlg2').hide()"
+									actionListener="#{vacacionForm.guardadPermiso()}"></p:commandButton>
+							</div>
+
+							
+
+						</div>
+					</center>
+
+				</div>
+
+			</p:panel>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
 </html>
