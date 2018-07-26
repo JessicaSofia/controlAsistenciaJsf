@@ -498,10 +498,9 @@ public class VacacionForm implements Serializable {
 	
 	public void visualizarHorasJustificadas(){
 		if(this.valorJustificaHoras){
-			this.horasJustificadas = false;
-		}else{
 			this.horasJustificadas = true;
-			this.valorJustificaHoras = true;
+		}else{
+			this.horasJustificadas = false;
 		}
 	}
 	
