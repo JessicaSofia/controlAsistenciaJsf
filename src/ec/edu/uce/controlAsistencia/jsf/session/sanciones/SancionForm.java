@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.record.formula.eval.StringValueEval;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.Faltas;
@@ -29,6 +28,7 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.GrupoOcupacionalServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
@@ -126,6 +126,9 @@ public class SancionForm implements   Serializable{
 	@EJB
 	private FichaEmpleadoServicio  srvFichaEmpleado;
 	
+	@EJB
+	private GrupoOcupacionalServicio srvGrupoOc;
+	
 	
 	public List<DetallePuestoSancion> getLstSanciones() {
 		lstSanciones=srvSanciones.listarSancionPorDetallePuestoId(seleccionPersona.getDtpsId());
@@ -172,7 +175,7 @@ public class SancionForm implements   Serializable{
 	}
 	public Puesto getPuesto() {
 		if(seleccionPersona !=null) {
-			puesto =srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+			puesto=srvPuesto.BuscarPorId(seleccionPersona.getPstId());
 		}
 		return puesto;
 	}
@@ -353,11 +356,18 @@ public class SancionForm implements   Serializable{
 			}
 		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
-		  int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
-		  if(idTiposancion==1) {
-			valor=dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase();
-			EsDescuento=true;
+		//  int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
+		  if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
+			  if(categoriaFaltaAplicar.getCtgflPorcentajeBase()>=3){
+				  valor=categoriaFaltaAplicar.getCtgflPorcentajeBase();
+				  
+			  }else {
+			valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
 			
+			  }
+			  int sueldo=puesto.getGrupoOcupacional().getGrocRmu();
+				valor=(valor/100)*sueldo;
+				EsDescuento=true;
 		  }
 		  else {
 			  EsDescuento =false;
@@ -367,7 +377,7 @@ public class SancionForm implements   Serializable{
 
 			dtSancion.setDtpssnValor(valor);
 			
-			 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getTipoSancion().getTpsnId());
+			 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId());
 
 			 this.tipoSancion=String.valueOf(sancion.getSnId());
 			 
@@ -388,8 +398,14 @@ public class SancionForm implements   Serializable{
 				
 
 				if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()==-1 ) {
-					if( min>s.getCtgflMinuntosMin()) {
+					if( min>=s.getCtgflMinuntosMin()) {
 					categoriaFalta=s;	
+					break;
+				}else {
+					if(s.getCtgflFrecuenciaMax()>1) {
+						categoriaFalta=s;
+						break;
+					}
 				}
 		}
 			}
