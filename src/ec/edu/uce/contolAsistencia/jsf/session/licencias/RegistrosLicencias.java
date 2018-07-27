@@ -125,7 +125,8 @@ public class RegistrosLicencias implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia();
+		this.regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
+		this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(regimen.getRgmId());
 		this.tiposLicencias = new LinkedHashMap<>();
 		this.listaTipoLicencia.forEach((tipoLicenciaEach) -> {
 			tiposLicencias.put(tipoLicenciaEach.getTplcNombre(), String.valueOf(tipoLicenciaEach.getTplcId()));
