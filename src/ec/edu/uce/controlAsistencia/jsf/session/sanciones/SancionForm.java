@@ -19,13 +19,12 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.mail.search.MessageNumberTerm;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
-import ec.edu.uce.controlAsistencia.ejb.datos.Faltas;
+
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
@@ -84,6 +83,7 @@ public class SancionForm implements   Serializable{
 	private Map<String, String> tiposSanciones;
 	private TipoLicencia tipoSancionEntidad;
 	private boolean EsDescuento=false;
+	private  boolean esPorFrecuencia=false;
 	
 	@PostConstruct
 	public void init() {
@@ -312,6 +312,14 @@ public class SancionForm implements   Serializable{
 	public void setEsDescuento(boolean esDescuento) {
 		EsDescuento = esDescuento;
 	}
+	
+	
+	public boolean isEsPorFrecuencia() {
+		return esPorFrecuencia;
+	}
+	public void setEsPorFrecuencia(boolean esPorFrecuencia) {
+		this.esPorFrecuencia = esPorFrecuencia;
+	}
 	/**
 	 * Metodos
 	 */
@@ -363,35 +371,34 @@ public class SancionForm implements   Serializable{
 		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
 		//  int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
-		  if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
-			  if(categoriaFaltaAplicar.getCtgflPorcentajeBase()>=3){
-				  valor=categoriaFaltaAplicar.getCtgflPorcentajeBase();
-				  
-			  }else {
-				  if(categoriaFaltaAplicar.getCtgflFrecuenciaMax()>1) {
-					  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
-				  }else {
-					  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
-				  }
-			
-			
-			  }
-			  int sueldo=puesto.getGrupoOcupacional().getGrocRmu();
+		
+		 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
+		 this.tipoSancion=String.valueOf(sancion.getSnId());
+		 
+if(sancion.getSnPorcentaje()!=0) {
+	 valor=sancion.getSnPorcentaje();
+	 
+}else {
+	if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
+	if(esPorFrecuencia) {
+		  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
+	  }else {
+		  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
+	  }}
+	
+}
+
+		if(valor!=0) {
+			int sueldo=puesto.getGrupoOcupacional().getGrocRmu();
 				valor=(valor/100)*sueldo;
 				EsDescuento=true;
-		  }
-		  else {
-			  EsDescuento =false;
-					  
-		  }
+		}else {
+			EsDescuento=false;
+			}
 
-			dtSancion.setDtpssnValor(valor);
-			
-			 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
-
-			 this.tipoSancion=String.valueOf(sancion.getSnId());
-			 
-				}
+			dtSancion.setDtpssnValor(valor);		 
+				
+	}
 	
 	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min,  int frc) {
 		CategoriaFalta categoriaFalta= null;
@@ -401,6 +408,7 @@ public class SancionForm implements   Serializable{
 
 				if(s.getCtgflMinuntosMin()<=min && min <=s.getCtgflMinutosMax()) {
 					categoriaFalta=s;
+					esPorFrecuencia=false;
 					break;
 				}
 			}
@@ -410,17 +418,20 @@ public class SancionForm implements   Serializable{
 				if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()==-1 ) {
 					if( min>=s.getCtgflMinuntosMin()) {
 					categoriaFalta=s;	
+					esPorFrecuencia=false;
 					break;
 					}
 				}else {
 					if(s.getCtgflFrecuenciaMin()>=1 && s.getCtgflFrecuenciaMax()!=-1) {
 						if(s.getCtgflFrecuenciaMin()<=frc && s.getCtgflFrecuenciaMax()>=frc ) {
 							categoriaFalta=s;
+							esPorFrecuencia=true;
 							break;
 						}
 					}else {
 						if((s.getCtgflFrecuenciaMin()>=1) && (s.getCtgflFrecuenciaMax()==-1)) {
 							categoriaFalta=s;
+							esPorFrecuencia=true;
 							break;
 							
 						}
