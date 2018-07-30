@@ -19,6 +19,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.mail.search.MessageNumberTerm;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -340,16 +341,17 @@ public class SancionForm implements   Serializable{
 	
 	public void calcularSancion() {
 		 
-		String txtDias=dtSancion.getDtpssnDias();
+ 		String txtDias=dtSancion.getDtpssnDias();
 		float valor=0;
 		int min=dtSancion.getDtpssnMinutos();
+		
 		
 		String[] Dias  = txtDias.split("-");
 		int frecuencia=Dias.length;
 		
 		FichaEmpleado empleado= srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
 		falta=srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
-		 categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), falta.getFlId() , min);
+		 categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), falta.getFlId() , min,  frecuencia);
 		
 		if(categoriaFaltaAplicar==null) {
 //			if(Faltas.Atrasos.getId()==falta.getFlId()) {
@@ -366,7 +368,7 @@ public class SancionForm implements   Serializable{
 				  valor=categoriaFaltaAplicar.getCtgflPorcentajeBase();
 				  
 			  }else {
-				  if(dtSancion.getDtpssnFrecuencia()>1) {
+				  if(categoriaFaltaAplicar.getCtgflFrecuenciaMax()>1) {
 					  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
 				  }else {
 					  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
@@ -391,7 +393,7 @@ public class SancionForm implements   Serializable{
 			 
 				}
 	
-	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min) {
+	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min,  int frc) {
 		CategoriaFalta categoriaFalta= null;
 		List<CategoriaFalta> parametros= srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(ctgId,flId);
 		for(CategoriaFalta s: parametros) {
@@ -409,19 +411,31 @@ public class SancionForm implements   Serializable{
 					if( min>=s.getCtgflMinuntosMin()) {
 					categoriaFalta=s;	
 					break;
-				}else {
-					if(s.getCtgflFrecuenciaMax()>1) {
-						categoriaFalta=s;
-						break;
 					}
-				}
+				}else {
+					if(s.getCtgflFrecuenciaMin()>=1 && s.getCtgflFrecuenciaMax()!=-1) {
+						if(s.getCtgflFrecuenciaMin()<=frc && s.getCtgflFrecuenciaMax()>=frc ) {
+							categoriaFalta=s;
+							break;
+						}
+					}else {
+						if((s.getCtgflFrecuenciaMin()>=1) && (s.getCtgflFrecuenciaMax()==-1)) {
+							categoriaFalta=s;
+							break;
+							
+						}
+				
+					}
+						}
+			
 		}
 			}
+		return categoriaFalta;
 		}
 		
-		return categoriaFalta;
 		
-	}
+		
+	
 	
 	public  Sancion  obtenerSancionAplicar(Sancion  sancion) {
 		Sancion retorno =null;
@@ -433,9 +447,10 @@ public class SancionForm implements   Serializable{
 		
 		
 		if(tpsn!=1) {
-			dtSanUlt=srvSanciones.ObtenerUltimaSancion(seleccionPersona.getDtpsId(),falta.getFlId(), tpsn);
-			ultimaSancion= dtSanUlt.getSancion();
-			
+			dtSanUlt=srvSanciones.ObtenerUltimaSancion(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId());
+			if(dtSanUlt!=null){
+				ultimaSancion= dtSanUlt.getSancion();	
+			}
 			
 		}
 		
@@ -443,7 +458,7 @@ public class SancionForm implements   Serializable{
 			retorno=sancion;
 		}else {
 			
-			if(calcularTiempoUltimaSancion(dtSanUlt.getDtpssnMes(), dtSanUlt.getDtpssnAno(), dtSanUlt.getDtpssnDias())) {
+			if(calcularTiempoUltimaSancion(dtSancion, dtSanUlt)) {
 
 				int ulnivel=ultimaSancion.getSnNivel();
 				if(ulnivel>=nivel) {
@@ -452,10 +467,11 @@ public class SancionForm implements   Serializable{
 					}else {
 						ulnivel=ulnivel+1;
 						List<Sancion> sanciones= new ArrayList<>();
-						sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(tpsn);
+     						sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(tpsn);
 						for(Sancion s:sanciones) {
 							if(s.getSnNivel()==ulnivel) {
 								retorno=s;
+								break;
 							}
 						}
 						
@@ -570,61 +586,55 @@ public class SancionForm implements   Serializable{
 		
 	}
 
-public boolean calcularTiempoUltimaSancion(int mes, int anio, String diasReg ) {
-	String[] dias = diasReg.split("-"); 
-	int n=dias.length;
+public boolean calcularTiempoUltimaSancion(DetallePuestoSancion dtSancionNueva,	DetallePuestoSancion dtSancionAnterior) {
+	  
+	String diasNuevo=dtSancionNueva.getDtpssnDias();
+	String diasAnterior=dtSancionAnterior.getDtpssnDias();
 	
-	int ultimoDia=Integer.parseInt(dias[n-1]);
+	String[] dias1 = diasNuevo.split("-"); 
+	String[] dias2 = diasAnterior.split("-"); 
+	
+	int n2=dias2.length;
+	
+	int ultimoDiaNuevo=Integer.parseInt(dias1[0]);
+	int ultimoDiaAnterior=Integer.parseInt(dias2[n2-1]);
+	
+	int mesNuevo=dtSancionNueva.getDtpssnMes();
+	int mesAnterior=dtSancionAnterior.getDtpssnMes();
+	
+	int anioNuevo=dtSancionNueva.getDtpssnAno();
+	int anioAnterior=dtSancionAnterior.getDtpssnAno();
+	
 	boolean retorno = false;
 	Calendar fecAct= Calendar.getInstance();
-
+	
+	fecAct.set(anioNuevo,mesNuevo,ultimoDiaNuevo);
+	
 	Calendar fUltSan= Calendar.getInstance();
-	fUltSan.set(Calendar.MONTH , mes);
-	fUltSan.set(Calendar.YEAR , anio);
-	fUltSan.set(Calendar.DAY_OF_MONTH , ultimoDia);
+	fUltSan.set(anioAnterior , mesAnterior,ultimoDiaAnterior);
+
 
 	 
 		 int monthDay[]= { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		 int anios = fecAct.get(Calendar.YEAR) - fUltSan.get(Calendar.YEAR);
+		 int anios = anioNuevo - anioAnterior;
          int Meses;
          int Dias;
          
          GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
 
          Calendar sanAhora=Calendar.getInstance();
-         sanAhora=fUltSan;
+         sanAhora.setTime(fUltSan.getTime());
          sanAhora.add(Calendar.YEAR, anios);
        
          if (fecAct.compareTo(sanAhora) < 0)
              anios--;
 
-         int increment = 0;
-         if (fUltSan.get(Calendar.DAY_OF_MONTH) > fecAct.get(Calendar.DAY_OF_MONTH))
-             increment = monthDay[fUltSan.get(Calendar.MONTH) - 1];
 
-         if (increment == -1)
-         {
-             increment = (short)(cal.isLeapYear(fUltSan.get(Calendar.DAY_OF_MONTH)) ? 29 : 28);
-             
-         }
-
-         if (increment != 0)
-         {
-             Dias = (fecAct.get(Calendar.DAY_OF_MONTH) + increment) - fUltSan.get(Calendar.DAY_OF_MONTH);
-             increment = 1;
-         }
-         else
-             Dias = fecAct.get(Calendar.DAY_OF_MONTH) - fUltSan.get(Calendar.DAY_OF_MONTH);
-
-         if ((fecAct.get(Calendar.MONTH)  + increment) > fUltSan.get(Calendar.MONTH))
-             Meses = (fecAct.get(Calendar.MONTH) + 12) - (fUltSan.get(Calendar.MONTH) + increment);
-         else
-             Meses = (fecAct.get(Calendar.MONTH)) - (fUltSan.get(Calendar.MONTH) + increment);
          
-         if(anio>=1) {
-        	 retorno=true;
-         }else {
+         if(anios>=1) {
         	 retorno=false;
+         }else {
+        	 retorno=true;
          }
   
          return retorno;
