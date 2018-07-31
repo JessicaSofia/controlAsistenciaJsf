@@ -373,6 +373,20 @@ public class SancionForm implements   Serializable{
 		//  int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
 		
 		 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
+		 if(sancion.getTipoSancion().getTpsnId()==1) {
+			 if(VerificarSancionConsecutivoMuta(sancion,categoriaFaltaAplicar)) {
+				 List<Sancion> sanciones= new ArrayList<>();
+					sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(2);
+				for(Sancion s:sanciones) {
+					if(s.getSnNivel()==1) {
+						sancion=s;
+						break;
+					}
+				 
+			 }
+		 }
+		 }
+			 
 		 this.tipoSancion=String.valueOf(sancion.getSnId());
 		 
 if(sancion.getSnPorcentaje()!=0) {
@@ -387,7 +401,6 @@ if(sancion.getSnPorcentaje()!=0) {
 	  }}
 	
 }
-
 		if(valor!=0) {
 			int sueldo=puesto.getGrupoOcupacional().getGrocRmu();
 				valor=(valor/100)*sueldo;
@@ -396,8 +409,7 @@ if(sancion.getSnPorcentaje()!=0) {
 			EsDescuento=false;
 			}
 
-			dtSancion.setDtpssnValor(valor);		 
-				
+			dtSancion.setDtpssnValor(valor);		 				
 	}
 	
 	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min,  int frc) {
@@ -444,9 +456,6 @@ if(sancion.getSnPorcentaje()!=0) {
 		return categoriaFalta;
 		}
 		
-		
-		
-	
 	
 	public  Sancion  obtenerSancionAplicar(Sancion  sancion) {
 		Sancion retorno =null;
@@ -455,10 +464,8 @@ if(sancion.getSnPorcentaje()!=0) {
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
 		
-		
-		
 		if(tpsn!=1) {
-			dtSanUlt=srvSanciones.ObtenerUltimaSancion(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId());
+			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId());
 			if(dtSanUlt!=null){
 				ultimaSancion= dtSanUlt.getSancion();	
 			}
@@ -502,6 +509,31 @@ if(sancion.getSnPorcentaje()!=0) {
 		return retorno;
 		
 	}
+	
+	public boolean VerificarSancionConsecutivoMuta(Sancion sancion, CategoriaFalta  categoriaFal) {
+		boolean retorno =false;
+		Calendar fs=Calendar.getInstance();
+		fs.set(dtSancion.getDtpssnAno() , dtSancion.getDtpssnMes(),1);
+
+		int mes=dtSancion.getDtpssnMes();
+		int n=mes-2;
+		for(int i=1;i<=2; i++) {
+			fs.add(Calendar.MONTH, -1);
+			DetallePuestoSancion  detSan= srvSanciones.obtenerSancionPorMesAnio(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId(),fs.get(Calendar.MONTH)+1,dtSancion.getDtpssnAno());
+			if(detSan==null) {
+				retorno=false;
+				break;
+			}else {
+				retorno=true;
+			}
+		}
+		
+		
+		return retorno;
+		
+		
+	}
+	
 	public void cargarSancionFormEdit() {
 		
 			if(seleccionDtSancion.getDtpssnDescontar()==1) {
