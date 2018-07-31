@@ -76,9 +76,9 @@ public class VacacionForm implements Serializable {
 	private PersonaDto seleccionPersona;
 	private SaldoVacacion salVacaCal1;
 	private SaldoVacacion salVacaCal2;
-	
-	
-	/*Permiso Personal*/
+	private boolean renderBtnImprimir = false;
+
+	/* Permiso Personal */
 	private Permiso permiso;
 	private List<Permiso> listaPermisos;
 	private Permiso seleccionPermiso;
@@ -112,21 +112,28 @@ public class VacacionForm implements Serializable {
 
 	@EJB
 	private PermisoServicio srvPermiso;
-	
-	//==============================================POSTCONSTRUCT=============================================================//
+
+	// ==============================================POSTCONSTRUCT=============================================================//
 
 	@PostConstruct
 	public void init() {
 
 	}
 
-	//*=====================================================================METODOS====================================================================//
-	
+	// *=====================================================================METODOS====================================================================//
+
 	public void CalcularVacaciones() {
-		if (vacacion.getVccNumDias() > 0 && vacacion.getVccFechaInicio() != null) {
-			CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
+		if (vacacion.getVccNumDias() > 2 ) {
+			if(vacacion.getVccFechaInicio() != null){
+				CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
+			}else{
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia.", "No se ha especificado una fecha de inicio."));	
+			}
+			
 		} else {
-			// implementacion de mensajes
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia.", "No se puede registrar una Autorización de vacaciones cuyo número de días es menor a 3."));
 		}
 
 	}
@@ -146,6 +153,9 @@ public class VacacionForm implements Serializable {
 		} else {
 			vacacion.setVccEstado(Estados.Activo.getId());
 			retorno = srvVacacion.VacionInsertar(vacacion);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Aut. de vacaciones anuales registrada exitosamente."));
+			this.renderBtnImprimir = true;
 		}
 
 		if (retorno) {
@@ -378,12 +388,14 @@ public class VacacionForm implements Serializable {
 	public String regresar() {
 		String ruta = "/controlAsistencia/vacaciones/VacacionesRegistros.xhtml";
 		vacacion = null;
+		permiso = null;
 		saldoVacacion = null;
+		this.renderBtnImprimir = false;
 		// cargarVariables();
 		return ruta;
 	}
 
-	public void cargarVariablesVacacion() {
+	public void cargarVariablesVacacion( Vacacion seleccionVacacion) {
 
 		if (seleccionVacacion == null) {
 			esActualizacion = false;
@@ -391,6 +403,7 @@ public class VacacionForm implements Serializable {
 			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
 			vacacion.setVccFechaEmision(fechaEmision);
+			vacacion.setVccCopia(dependencia.getDpnDescripcion());
 
 		} else {
 			esActualizacion = true;
@@ -402,7 +415,7 @@ public class VacacionForm implements Serializable {
 
 	}
 
-	public void cargarVariablesPermiso() {
+	public void cargarVariablesPermiso(Permiso seleccionPermiso) {
 
 		if (seleccionPermiso == null) {
 			esActualizacion = false;
@@ -451,67 +464,64 @@ public class VacacionForm implements Serializable {
 
 		}
 	}
-	
-	
-	
-	public void verPDF()  {
+
+	public void verPDF() {
 		try {
-			
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-			
+
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("txt_num_auto", String.valueOf(vacacion.getVccNumAutorizacion()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
 			String fecha_inicio = sdf.format(vacacion.getVccFechaInicio());
 			String fecha_fin = sdf.format(vacacion.getVccFechaFin());
-			
+
 			parametros.put("txt_dias", String.valueOf(vacacion.getVccNumDias()));
 			parametros.put("txt_desde", fecha_inicio);
 			parametros.put("txt_hasta", fecha_fin);
 			parametros.put("txt_saldo1", String.valueOf(salVacaCal1.getSlvcDiasRestantes()));
 			parametros.put("txt_saldo2", String.valueOf(salVacaCal2.getSlvcDiasRestantes()));
-			parametros.put("txt_copia", dependencia.getDpnDescripcion());
-			
+			parametros.put("txt_observacion", vacacion.getVccObservacion());
+			parametros.put("txt_copia", this.vacacion.getVccCopia());
 
-			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/controlAsistencia/reportes/vacaciones.jasper"));
-			
+			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/vacaciones.jasper"));
+
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
-			
-			
-			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/controlAsistencia/reportes/vacaciones.jasper");
+
+			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext()
+					.getResourceAsStream("/controlAsistencia/reportes/vacaciones.jasper");
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
-			response.addHeader("Content-disposition", "attachment; filename=vacacion_" + sdf.format(new Date()).toString() + ".pdf");
+			response.addHeader("Content-disposition", "attachment; filename=AUT. VACACIONES_"
+					+ this.seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
-			JasperRunManager.runReportToPdfStream(rptStream,stream, parametros, new JREmptyDataSource());
+			JasperRunManager.runReportToPdfStream(rptStream, stream, parametros, new JREmptyDataSource());
 			stream.flush();
 			stream.close();
 			FacesContext.getCurrentInstance().responseComplete();
-	
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	public void visualizarHorasJustificadas(){
-		if(this.valorJustificaHoras){
+
+	public void visualizarHorasJustificadas() {
+		if (this.valorJustificaHoras) {
 			this.horasJustificadas = true;
-		}else{
+		} else {
 			this.horasJustificadas = false;
 		}
 	}
-	
-	
+
 	public void guardadPermiso() {
 		boolean retorno = false;
 
 		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		permiso.setDetallePuesto(detallePuesto);
-
-		
 
 		if (esActualizacion) {
 			Permiso p = srvPermiso.ActualizarPermiso(permiso);
@@ -521,18 +531,60 @@ public class VacacionForm implements Serializable {
 				retorno = false;
 			}
 		} else {
-			
 
 			retorno = srvPermiso.InsertarPermiso(permiso);
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Licencia registrada exitosamente."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
 			
+			if(retorno){
+				calcularHoras();
+				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
+			}
+
 		}
 	}
 	
-	
-	//================================================================GETTERS & SETTERS================================================================================//
-	
+	public void calcularHoras() {
+		String horas = this.permiso.getPrmNumHoras();
+		
+		String[] divH1=horas.split(":");
+		int h1=Integer.parseInt(divH1[0]);
+		System.out.println(h1);
+		int m1=Integer.parseInt(divH1[1]);
+		System.out.println(m1);
+		
+		//String horaInicio = licenciaPermiso.getLcprHoraInicio();
+		String totalHoras = saldoVacacion1.getSlvcTotalHoras();
+		String[] divH2=totalHoras.split(":");
+		int h2=Integer.parseInt(divH2[0]);
+		System.out.println(h2);
+		int m2=Integer.parseInt(divH2[1]);
+		System.out.println(m2);
+		
+		int res1 = h1+h2;
+		System.out.println(res1);
+		int res2 = m1+m2;
+		System.out.println(res2);
+		
+		if(this.salVacaCal1 != null){
+			salVacaCal1.setSlvcTotalHoras(res1+":"+res2);
+		}
+		//licenciaPermiso.setLcprHoraFin(res1+":"+res2);
+		
+		
+		}
+
+	public String regresarEmpleados() {
+		String ruta = "/controlAsistencia/empleado/busquedaEmpleado.xhtml";
+		this.seleccionPersona = null;
+		// this.licencia = null;
+		// saldoVacacion = null;
+		// cargarVariables();
+		return ruta;
+	}
+
+	// ================================================================GETTERS &
+	// SETTERS================================================================================//
 
 	public Dependencia getDependencia() {
 		if (dependencia == null) {
@@ -657,8 +709,6 @@ public class VacacionForm implements Serializable {
 		this.permiso = permiso;
 	}
 
-	
-
 	public Permiso getSeleccionPermiso() {
 		return seleccionPermiso;
 	}
@@ -667,7 +717,6 @@ public class VacacionForm implements Serializable {
 		this.seleccionPermiso = seleccionPermiso;
 	}
 
-	
 	public Vacacion getVacacion() {
 		return vacacion;
 	}
@@ -748,6 +797,12 @@ public class VacacionForm implements Serializable {
 		this.horasJustificadas = horasJustificadas;
 	}
 
-	
+	public boolean isRenderBtnImprimir() {
+		return renderBtnImprimir;
+	}
+
+	public void setRenderBtnImprimir(boolean renderBtnImprimir) {
+		this.renderBtnImprimir = renderBtnImprimir;
+	}
 
 }

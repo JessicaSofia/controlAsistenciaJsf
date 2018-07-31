@@ -84,8 +84,7 @@
 								</ui:define>
 								<ui:define name="valor">
 									<p:calendar id="CalFechaInicio"
-										value="#{vacacionForm.vacacion.vccFechaInicio}"
-										showOn="button"></p:calendar>
+										value="#{vacacionForm.vacacion.vccFechaInicio}"></p:calendar>
 								</ui:define>
 
 								<ui:define name="etiquetaError">
@@ -178,10 +177,9 @@
 									<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputTextarea id="txtCopia"
+									<p:outputLabel id="txtCopia"
 										value="#{vacacionForm.vacacion.vccCopia}"
-										style="font-weight: Normal !important;width: 200%;">
-									</p:inputTextarea>
+										style="font-weight: Normal !important;width: 200%;" />
 								</ui:define>
 							</ui:decorate>
 						</div>
@@ -192,23 +190,16 @@
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3">
-								<p:commandButton id="btnGuardarVacion"
-									value="Guardar e Imprimir"
+								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm"
 									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
-							</div>
-							<div class="cell colpan3">
-								<p:commandButton id="btnAnularVacacion" value="Anular"
-									actionListener="#{vacacionForm.anularVacacion()}"></p:commandButton>
-							</div>
-							<div class="cell colpan3">
-								<p:commandButton id="btnCancelarVacion" value="Cancelar"
+									
+								<p:commandButton id="btnCancelarVacion" value="Volver"
 									action="#{vacacionForm.regresar()}"></p:commandButton>
 							</div>
-							<div class="cell colpan3">
-								<p:commandButton id="btnPDFVacaciones"
-									value="Imprimir" actionListener="#{vacacionForm.verPDF}"
-									target="_blank" ajax="false"></p:commandButton>
-							</div>
+							<p:commandButton id="btnPDFVacaciones"
+								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
+								actionListener="#{vacacionForm.verPDF}" target="_blank"
+								ajax="false"></p:commandButton>
 						</div>
 					</center>
 

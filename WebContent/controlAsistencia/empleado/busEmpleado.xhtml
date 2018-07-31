@@ -46,11 +46,15 @@
             <h:outputText value="#{busEmpleado.ObtenerNombreDependencia(emp.dpnId)}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/licencias/LicenciasRegistros.xhtml" >
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/licencias/LicenciasRegistros.xhtml" actionListener="#{registrosLicencia.cargarVariablesFuncionario(emp)}">
                 <f:setPropertyActionListener value="#{emp}" target="#{busEmpleado.seleccionPersona}" />
             </p:commandButton>
         </p:column>
 	</p:dataTable>
+	<br></br>
+	<center>
+	<p:commandLink value="Inicio" action="/controlAsistencia/generalidades/principal.xhtml"> </p:commandLink>
+	</center>
 	</div>
 </div>
 	</p:panel>

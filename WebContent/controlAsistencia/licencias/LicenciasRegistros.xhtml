@@ -6,149 +6,152 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia / Licencias/ Listas" />
 		</ui:include>
-		</ui:define>
-<ui:define name="cuerpo">
-			<h:form id="frmBusquedaEmpleado" enctype="multipart/form-data"
-				acceptcharset="UTF-8">
+	</ui:define>
+	<ui:define name="cuerpo">
+		<h:form id="frmBusquedaEmpleado" enctype="multipart/form-data"
+			acceptcharset="UTF-8">
 
 
-				<p:panel id="pnlLicenciasRegistros" header="Detalle Funcionario">
+			<p:panel id="pnlLicenciasRegistros" header="Detalle Funcionario">
 
-					<div id="divDetalleEmpl" class="grid condensed">
-						<!-- ******************** FILA NUMERO 1 ************************ -->
-						<div class="row cells8">
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtCedula"
-											value="#{registrosLicencia.seleccionPersona.prsIdentificacion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblNombres" for="txtNombres"
-											value="Nombres: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtNombres"
-											value="#{registrosLicencia.seleccionPersona.nombresCompetos()}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DEPENDENCIA -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDependencia" for="txtDependencia"
-											value="Dependencia: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDependencia"
-											value="#{registrosLicencia.dependencia.dpnDescripcion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DENOMINACION -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDenominacion" for="txtDenominacion"
-											value="Denominación: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDenominacion"
-											value="#{registrosLicencia.puesto.pstDenominacion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- REGIMEN -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblRegimen" for="txtRegimen"
-											value="Régimen: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtRegimen"
-											value="#{registrosLicencia.regimen.rgmDescripcion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
+				<div id="divDetalleEmpl" class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtCedula"
+										value="#{registrosLicencia.seleccionPersona.prsIdentificacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNombres" for="txtNombres"
+										value="Nombres: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtNombres"
+										value="#{registrosLicencia.seleccionPersona.nombresCompetos()}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DEPENDENCIA -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDependencia" for="txtDependencia"
+										value="Dependencia: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDependencia"
+										value="#{registrosLicencia.dependencia.dpnDescripcion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DENOMINACION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDenominacion" for="txtDenominacion"
+										value="Denominación: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDenominacion"
+										value="#{registrosLicencia.puesto.pstDenominacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- REGIMEN -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblRegimen" for="txtRegimen"
+										value="Régimen: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtRegimen"
+										value="#{registrosLicencia.regimen.rgmDescripcion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
 						</div>
 					</div>
-					
-					<div id="divTblRegistrosLicencias">
-						<p:dataTable var="licencia"
-							value="#{registrosLicencia.listaLicencias}">
-							<p:column headerText="Tipo Licencia">
-								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
-							</p:column>
-							<p:column headerText="Nº días">
-								<h:outputText value="#{licencia.lcnNumDias}" />
-							</p:column>
-							<p:column headerText="Fecha Inicio">
-								<h:outputText value="#{licencia.lcnFechaInicio}" />
-							</p:column>
-							<p:column headerText="Fecha Fin">
-								<h:outputText value="#{licencia.lcnFechaFin}" />
-							</p:column>
-							<p:column headerText="Explicación">
-								<h:outputText value="#{licencia.lcnExplicacion}" />
-							</p:column>
-							
-							<p:column>
-								<f:facet name="header">
-									<i class="fa fa-check-square-o" />
-								</f:facet>
-								<p:commandButton value="Ver/Editar"
-									action="/controlAsistencia/licencias/Licencia.xhtml" actionListener="#{registrosLicencia.cargarVariables(licencia)}">
-									<f:setPropertyActionListener value="#{licencia}"
-										target="#{registrosLicencia.seleccionLicencia}" />
-								</p:commandButton>
-								
-								<p:commandButton value="Imprimir"></p:commandButton>
-							</p:column>
-							
-						</p:dataTable>
-					</div>
-					<div>
+				</div>
+
+				<div id="divTblRegistrosLicencias">
+					<p:dataTable var="licencia"
+						value="#{registrosLicencia.listaLicencias}">
+						<p:column headerText="Tipo Licencia" style="width:15%;">
+							<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
+						</p:column>
+						<p:column headerText="Nº días" style="width:10%;">
+							<h:outputText value="#{licencia.lcnNumDias}" />
+						</p:column>
+						<p:column headerText="Fecha Inicio" style="width:10%;">
+							<h:outputText value="#{licencia.lcnFechaInicio}" />
+						</p:column>
+						<p:column headerText="Fecha Fin" style="width:10%;">
+							<h:outputText value="#{licencia.lcnFechaFin}" />
+						</p:column>
+						<p:column headerText="Explicación">
+							<h:outputText value="#{licencia.lcnExplicacion}" />
+						</p:column>
+
+						<p:column style="width:10%;">
+							<f:facet name="header">
+								<i class="fa fa-check-square-o" />
+							</f:facet>
+							<p:commandLink value="Ver/Editar"
+								action="/controlAsistencia/licencias/Licencia.xhtml"
+								actionListener="#{registrosLicencia.cargarVariables(licencia)}">
+								<f:setPropertyActionListener value="#{licencia}"
+									target="#{registrosLicencia.seleccionLicencia}" />
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+				</div>
+				<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/licencias/Licencia.xhtml"  actionListener="#{registrosLicencia.cargarVariables(null)}"></p:commandButton>
-							</center>
-					</div>
-					
-				</p:panel>
+							action="/controlAsistencia/licencias/Licencia.xhtml"
+							actionListener="#{registrosLicencia.cargarVariables(null)}"></p:commandButton>
+						<p:commandButton id="btnCancelarVacion" value="Volver"
+							action="#{registrosLicencia.regresarEmpleados()}"></p:commandButton>
+					</center>
+				</div>
 
-			</h:form>
-			</ui:define>
-	</ui:composition>
-	</html>
+			</p:panel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
