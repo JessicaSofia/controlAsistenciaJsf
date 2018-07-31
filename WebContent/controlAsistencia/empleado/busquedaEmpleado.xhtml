@@ -18,16 +18,16 @@
 	<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
 	<p:panel id="pnlBusquedaEmpleado"  header="Búsqueda Empleado" style="margin-bottom: 10px;">
 	<div class="grid condensed" style="margin:0 !important">
-	<div class="row cells8" > 
-						<div class="cell colspan1" >
+	<div class="row cells8" style="width: fit-content;"> 
+						<div class="cell colspan2" >
 		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado" value="Nombres: "/>
 		       			</div>
 		       			<div class="cell colspan4">	
 		       					<p:inputText  id="txtBusquedaEmpleado" value="#{busquedaEmpleado.txtBusquedaEmpleado}" 
-		       									style="width: 100%"  ></p:inputText> 
+		       						style=" font-weight: Normal !important; with: 100%"			 ></p:inputText> 
 		       			</div>
 		       					<div class="cell colspan2">	
-		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleado.buscarEmpleado()}" update="tblEmpleados" action="controlAsistencia/vacaciones/VacacionesRegistros.xhtml" ></p:commandButton>
+		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleado.buscarEmpleado()}" update="tblEmpleados" action="controlAsistencia/vacaciones/VacacionesRegistros.xhtml" style="margin-left: 50%;" ></p:commandButton>
 		       					</div>
 		       	
 	</div>				
@@ -52,6 +52,10 @@
             </p:commandButton>
         </p:column>
 	</p:dataTable>
+	<br></br>
+	<center>
+	<p:commandLink value="Inicio" action="/controlAsistencia/generalidades/principal.xhtml"> </p:commandLink>
+	</center>
 	</div>
 </div>
 	</p:panel>
