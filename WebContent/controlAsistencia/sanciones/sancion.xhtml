@@ -13,6 +13,28 @@
 		</ui:include>
 		</ui:define>
 	<ui:define name="cuerpo">
+	<style type="text/css">
+
+.ui-datepicker-calendar {
+    display: none;
+}
+
+
+
+</style>
+<script language="JavaScript">
+function regenererCalSancionForm(){
+    year = $("#sancionForm\\:calendarSanInicio .ui-datepicker-year").val();
+    month = $("#sancionForm\\:calendarSanInicio .ui-datepicker-month").val();
+    
+    $('#frmReporteSanciones\\:calendarSanInicio_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
+      
+}
+
+
+</script>
+
+	
 	<h:form  id="sancionForm">
 	<p:panel  id="panelSancion" header="Nuevo Registro"  >
 	<div class="grid condensed">
@@ -45,39 +67,30 @@
 					</div>
 				</div>
 				<div class="row cells8"> 
-					<div class="cell colspan2"><!-- AÑO DE SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+					<div class="cell colspan4"  ><!-- segunda fila-->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml" >
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioSancion" for="txtAnioSancion" value="Año:"/>	
+		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicio" value="Año-Mes:"  />	
 		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtAnioSancion" value="#{sancionForm.dtSancion.dtpssnAno}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:inputText>	
+		       				<ui:define name="valor">
+		       				 <p:calendar  id="calendarSanInicio" value="#{reporteSanciones.fecha}" required="true"
+                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
+                  />
+     	
 		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgSanInicionReporteVac" for="calendarSanInicio" />
+		       				</ui:define>
+		       				
 		       			</ui:decorate>
 					</div>
-					
-					<div class="cell colspan2"><!-- MES  DE SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblMesSancion" for="txtMesSancion" value="Mes: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtMesSancion" value="#{sancionForm.dtSancion.dtpssnMes}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:inputText>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					
 					<div class="cell colspan4"><!-- DIAS DE SANCION -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 		       				<ui:define name="etiqueta">	
 		       					<p:outputLabel id="lblDiasSancion" for="txtDiasSancion" value="Días: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputText id="txtDiasSancion" value="#{sancionForm.dtSancion.dtpssnDias}"  
+		       					<p:inputText id="txtDiasSancion" value="#{sancionForm.dtSancion.dtpssnDias}" required="true"  
 		       									style="font-weight: Normal !important; width: 100%;">
 		       					</p:inputText>	
 		       				</ui:define>
@@ -93,7 +106,7 @@
 		       					<p:outputLabel id="lblTipoFalta" for="tipoFalta" value="Falta: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoFalta"
+		       					<p:selectOneMenu id="tipoFalta" required="true"
 											value="#{sancionForm.tipoFalta}" effect="fold">
 											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
 											<f:selectItems value="#{sancionForm.tipoFaltas}"  />
@@ -112,7 +125,7 @@
 		       					<p:outputLabel id="lblMinutos" for="txtMinutos" value="Minutos: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       				<p:inputText id="txtMinutos" value="#{sancionForm.dtSancion.dtpssnMinutos}" 
+		       				<p:inputText id="txtMinutos" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true"
 		       									style="font-weight: Normal !important;  ">
 		       					</p:inputText>
 		       					
@@ -127,7 +140,7 @@
 					
 				</div>
 				<br/>
-				<p:commandButton id="btnCalcularSancion"  value="Calcular" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
+				<p:commandButton id="btnCalcularSancion"  value="Calcular" onclick="regenererCalSancionForm()" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
 				<br/>
 				<p:separator></p:separator>
 				<div class="row cells8"> 
@@ -150,7 +163,7 @@
 		       					<p:outputLabel id="lblValorSancion" for="txtValorSancion" value="Valor: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" disabled="true"
+		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" 
 		       									style="font-weight: Normal !important;">
 		       					</p:inputText>	
 		       				</ui:define>
@@ -212,10 +225,10 @@
 				<div class="cell colpan3"></div>
 				<div class="cell colpan3"></div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnGuardarVacion" value="Guardar e Imprimir" action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  actionListener="#{sancionForm.guardarSancion()}" update="sancionForm" ></p:commandButton>
+                <p:commandButton id="btnGuardarVacion" value="Guardar"   actionListener="#{sancionForm.guardarSancion()}" update="sancionForm" ></p:commandButton>
 				</div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{sancionForm.anularSancion()}"></p:commandButton>
+                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{sancionForm.anularSancion()}" rendered="#{sancionForm.esActualizacion}"></p:commandButton>
 				</div>
 				<div class="cell colpan3">
                 <p:commandButton id="btnCancelarVacion" value="Cancelar" action="#{sancionForm.regresar()}"></p:commandButton>
@@ -229,7 +242,7 @@
 				</center>
 					
 		</div>
-					
+					 
 	</p:panel>
 	
 	</h:form>

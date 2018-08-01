@@ -194,6 +194,10 @@ public class VacacionForm implements Serializable {
 		Calendar fechaFinal = Calendar.getInstance();
 		fechaFinal.setTime(fechaInicio);
 		fechaFinal.add(Calendar.DAY_OF_YEAR, numDias - 1);
+		int dsab=fechaFinal.get(Calendar.DAY_OF_WEEK);
+		if(dsab==Calendar.SATURDAY) {
+			fechaFinal.add(Calendar.DAY_OF_YEAR, 1);
+		}
 		return (Date) fechaFinal.getTime();
 	}
 

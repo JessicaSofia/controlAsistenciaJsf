@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -84,6 +85,7 @@ public class SancionForm implements   Serializable{
 	private TipoLicencia tipoSancionEntidad;
 	private boolean EsDescuento=false;
 	private  boolean esPorFrecuencia=false;
+	private Date fecha;
 	
 	@PostConstruct
 	public void init() {
@@ -98,8 +100,6 @@ public class SancionForm implements   Serializable{
 	this.lstTipSanciones.forEach((tipoSancionEach) -> {
 		tiposSanciones.put(tipoSancionEach.getSnNombre(), String.valueOf(tipoSancionEach.getSnId()));
 	});
-	
-
 		
 	}
 	
@@ -320,6 +320,14 @@ public class SancionForm implements   Serializable{
 	public void setEsPorFrecuencia(boolean esPorFrecuencia) {
 		this.esPorFrecuencia = esPorFrecuencia;
 	}
+	
+	public Date getFecha() {
+		return fecha;
+	}
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+	
 	/**
 	 * Metodos
 	 */
@@ -331,7 +339,6 @@ public class SancionForm implements   Serializable{
 		tipoFalta="";
 		
 	}
-	
 	
 	/**
 	 * Metodo paara  generar el Numero De Autorizacion
@@ -348,6 +355,12 @@ public class SancionForm implements   Serializable{
 	} 
 	
 	public void calcularSancion() {
+		
+		Calendar c=Calendar.getInstance();
+		c.setTime(fecha);
+		dtSancion.setDtpssnAno(c.get(Calendar.YEAR));
+		dtSancion.setDtpssnMes(Calendar.MONTH);
+		
 		 
  		String txtDias=dtSancion.getDtpssnDias();
 		float valor=0;
@@ -366,7 +379,8 @@ public class SancionForm implements   Serializable{
 //				categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), Faltas.AbandonodeTrabajo.getId() , min);
 //				
 //			}
-			//Mensaje no hay parametrizaciones
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "No se ha paramatrizado estos rangos"));
 			return;
 		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
@@ -389,16 +403,18 @@ public class SancionForm implements   Serializable{
 			 
 		 this.tipoSancion=String.valueOf(sancion.getSnId());
 		 
-if(sancion.getSnPorcentaje()!=0) {
+if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 	 valor=sancion.getSnPorcentaje();
 	 
 }else {
+	if(sancion.getSnPorcentaje()!=-1) {
 	if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
 	if(esPorFrecuencia) {
 		  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
 	  }else {
 		  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
 	  }}
+	}
 	
 }
 		if(valor!=0) {
@@ -415,7 +431,7 @@ if(sancion.getSnPorcentaje()!=0) {
 	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min,  int frc) {
 		CategoriaFalta categoriaFalta= null;
 		List<CategoriaFalta> parametros= srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(ctgId,flId);
-		for(CategoriaFalta s: parametros) {
+ 		for(CategoriaFalta s: parametros) {
 			if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()!=-1) {
 
 				if(s.getCtgflMinuntosMin()<=min && min <=s.getCtgflMinutosMax()) {
@@ -460,22 +476,21 @@ if(sancion.getSnPorcentaje()!=0) {
 	public  Sancion  obtenerSancionAplicar(Sancion  sancion) {
 		Sancion retorno =null;
 		int nivel=sancion.getSnNivel();
-		int tpsn= sancion.getTipoSancion().getTpsnId();
+		int tpsn= 0;
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
 		
-		if(tpsn!=1) {
-			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId());
+		
+			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId());
 			if(dtSanUlt!=null){
-				ultimaSancion= dtSanUlt.getSancion();	
-			}
-			
+				ultimaSancion= dtSanUlt.getSancion();
+				tpsn=ultimaSancion.getTipoSancion().getTpsnId();
 		}
 		
 		if(ultimaSancion==null) {
 			retorno=sancion;
 		}else {
-			
+			if(tpsn==2) {
 			if(calcularTiempoUltimaSancion(dtSancion, dtSanUlt)) {
 
 				int ulnivel=ultimaSancion.getSnNivel();
@@ -505,6 +520,10 @@ if(sancion.getSnPorcentaje()!=0) {
 				retorno=sancion;
 			}
 				}
+			else {
+				retorno=sancion;
+			}
+		}
 		
 		return retorno;
 		
@@ -513,7 +532,7 @@ if(sancion.getSnPorcentaje()!=0) {
 	public boolean VerificarSancionConsecutivoMuta(Sancion sancion, CategoriaFalta  categoriaFal) {
 		boolean retorno =false;
 		Calendar fs=Calendar.getInstance();
-		fs.set(dtSancion.getDtpssnAno() , dtSancion.getDtpssnMes(),1);
+		fs.set(dtSancion.getDtpssnAno() , dtSancion.getDtpssnMes()-1,1);
 
 		int mes=dtSancion.getDtpssnMes();
 		int n=mes-2;
@@ -569,7 +588,10 @@ if(sancion.getSnPorcentaje()!=0) {
 		 detallePuesto=srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		 dtSancion.setDetallePuesto(detallePuesto); 
 		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
-		 srvSanciones.insertaSancion(dtSancion);
+		if( srvSanciones.insertaSancion(dtSancion)) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Sancion Registrada existosamente"));
+		}
 		 
 		}
 		limpiarFormSancion();
@@ -642,8 +664,8 @@ public boolean calcularTiempoUltimaSancion(DetallePuestoSancion dtSancionNueva,	
 	int ultimoDiaNuevo=Integer.parseInt(dias1[0]);
 	int ultimoDiaAnterior=Integer.parseInt(dias2[n2-1]);
 	
-	int mesNuevo=dtSancionNueva.getDtpssnMes();
-	int mesAnterior=dtSancionAnterior.getDtpssnMes();
+	int mesNuevo=dtSancionNueva.getDtpssnMes()-1;
+	int mesAnterior=dtSancionAnterior.getDtpssnMes()-1;
 	
 	int anioNuevo=dtSancionNueva.getDtpssnAno();
 	int anioAnterior=dtSancionAnterior.getDtpssnAno();
