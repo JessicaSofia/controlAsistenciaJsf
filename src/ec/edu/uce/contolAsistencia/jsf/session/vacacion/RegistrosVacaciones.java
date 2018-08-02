@@ -53,7 +53,7 @@ public  class RegistrosVacaciones  implements Serializable {
 	private Puesto puesto= null;
 	private Regimen regimen=null;
 	
-	
+
 
 	private PersonaDto seleccionPersona;
 	

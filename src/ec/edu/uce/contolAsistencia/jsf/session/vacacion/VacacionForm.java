@@ -232,7 +232,7 @@ public class VacacionForm implements Serializable {
 			totaldias1 = salVacaCal1.getSlvcTotalDias();
 			diasReg1 = salVacaCal1.getSlvcDiasRegistrados();
 			diasAnt1 = salVacaCal1.getSlvcDiasAnticipados();
-			numFSem1 = salVacaCal1.getSlvcNumFinSemana();
+			numFSem1 = salVacaCal1.getSlvcNumfinsemana();
 			numFsTotal1 = salVacaCal1.getSlvcTotalDias() / 7;
 
 		}
@@ -241,7 +241,7 @@ public class VacacionForm implements Serializable {
 			saldoDias2 = salVacaCal2.getSlvcDiasRestantes();
 			diasReg2 = salVacaCal2.getSlvcDiasRegistrados();
 			diasAnt2 = salVacaCal2.getSlvcDiasAnticipados();
-			numFSem2 = salVacaCal2.getSlvcNumFinSemana();
+			numFSem2 = salVacaCal2.getSlvcNumfinsemana();
 			numFsTotal2 = salVacaCal2.getSlvcTotalDias() / 7;
 		}
 
@@ -253,7 +253,7 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcDiasRegistrados(totaldias1);
 				salVacaCal1.setSlvcDiasRestantes(0);
 				salVacaCal1.setSlvcEstado(Estados.DesActivo.getId());
-				salVacaCal1.setSlvcNumFinSemana(numFsTotal1);
+				salVacaCal1.setSlvcNumfinsemana(numFsTotal1);
 				salVacaCal2.setSlvcPeriodo(1);
 				saldoTotaldias = saldoTotaldias + saldoDias2;
 				if (saldoTotaldias < 0) {
@@ -263,7 +263,7 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
-					salVacaCal2.setSlvcNumFinSemana(numFsTotal2);
+					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
 
 				} else {
 
@@ -275,7 +275,7 @@ public class VacacionForm implements Serializable {
 					salVacaCal1.setSlvcTotalHoras("00:00");
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
-					salVacaCal2.setSlvcNumFinSemana(numFSem2 + resultado.get("finSemana"));
+					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
 				}
 			}
 
@@ -284,7 +284,7 @@ public class VacacionForm implements Serializable {
 				int n = resultado.get("diasDescontar");
 				salVacaCal1.setSlvcDiasRegistrados(diasReg1 + n);
 				salVacaCal1.setSlvcDiasRestantes(totaldias1 - (diasReg1 + n));
-				salVacaCal1.setSlvcNumFinSemana(numFSem1 + resultado.get("finSemana"));
+				salVacaCal1.setSlvcNumfinsemana(numFSem1 + resultado.get("finSemana"));
 
 				vacacion.setVccFechaFin(
 						calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
@@ -300,7 +300,7 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasAnticipados((-1) * saldoTotaldias);
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
-					salVacaCal2.setSlvcNumFinSemana(numFsTotal2);
+					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 				} else {
 
@@ -308,7 +308,7 @@ public class VacacionForm implements Serializable {
 					int n = resultado.get("diasDescontar");
 					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
 					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
-					salVacaCal2.setSlvcNumFinSemana(numFSem2 + resultado.get("finSemana"));
+					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 
@@ -340,7 +340,7 @@ public class VacacionForm implements Serializable {
 		int n = 0;
 		int n1 = 0;
 		int nAñF = 0;
-		int numFReg = saldoVacacion.getSlvcNumFinSemana();
+		int numFReg = saldoVacacion.getSlvcNumfinsemana();
 		int finSemana = saldoVacacion.getSlvcTotalDias() / 7;
 		if (finSemana != 0) {
 			if (num <= 5) {
