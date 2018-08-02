@@ -24,10 +24,10 @@
 </style>
 <script language="JavaScript">
 function regenererCalSancionForm(){
-    year = $("#sancionForm\\:calendarSanInicio .ui-datepicker-year").val();
-    month = $("#sancionForm\\:calendarSanInicio .ui-datepicker-month").val();
+    year = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-year").val();
+    month = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-month").val();
     
-    $('#frmReporteSanciones\\:calendarSanInicio_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
+    $('#sancionForm\\:calendarSanInicioForm_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
       
 }
 
@@ -70,29 +70,32 @@ function regenererCalSancionForm(){
 					<div class="cell colspan4"  ><!-- segunda fila-->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml" >
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicio" value="Año-Mes:"  />	
+		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicioForm" value="Año-Mes:"  />	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanInicio" value="#{reporteSanciones.fecha}" required="true"
+		       				 <p:calendar  id="calendarSanInicioForm" value="#{reporteSanciones.fecha}" required="true"
                 pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
                   />
      	
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgSanInicionReporteVac" for="calendarSanInicio" />
+		       				<p:message id="msgSanInicionReporteVac" for="calendarSanInicioForm" />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
 					</div>
 					<div class="cell colspan4"><!-- DIAS DE SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDiasSancion" for="txtDiasSancion" value="Días: "/>	
+		       					<p:outputLabel id="lblDiasSancion" for="txtDiasSancionForm" value="Días: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputText id="txtDiasSancion" value="#{sancionForm.dtSancion.dtpssnDias}" required="true"  
+		       					<p:inputText id="txtDiasSancionForm" value="#{sancionForm.dtSancion.dtpssnDias}" required="true"  
 		       									style="font-weight: Normal !important; width: 100%;">
 		       					</p:inputText>	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgDiasSancionForm" for="txtDiasSancionForm" />
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>
@@ -122,16 +125,16 @@ function regenererCalSancionForm(){
 				<div class="cell colspan4"><!--NUMERO EN MINUTOS  --> 
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblMinutos" for="txtMinutos" value="Minutos: "/>	
+		       					<p:outputLabel id="lblMinutos" for="txtMinutosSancionForm" value="Minutos: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       				<p:inputText id="txtMinutos" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true"
-		       									style="font-weight: Normal !important;  ">
+		       				<p:inputText id="txtMinutosSancionForm" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true"
+		       									>
 		       					</p:inputText>
 		       					
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgNumMin" for="txtMinutos" />
+		       				<p:message id="msgNumMinSancion" for="txtMinutosSancionForm" />
 		       				</ui:define>
 		       			</ui:decorate>
 					</div>

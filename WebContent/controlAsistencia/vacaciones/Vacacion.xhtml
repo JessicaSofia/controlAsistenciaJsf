@@ -65,7 +65,7 @@
 								</ui:define>
 								<ui:define name="valor">
 									<p:inputText id="txtNumDias"
-										value="#{vacacionForm.vacacion.vccNumDias}"
+										value="#{vacacionForm.vacacion.vccNumDias}" required="true"
 										style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
 								</ui:define>
@@ -83,7 +83,7 @@
 										value="Desde: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="CalFechaInicio"
+									<p:calendar id="CalFechaInicio" required="true"
 										value="#{vacacionForm.vacacion.vccFechaInicio}"></p:calendar>
 								</ui:define>
 
