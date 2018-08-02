@@ -128,9 +128,7 @@ public class RegistrosLicencias implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		
-		
-		
+
 	}
 
 	/**
@@ -138,11 +136,12 @@ public class RegistrosLicencias implements Serializable {
 	 */
 
 	public void cargarHijos() {
-		
+
 		this.listaTipoLicenciaHijos = srvTipoLicencia.buscarTipoLicenciaPorPadre(Integer.parseInt(this.tipoLicencia));
 		if (this.listaTipoLicenciaHijos.isEmpty()) {
 			// compruebo si la licencia es de tipo enfermedad
-			if (Integer.parseInt(this.tipoLicencia) == 1) {
+			TipoLicencia tipoLicenciaAux = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
+			if (tipoLicenciaAux.getTplcNombre().equals("ENFERMEDAD")) {
 				this.btnComboHijo = false;
 				this.disableNumDias = false;
 				this.renderEtiqueta = false;
@@ -150,7 +149,7 @@ public class RegistrosLicencias implements Serializable {
 				tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 				this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 			} else {
-				if (Integer.parseInt(this.tipoLicencia) == 2) {
+				if (tipoLicenciaAux.getTplcNombre().equals("MATERNIDAD") && this.regimen.getRgmId() != 3) {
 					this.renderEtiqueta = true;
 					this.nombreEtiqueta = "Nacimiento multiple o Cesaria?";
 					this.btnComboHijo2 = false;
@@ -161,6 +160,8 @@ public class RegistrosLicencias implements Serializable {
 					this.renderEtiqueta = false;
 					this.btnComboHijo2 = false;
 					this.disableNumDias = true;
+					tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
+					this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 				}
 				setNumeroDias(Integer.parseInt(this.tipoLicencia));
 				this.btnComboHijo = false;
@@ -191,10 +192,19 @@ public class RegistrosLicencias implements Serializable {
 		this.listaTipoLicenciaHijos2 = srvTipoLicencia
 				.buscarTipoLicenciaPorPadre(Integer.parseInt(this.tipoLicenciaHijo));
 		if (this.listaTipoLicenciaHijos2.isEmpty()) {
-			if (Integer.parseInt(this.tipoLicenciaHijo) == 4 || Integer.parseInt(this.tipoLicenciaHijo) == 5) {
-				this.renderEtiqueta = true;
-				this.nombreEtiqueta = "Nacimiento prematuro?";
-				this.disableNumDias = true;
+			TipoLicencia tipoLicenciaAux = srvTipoLicencia
+					.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicenciaHijo));
+			if (tipoLicenciaAux.getTplcNombre().equals("PARTO: NORMAL")
+					|| tipoLicenciaAux.getTplcNombre().equals("PARTO: CESARIA")) {
+				if (this.regimen.getRgmId() != 3) {
+					this.renderEtiqueta = true;
+					this.nombreEtiqueta = "Nacimiento prematuro?";
+					this.disableNumDias = true;
+				}else{
+					this.renderEtiqueta = false;
+					this.disableNumDias = true;
+				}
+
 				tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicenciaHijo));
 				this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 			} else {
@@ -257,7 +267,6 @@ public class RegistrosLicencias implements Serializable {
 		return (Date) fechaFinal.getTime();
 	}
 
-	
 	/**
 	 * Metodo paara generar el Numero De Autorizacion
 	 */
@@ -294,18 +303,18 @@ public class RegistrosLicencias implements Serializable {
 			}
 		} else {
 			licencia.setLcnEstado(Estados.Activo.getId());
-			if (this.tipoLicencia.equals("0") || this.licencia.getLcnFechaInicio() == null || this.licencia.getLcnFechaFin() == null || this.licencia.getLcnExplicacion().equals("")) {
+			if (this.tipoLicencia.equals("0") || this.licencia.getLcnFechaInicio() == null
+					|| this.licencia.getLcnFechaFin() == null || this.licencia.getLcnExplicacion().equals("")) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Advertencia.", "Los campos marcados con (*) son obligatorios."));
 
-			}else{
+			} else {
 				retorno = srvlicencia.LicenciaInsertar(licencia);
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Licencia registrada exitosamente."));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "Licencia registrada exitosamente."));
 				this.renderBtnImprimir = true;
 			}
 
-			
 		}
 	}
 
@@ -337,8 +346,8 @@ public class RegistrosLicencias implements Serializable {
 					.getResourceAsStream("/controlAsistencia/reportes/licencias.jasper");
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
-			response.addHeader("Content-disposition",
-					"attachment; filename=LICENCIA_" + this.seleccionPersona.nombresCompetos() +"_" +sdf.format(new Date()).toString() + ".pdf");
+			response.addHeader("Content-disposition", "attachment; filename=LICENCIA_"
+					+ this.seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
 			JasperRunManager.runReportToPdfStream(rptStream, stream, parametros, new JREmptyDataSource());
@@ -351,8 +360,7 @@ public class RegistrosLicencias implements Serializable {
 		}
 
 	}
-	
-	
+
 	public void cargarVariables(Licencia seleccionLicencia) {
 		if (seleccionLicencia == null) {
 			esActualizacion = false;
@@ -370,7 +378,7 @@ public class RegistrosLicencias implements Serializable {
 		}
 
 	}
-	
+
 	public void cargarVariablesFuncionario(PersonaDto persona) {
 		limpiar();
 		if (persona != null) {
@@ -382,9 +390,9 @@ public class RegistrosLicencias implements Serializable {
 				tiposLicencias.put(tipoLicenciaEach.getTplcNombre(), String.valueOf(tipoLicenciaEach.getTplcId()));
 			});
 		}
-		
-		 
+
 	}
+
 	public void limpiar() {
 		seleccionPersona = null;
 		this.listaLicencias = null;
@@ -404,7 +412,7 @@ public class RegistrosLicencias implements Serializable {
 		this.tipoLicenciaHijo2 = "0";
 		this.btnComboHijo = false;
 		this.btnComboHijo2 = false;
-		//saldoVacacion = null;
+		// saldoVacacion = null;
 		// cargarVariables();
 		return ruta;
 	}
@@ -412,12 +420,12 @@ public class RegistrosLicencias implements Serializable {
 	public String regresarEmpleados() {
 		String ruta = "/controlAsistencia/empleado/busEmpleado.xhtml";
 		this.seleccionPersona = null;
-		//this.licencia = null;
-		//saldoVacacion = null;
+		// this.licencia = null;
+		// saldoVacacion = null;
 		// cargarVariables();
 		return ruta;
 	}
-	
+
 	/**
 	 * GETTER & SETTER
 	 * 
