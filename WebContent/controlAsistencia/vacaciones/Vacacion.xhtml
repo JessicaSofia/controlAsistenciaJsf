@@ -189,13 +189,14 @@
 						<div class="row cells8">
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3"></div>
-							<div class="cell colpan3">
+							<div class="cell colpan6">
 								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm"
 									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
 									
 								<p:commandButton id="btnCancelarVacion" value="Volver"
 									action="#{vacacionForm.regresar()}"></p:commandButton>
 							</div>
+							<p:commandButton id="btnAnularVacion" value="Anular" update="VacacionForm"  onclick="PF('anulDialogVacacion').show();"></p:commandButton>
 							<p:commandButton id="btnPDFVacaciones"
 								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
 								actionListener="#{vacacionForm.verPDF}" target="_blank"
@@ -208,6 +209,33 @@
 			</p:panel>
 
 		</h:form>
+			<div id="divDialogoAnulVacacion">
+		<p:dialog header="Anulación" widgetVar="anulDialogVacacion" modal="true" height="40%" width="50%" >
+		<div class="row cells8"> 
+					<div class="cell colspan8"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblMotivo" for="txtMotivoAnulado" value="Motivo:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputTextarea id="txtMotivoAnulado" value="#{vacacionForm.vacacion.vccObservacionEstado}" required="true" 
+		       									style="font-weight: Normal !important;width: 100%;">
+		       					</p:inputTextarea>	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgtipoSancion" for="txtMotivoAnulado" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+				</div>
+				<center>
+				<p:commandButton value="Guardar"  actionListener="#{vacacionForm.anularVacacion()}" update="VacacionForm" ></p:commandButton>
+				<p:commandButton value="Volver" update="VacacionForm"></p:commandButton>
+				</center>
+    	
+		</p:dialog> 
+		</div>
 	</ui:define>
 
 </ui:composition>

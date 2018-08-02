@@ -13,20 +13,17 @@
 		</ui:include>
 		</ui:define>
 	<ui:define name="cuerpo">
-	<style type="text/css">
-
+<style type="text/css">
 .ui-datepicker-calendar {
     display: none;
 }
 
-
-
 </style>
 <script language="JavaScript">
 function regenererCalSancionForm(){
+alert("Entramos");
     year = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-year").val();
     month = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-month").val();
-    
     $('#sancionForm\\:calendarSanInicioForm_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
       
 }
@@ -73,7 +70,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicioForm" value="Año-Mes:"  />	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanInicioForm" value="#{reporteSanciones.fecha}" required="true"
+		       				 <p:calendar  id="calendarSanInicioForm" value="#{sancionForm.fecha}" required="true"
                 pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
                   />
      	
@@ -139,8 +136,6 @@ function regenererCalSancionForm(){
 		       			</ui:decorate>
 					</div>
 				
-				
-					
 				</div>
 				<br/>
 				<p:commandButton id="btnCalcularSancion"  value="Calcular" onclick="regenererCalSancionForm()" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
@@ -231,16 +226,16 @@ function regenererCalSancionForm(){
                 <p:commandButton id="btnGuardarVacion" value="Guardar"   actionListener="#{sancionForm.guardarSancion()}" update="sancionForm" ></p:commandButton>
 				</div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnAnularVacacion" value="Anular" actionListener="#{sancionForm.anularSancion()}" rendered="#{sancionForm.esActualizacion}"></p:commandButton>
+                <p:commandButton id="btnAnularVacacion" value="Anular" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}"></p:commandButton>
 				</div>
 				<div class="cell colpan3">
-                <p:commandButton id="btnCancelarVacion" value="Cancelar" action="#{sancionForm.regresar()}"></p:commandButton>
+                <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}"></p:commandButton>
 				</div>
 				<div class="cell colpan3">
-								<p:commandButton id="btnPDFLicenia"
-									value="Imprimir" actionListener="#{sancionForm.verPDF}"
+								<p:commandButton id="btnPDFSancion"
+									value="Imprimir" rendered="#{sancionForm.esImprimir}" actionListener="#{sancionForm.verPDF}"
 									target="_blank" ajax="false"></p:commandButton>
-							</div>
+							</div> 
 				</div>
 				</center>
 					
@@ -249,6 +244,37 @@ function regenererCalSancionForm(){
 	</p:panel>
 	
 	</h:form>
+	
+		<div id="divDialogoAnuladdo">
+		<h:form id="dialogAnulSancion">
+		<p:dialog header="Insubcistencia" widgetVar="anulDialog" modal="true" height="40%" width="50%" >
+		<div class="row cells8"> 
+					<div class="cell colspan8"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblMotivo" for="txtMotivoInsub" value="Motivo:"/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:inputTextarea id="txtMotivoInsub" value="#{sancionForm.dtSancion.dtpssnMotivoInsub}" required="true" 
+		       									style="font-weight: Normal !important;width: 100%;">
+		       					</p:inputTextarea>	
+		       				</ui:define>
+		       				<ui:define name="etiquetaError">
+		       				<p:message id="msgtipoSancion" for="txtMotivoInsub" />
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+				</div>
+				<center>
+				<p:commandButton value="Guardar"  actionListener="#{sancionForm.anularSancion()}" update="dialogAnulSancion" ></p:commandButton>
+				<p:commandButton value="Volver" update="dialogAnulSancion"></p:commandButton>
+				</center>
+    	
+		</p:dialog> 
+		</h:form>
+		</div>
+		
 	</ui:define>
 	  
 	</ui:composition>

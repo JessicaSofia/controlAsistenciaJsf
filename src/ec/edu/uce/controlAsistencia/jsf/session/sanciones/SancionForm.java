@@ -85,6 +85,7 @@ public class SancionForm implements   Serializable{
 	private TipoLicencia tipoSancionEntidad;
 	private boolean EsDescuento=false;
 	private  boolean esPorFrecuencia=false;
+	private boolean esImprimir=false;
 	private Date fecha;
 	
 	@PostConstruct
@@ -328,6 +329,13 @@ public class SancionForm implements   Serializable{
 		this.fecha = fecha;
 	}
 	
+	
+	public boolean isEsImprimir() {
+		return esImprimir;
+	}
+	public void setEsImprimir(boolean esImprimir) {
+		this.esImprimir = esImprimir;
+	}
 	/**
 	 * Metodos
 	 */
@@ -359,8 +367,8 @@ public class SancionForm implements   Serializable{
 		Calendar c=Calendar.getInstance();
 		c.setTime(fecha);
 		dtSancion.setDtpssnAno(c.get(Calendar.YEAR));
-		dtSancion.setDtpssnMes(Calendar.MONTH);
-		
+	 	dtSancion.setDtpssnMes(Calendar.MONTH);
+	 	
 		 
  		String txtDias=dtSancion.getDtpssnDias();
  		
@@ -408,7 +416,7 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 	 valor=sancion.getSnPorcentaje();
 	 
 }else {
-	if(sancion.getSnPorcentaje()!=-1) {
+   	if(sancion.getSnPorcentaje()!=-1) {
 	if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
 	if(esPorFrecuencia) {
 		  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
@@ -445,14 +453,14 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 				
 
 				if(s.getCtgflMinuntosMin()!=-1 && s.getCtgflMinutosMax()==-1 ) {
-					if( min>=s.getCtgflMinuntosMin()) {
+	 				if( min>=s.getCtgflMinuntosMin()) {
 					categoriaFalta=s;	
 					esPorFrecuencia=false;
 					break;
 					}
 				}else {
 					if(s.getCtgflFrecuenciaMin()>=1 && s.getCtgflFrecuenciaMax()!=-1) {
-						if(s.getCtgflFrecuenciaMin()<=frc && s.getCtgflFrecuenciaMax()>=frc ) {
+	 					if(s.getCtgflFrecuenciaMin()<=frc && s.getCtgflFrecuenciaMax()>=frc ) {
 							categoriaFalta=s;
 							esPorFrecuencia=true;
 							break;
@@ -480,7 +488,6 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		int tpsn= 0;
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
-		
 		
 			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId());
 			if(dtSanUlt!=null){
@@ -562,6 +569,10 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 			}else {
 				EsDescuento=false;
 			}
+			Calendar fedit=Calendar.getInstance();
+			fedit.set(seleccionDtSancion.getDtpssnAno(),seleccionDtSancion.getDtpssnMes(),1);
+			fecha=fedit.getTime();
+		
 			falta=seleccionDtSancion.getCategoriaFalta().getFalta();
 			sancion=seleccionDtSancion.getSancion();
 			tipoFalta=String.valueOf(falta.getFlId());
@@ -590,23 +601,27 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		 dtSancion.setDetallePuesto(detallePuesto); 
 		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
 		if( srvSanciones.insertaSancion(dtSancion)) {
+			esImprimir=true;
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Sancion Registrada existosamente"));
 		}
 		 
 		}
-		limpiarFormSancion();
+	
 
 	}
 
 	public void anularSancion() {
 		dtSancion.setDtpssnEstado(Estados.Anulado.getId());
-		srvSanciones .insertaSancion(dtSancion);
+		guardarSancion();
 	}
 	
 	
 	
-	public void regresar() {
+	public String regresar() {
+		String retorno="";
+		retorno="/controlAsistencia/sanciones/SancionesRegistros.xhtml";
+		return retorno;	
 		
 	}
 	
@@ -706,5 +721,9 @@ public boolean calcularTiempoUltimaSancion(DetallePuestoSancion dtSancionNueva,	
          return retorno;
 }
 
-	
+public String regresarEmpleado() {
+	String retorno="";
+	retorno ="/controlAsistencia/empleado/busquedaEmpleadoSancion.xhtml";
+	return retorno;
+}
 }

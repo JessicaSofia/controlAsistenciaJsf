@@ -306,9 +306,9 @@ public class VacacionForm implements Serializable {
 
 					Map<String, Integer> resultado = CalcularNumDiasADescontar(saldoVacacion2, num);
 					int n = resultado.get("diasDescontar");
-					salVacaCal2.setSlvcDiasRegistrados(diasReg1 + n);
-					salVacaCal2.setSlvcDiasRestantes(totaldias1 - (diasReg1 + n));
-					salVacaCal2.setSlvcNumFinSemana(numFSem1 + resultado.get("finSemana"));
+					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
+					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
+					salVacaCal2.setSlvcNumFinSemana(numFSem2 + resultado.get("finSemana"));
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 

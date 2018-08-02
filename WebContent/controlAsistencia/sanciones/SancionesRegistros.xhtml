@@ -142,12 +142,19 @@
 								<f:facet name="header">
 									<i class="fa fa-check-square-o" />
 								</f:facet>
-								<p:commandButton value="Ver/Editar"
+								<p:commandLink value="Ver/Editar"
 									action="/controlAsistencia/sanciones/sancion.xhtml" >
 									<f:setPropertyActionListener value="#{listSanc}"
 										target="#{sancionForm.seleccionDtSancion}" />
-								</p:commandButton>
-								<p:commandButton value="Imprimir"></p:commandButton>
+								</p:commandLink>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<i class="fa fa-check-square-o" />
+								</f:facet>
+								
+								<p:commandLink  value="Imprimir" actionListener="#{sancionForm.verPDF}"
+									target="_blank" ajax="false"></p:commandLink>
 							</p:column>
 							
 						</p:dataTable>
@@ -155,7 +162,9 @@
 					<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/sanciones/sancion.xhtml"  ></p:commandButton>
+							action="/controlAsistencia/sanciones/sancion.xhtml" ></p:commandButton>
+							<p:commandButton id="btnCancelarSancion" value="Volver"
+							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
 							</center>
 					</div>
 				</p:panel>
