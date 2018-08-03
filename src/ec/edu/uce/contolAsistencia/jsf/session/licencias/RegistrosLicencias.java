@@ -289,7 +289,7 @@ public class RegistrosLicencias implements Serializable {
 		boolean retorno = false;
 
 		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
-		licencia.setDetallePuesto(detallePuesto);
+		//licencia.setDetallePuesto(detallePuesto);
 
 		tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 		licencia.setTipoLicencia(tipoLicenciaEntidad);
@@ -384,7 +384,7 @@ public class RegistrosLicencias implements Serializable {
 		if (persona != null) {
 			seleccionPersona = persona;
 			this.regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-			this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(regimen.getRgmId());
+		//	this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(regimen.getRgmId());
 			this.tiposLicencias = new LinkedHashMap<>();
 			this.listaTipoLicencia.forEach((tipoLicenciaEach) -> {
 				tiposLicencias.put(tipoLicenciaEach.getTplcNombre(), String.valueOf(tipoLicenciaEach.getTplcId()));
