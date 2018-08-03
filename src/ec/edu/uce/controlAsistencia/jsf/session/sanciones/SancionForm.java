@@ -372,7 +372,7 @@ public class SancionForm implements   Serializable{
 		 
  		String txtDias=dtSancion.getDtpssnDias();
  		
-		double valor=0;
+		 float valor=0;
 		int min=dtSancion.getDtpssnMinutos();
 		
 		
