@@ -289,6 +289,7 @@ public class RegistrosLicencias implements Serializable {
 		boolean retorno = false;
 
 		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		System.out.println(seleccionPersona.getDtpsId());
 		//licencia.setDetallePuesto(detallePuesto);
 
 		tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
@@ -327,7 +328,7 @@ public class RegistrosLicencias implements Serializable {
 			parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 			parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
-			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			parametros.put("txt_dependencia",  seleccionPersona.getDpnNombre());
 			String fecha_inicio = sdf.format(licencia.getLcnFechaInicio());
 			String fecha_fin = sdf.format(licencia.getLcnFechaFin());
 
@@ -368,7 +369,14 @@ public class RegistrosLicencias implements Serializable {
 			licencia.setLcnNumLicencia(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
 			licencia.setLcnFechaEmision(fechaEmision);
-			licencia.setLcnCopia(dependencia.getDpnDescripcion());
+			//licencia.setLcnCopia(dependencia.getDpnDescripcion());
+			licencia.setLcnCopia(seleccionPersona.getDpnNombre());
+			//licencia.setDetallePuesto(detallePuesto);
+			detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+			System.out.println(seleccionPersona.getDtpsId());
+			//licencia.setDetallePuesto(detallePuesto);
+			licencia.setDtpsId(seleccionPersona.getDtpsId());
+			
 
 		} else {
 			esActualizacion = true;
@@ -383,8 +391,8 @@ public class RegistrosLicencias implements Serializable {
 		limpiar();
 		if (persona != null) {
 			seleccionPersona = persona;
-			this.regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-		//	this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(regimen.getRgmId());
+			//this.regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
+			this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(seleccionPersona.getRgmId());
 			this.tiposLicencias = new LinkedHashMap<>();
 			this.listaTipoLicencia.forEach((tipoLicenciaEach) -> {
 				tiposLicencias.put(tipoLicenciaEach.getTplcNombre(), String.valueOf(tipoLicenciaEach.getTplcId()));
@@ -431,19 +439,19 @@ public class RegistrosLicencias implements Serializable {
 	 * 
 	 * @return
 	 */
-	public Dependencia getDependencia() {
-		if (dependencia == null) {
+	/*public Dependencia getDependencia() {
+		/*if (dependencia == null) {
 			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
 		}
 		return dependencia;
 
-	}
+	}*/
 
 	public void setDependencia(Dependencia dependencia) {
 		this.dependencia = dependencia;
 	}
 
-	public DetallePuestoDto getDetallePuestoEmpleado() {
+	/*public DetallePuestoDto getDetallePuestoEmpleado() {
 		if (detallePuestoEmpleado == null) {
 			detallePuestoEmpleado = srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
 			if (detallePuestoEmpleado == null) {
@@ -452,16 +460,16 @@ public class RegistrosLicencias implements Serializable {
 		}
 
 		return detallePuestoEmpleado;
-	}
+	}*/
 
 	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
 		this.detallePuestoEmpleado = detallePuestoEmpleado;
 	}
 
-	public FichaEmpleado getFichaEmpleado() {
+	/*public FichaEmpleado getFichaEmpleado() {
 		fichaEmpleado = srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
 		return fichaEmpleado;
-	}
+	}*/
 
 	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
 		this.fichaEmpleado = fichaEmpleado;
@@ -475,26 +483,26 @@ public class RegistrosLicencias implements Serializable {
 		this.seleccionPersona = seleccionPersona;
 	}
 
-	public Puesto getPuesto() {
+	/*public Puesto getPuesto() {
 		if (puesto == null) {
 
 			puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
 
 		}
 		return puesto;
-	}
+	}*/
 
 	public void setPuesto(Puesto puesto) {
 		this.puesto = puesto;
 	}
 
-	public Regimen getRegimen() {
+	/*public Regimen getRegimen() {
 
 		if (regimen == null) {
 			regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
 		}
 		return regimen;
-	}
+	}*/
 
 	public void setRegimen(Regimen regimen) {
 		this.regimen = regimen;

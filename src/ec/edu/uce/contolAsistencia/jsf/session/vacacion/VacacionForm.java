@@ -140,13 +140,16 @@ public class VacacionForm implements Serializable {
 
 	public void GuardarVacacion() {
 		boolean retorno = false;
-		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 
-		vacacion.setDetallePuesto(detallePuesto);
+		vacacion.setDtpsId(seleccionPersona.getDtpsId());
 		if (esActualizacion) {
 			Vacacion vac = srvVacacion.VacacionActualizar(vacacion);
 			if (vac != null) {
 				retorno = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Aut. de vacaciones anuales actualizada exitosamente."));
+				this.renderBtnImprimir = true;
 			} else {
 				retorno = false;
 			}
@@ -161,14 +164,14 @@ public class VacacionForm implements Serializable {
 		if (retorno) {
 			if (salVacaCal1 != null && salVacaCal2 != null) {
 
-				salVacaCal1.setDetallePuesto(detallePuesto);
-				salVacaCal2.setDetallePuesto(detallePuesto);
+				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
+				salVacaCal2.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
 
 			} else {
 				if (salVacaCal1 == null && salVacaCal2 != null) {
-					salVacaCal2.setDetallePuesto(detallePuesto);
+					salVacaCal2.setDtpsId(seleccionPersona.getDtpsId());
 					srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
 
 				}
@@ -407,7 +410,7 @@ public class VacacionForm implements Serializable {
 			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
 			vacacion.setVccFechaEmision(fechaEmision);
-			vacacion.setVccCopia(dependencia.getDpnDescripcion());
+			vacacion.setVccCopia(seleccionPersona.getDpnNombre());
 
 		} else {
 			esActualizacion = true;
@@ -477,15 +480,27 @@ public class VacacionForm implements Serializable {
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("txt_num_auto", String.valueOf(vacacion.getVccNumAutorizacion()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
-			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());
 			String fecha_inicio = sdf.format(vacacion.getVccFechaInicio());
 			String fecha_fin = sdf.format(vacacion.getVccFechaFin());
 
 			parametros.put("txt_dias", String.valueOf(vacacion.getVccNumDias()));
 			parametros.put("txt_desde", fecha_inicio);
 			parametros.put("txt_hasta", fecha_fin);
-			parametros.put("txt_saldo1", String.valueOf(salVacaCal1.getSlvcDiasRestantes()));
-			parametros.put("txt_saldo2", String.valueOf(salVacaCal2.getSlvcDiasRestantes()));
+			String saldo1 = null;
+			String saldo2 = null;
+			if(salVacaCal1.getSlvcDiasRestantes() == 0){
+				saldo1 = "--";
+			}else {
+				saldo1 = String.valueOf(salVacaCal1.getSlvcDiasRestantes());
+			}
+			if(salVacaCal2.getSlvcDiasRestantes() == 0){
+				saldo2 = "--";
+			}else{
+				saldo2 = String.valueOf(salVacaCal2.getSlvcDiasRestantes());
+			}
+			parametros.put("txt_saldo1", saldo1);
+			parametros.put("txt_saldo2", saldo2);
 			parametros.put("txt_observacion", vacacion.getVccObservacion());
 			parametros.put("txt_copia", this.vacacion.getVccCopia());
 
@@ -524,8 +539,8 @@ public class VacacionForm implements Serializable {
 	public void guardadPermiso() {
 		boolean retorno = false;
 
-		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
-		permiso.setDetallePuesto(detallePuesto);
+		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		permiso.setDtpsId(seleccionPersona.getDtpsId());
 
 		if (esActualizacion) {
 			Permiso p = srvPermiso.ActualizarPermiso(permiso);
@@ -542,6 +557,8 @@ public class VacacionForm implements Serializable {
 			
 			if(retorno){
 				calcularHoras();
+				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
+				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
 			}
 
@@ -553,24 +570,25 @@ public class VacacionForm implements Serializable {
 		
 		String[] divH1=horas.split(":");
 		int h1=Integer.parseInt(divH1[0]);
-		System.out.println(h1);
+		
 		int m1=Integer.parseInt(divH1[1]);
-		System.out.println(m1);
+		System.out.println("Horas permiso "+h1 + ":"+m1);
 		
 		//String horaInicio = licenciaPermiso.getLcprHoraInicio();
 		String totalHoras = saldoVacacion1.getSlvcTotalHoras();
 		String[] divH2=totalHoras.split(":");
 		int h2=Integer.parseInt(divH2[0]);
-		System.out.println(h2);
+		//System.out.println(h2);
 		int m2=Integer.parseInt(divH2[1]);
-		System.out.println(m2);
+		System.out.println("Horas vacaciones "+h2 + ":"+m2);
 		
 		int res1 = h1+h2;
-		System.out.println(res1);
+		
 		int res2 = m1+m2;
-		System.out.println(res2);
+		System.out.println("Suma "+res1+":"+res2);
 		
 		if(this.salVacaCal1 != null){
+			salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
 			salVacaCal1.setSlvcTotalHoras(res1+":"+res2);
 		}
 		//licenciaPermiso.setLcprHoraFin(res1+":"+res2);
@@ -590,12 +608,12 @@ public class VacacionForm implements Serializable {
 	// ================================================================GETTERS &
 	// SETTERS================================================================================//
 
-	public Dependencia getDependencia() {
+	/*public Dependencia getDependencia() {
 		if (dependencia == null) {
 			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
 		}
 		return dependencia;
-	}
+	}*/
 
 	public List<Permiso> getListaPermisos() {
 		if (seleccionPersona != null) {
@@ -612,7 +630,7 @@ public class VacacionForm implements Serializable {
 		this.dependencia = dependencia;
 	}
 
-	public DetallePuestoDto getDetallePuestoEmpleado() {
+	/*public DetallePuestoDto getDetallePuestoEmpleado() {
 		if (detallePuestoEmpleado == null) {
 			detallePuestoEmpleado = srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
 			if (detallePuestoEmpleado == null) {
@@ -621,16 +639,16 @@ public class VacacionForm implements Serializable {
 		}
 
 		return detallePuestoEmpleado;
-	}
+	}*/
 
 	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
 		this.detallePuestoEmpleado = detallePuestoEmpleado;
 	}
 
-	public FichaEmpleado getFichaEmpleado() {
+	/*public FichaEmpleado getFichaEmpleado() {
 		fichaEmpleado = srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
 		return fichaEmpleado;
-	}
+	}*/
 
 	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
 		this.fichaEmpleado = fichaEmpleado;
@@ -664,26 +682,26 @@ public class VacacionForm implements Serializable {
 		this.srvVacacion = srvVacacion;
 	}
 
-	public Puesto getPuesto() {
+	/*public Puesto getPuesto() {
 		if (puesto == null) {
 
 			puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
 
 		}
 		return puesto;
-	}
+	}*/
 
 	public void setPuesto(Puesto puesto) {
 		this.puesto = puesto;
 	}
 
-	public Regimen getRegimen() {
+	/*public Regimen getRegimen() {
 
 		if (regimen == null) {
 			regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
 		}
 		return regimen;
-	}
+	}*/
 
 	public void setRegimen(Regimen regimen) {
 		this.regimen = regimen;

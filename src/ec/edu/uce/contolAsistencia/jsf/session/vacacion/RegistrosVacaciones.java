@@ -211,14 +211,14 @@ public  class RegistrosVacaciones  implements Serializable {
 
 
 
-	public Puesto getPuesto() {
+	/*public Puesto getPuesto() {
 		if(puesto==null){
 		
 			puesto=srvPuesto.BuscarPorId(seleccionPersona.getPstId());
 	
 		}
 		return puesto;
-	}
+	}*/
 
 	public void setPuesto(Puesto puesto) {
 		this.puesto = puesto;
@@ -226,13 +226,13 @@ public  class RegistrosVacaciones  implements Serializable {
 
 
 
-	public Regimen getRegimen() {
+	/*public Regimen getRegimen() {
 		
 		if(regimen ==null){
 			regimen=srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
 		}
 		return regimen;
-	}
+	}*/
 
 
 
