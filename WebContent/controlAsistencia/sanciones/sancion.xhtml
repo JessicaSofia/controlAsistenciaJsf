@@ -21,7 +21,6 @@
 </style>
 <script language="JavaScript">
 function regenererCalSancionForm(){
-alert("Entramos");
     year = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-year").val();
     month = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-month").val();
     $('#sancionForm\\:calendarSanInicioForm_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');

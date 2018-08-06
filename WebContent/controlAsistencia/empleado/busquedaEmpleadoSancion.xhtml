@@ -42,7 +42,7 @@
             <h:outputText value="#{emp.toString()}" />
         </p:column>
         <p:column headerText="Dependencia">
-            <h:outputText value="#{busquedaEmpleadoSancion.ObtenerNombreDependencia(emp.dpnId)}" />
+            <h:outputText value="#{emp.dpnNombre}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
              <p:commandLink update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  value="Seleccionar" action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  >

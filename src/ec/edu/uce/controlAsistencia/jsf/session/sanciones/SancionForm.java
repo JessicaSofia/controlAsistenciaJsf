@@ -27,24 +27,14 @@ import javax.servlet.http.HttpServletResponse;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.ContratoServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.FichaEmpleadoServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.GrupoOcupacionalServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
-import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.SancionesServicio;
 
 import ec.edu.uce.controlAsistencia.jpa.entidades.CategoriaFalta;
-import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuestoSancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Falta;
-import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
-import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
-import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Sancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoLicencia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -65,9 +55,6 @@ public class SancionForm implements   Serializable{
 	private List<DetallePuestoSancion>  lstSanciones = new ArrayList<>();
 	private DetallePuestoSancion  seleccionDtSancion=null;
 	private PersonaDto seleccionPersona;
-	private Dependencia dependencia;
-	private Puesto puesto = null;
-	private Regimen regimen = null;
 	private  Falta falta;
 	private String tipoFalta;
 	private List<Falta> listaFaltas=null;
@@ -108,18 +95,9 @@ public class SancionForm implements   Serializable{
 	 * Declaracion  de Servicios
 	 * 
 	 */
-	@EJB
-	private DependenciaServicio srvDependencia; 
-	@EJB
-	private RegimenServicio srvRegimen;
-	@EJB
-	private PuestoServicio srvPuesto;
 	
 	@EJB
 	private DetallePuestoServicio srvDetallePuesto;
-	
-	@EJB
-	private ContratoServicio srvContrato;
 	
 	@EJB
 	private  PersonaServicio srvPersona;
@@ -127,11 +105,6 @@ public class SancionForm implements   Serializable{
 	@EJB
 	private SancionesServicio srvSanciones;
 	
-	@EJB
-	private FichaEmpleadoServicio  srvFichaEmpleado;
-	
-	@EJB
-	private GrupoOcupacionalServicio srvGrupoOc;
 	
 	
 	public List<DetallePuestoSancion> getLstSanciones() {
@@ -165,35 +138,6 @@ public class SancionForm implements   Serializable{
 
 	public void setSeleccionDtSancion(DetallePuestoSancion seleccionDtSancion) {
 		this.seleccionDtSancion = seleccionDtSancion;
-	}
-	public Dependencia getDependencia() {
-		if(seleccionPersona !=null) {
-			dependencia =srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
-			
-		}
-		
-		return dependencia;
-	}
-	public void setDependencia(Dependencia dependencia) {
-		this.dependencia = dependencia;
-	}
-	public Puesto getPuesto() {
-		if(seleccionPersona !=null) {
-			puesto=srvPuesto.BuscarPorId(seleccionPersona.getPstId());
-		}
-		return puesto;
-	}
-	public void setPuesto(Puesto puesto) {
-		this.puesto = puesto;
-	}
-	public Regimen getRegimen() {
-		if(seleccionPersona !=null) {
-			regimen =srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-		}
-		return regimen;
-	}
-	public void setRegimen(Regimen regimen) {
-		this.regimen = regimen;
 	}
 	public DetallePuesto getDetallePuesto() {
 		return detallePuesto;
@@ -379,10 +323,11 @@ public class SancionForm implements   Serializable{
 		String[] Dias  = txtDias.split("-");
 		int frecuencia=Dias.length;
 		
-		FichaEmpleado empleado= srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
 		falta=srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
-		 categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), falta.getFlId() , min,  frecuencia);
-		
+		if(seleccionPersona.getCtgId()!=0) {
+			categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(seleccionPersona.getCtgId(), falta.getFlId() , min,  frecuencia);
+		}
+		 
 		if(categoriaFaltaAplicar==null) {
 //			if(Faltas.Atrasos.getId()==falta.getFlId()) {
 //				categoriaFaltaAplicar= obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(), Faltas.AbandonodeTrabajo.getId() , min);
@@ -427,7 +372,7 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 	
 }
 		if(valor!=0) {
-			int sueldo=puesto.getGrupoOcupacional().getGrocRmu();
+			int sueldo=srvSanciones.ObtnerSueldoPorDetallePuestoId(seleccionPersona.getDtpsId());
 				valor=(valor/100)*sueldo;
 				EsDescuento=true;
 		}else {
@@ -541,9 +486,6 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		boolean retorno =false;
 		Calendar fs=Calendar.getInstance();
 		fs.set(dtSancion.getDtpssnAno() , dtSancion.getDtpssnMes()-1,1);
-
-		int mes=dtSancion.getDtpssnMes();
-		int n=mes-2;
 		for(int i=1;i<=2; i++) {
 			fs.add(Calendar.MONTH, -1);
 			DetallePuestoSancion  detSan= srvSanciones.obtenerSancionPorMesAnio(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId(),fs.get(Calendar.MONTH)+1,dtSancion.getDtpssnAno());
@@ -596,9 +538,9 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		 
 		if(esActualizacion) {
 			srvSanciones.actualizarSancion(dtSancion);
+			
 		}else {
-		 detallePuesto=srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
-		 dtSancion.setDetallePuesto(detallePuesto); 
+		 dtSancion.setDtpsId(seleccionPersona.getDtpsId());
 		 dtSancion.setDtpssnEstado(Estados.Activo.getId());
 		if( srvSanciones.insertaSancion(dtSancion)) {
 			esImprimir=true;
@@ -633,10 +575,10 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("txt_num_auto", String.valueOf(dtSancion.getDtpssnNumaccion()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
-			parametros.put("txt_dependencia", dependencia.getDpnDescripcion());
+			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());
 			parametros.put("txt_cedula", seleccionPersona.getPrsIdentificacion());
 			parametros.put("txt_explicacion", dtSancion.getDtpssnObservacion());
-			parametros.put("txt_puesto", puesto.getPstDenominacion());
+			parametros.put("txt_puesto", seleccionPersona.getPstNombre());
 			parametros.put("txt_renumeracion", "896.00");
 			parametros.put("txt_partida", "1234567890000000000");
 			parametros.put("txt_individual", "123456");
