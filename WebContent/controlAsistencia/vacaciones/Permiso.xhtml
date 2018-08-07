@@ -107,15 +107,16 @@
 								<ui:define name="valor">
 									<p:selectBooleanCheckbox id="booleanValue"
 										value="#{vacacionForm.valorJustificaHoras}">
-										<p:ajax
+										<p:ajax 
 											listener="#{vacacionForm.visualizarHorasJustificadas()}" 
-											update="VacacionForm" ></p:ajax>
+											update=":VacacionForm:panelPermiso"></p:ajax>
 									</p:selectBooleanCheckbox>
 
 								</ui:define>
 
 							</ui:decorate>
 						</div>
+						
 						<div class="cell colspan8">
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
