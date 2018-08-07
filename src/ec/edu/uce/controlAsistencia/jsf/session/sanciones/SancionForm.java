@@ -76,6 +76,8 @@ public class SancionForm implements   Serializable{
 	private boolean esBloqueado=false;
 	private Date fecha; 
 	private boolean activar=false;
+	private int sueldo = 0;
+	private int valor = 0;
 	
 	
 	@PostConstruct
@@ -610,7 +612,12 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 			parametros.put("txt_cedula", seleccionPersona.getPrsIdentificacion());
 			parametros.put("txt_explicacion", dtSancion.getDtpssnObservacion());
 			parametros.put("txt_puesto", seleccionPersona.getPstNombre());
-			parametros.put("txt_renumeracion", "896.00");
+			String sueldoAux = String.valueOf(sueldo);
+			parametros.put("txt_renumeracion", sueldoAux);
+			parametros.put("txt_tipo_falta", dtSancion.getCategoriaFalta().getFalta().getFlNombre());
+			parametros.put("txt_sancion", dtSancion.getSancion().getSnDescripcion());
+			String valorAux = String.valueOf(valor);
+			parametros.put("txt_valor", valorAux);
 			parametros.put("txt_partida", "1234567890000000000");
 			parametros.put("txt_individual", "123456");
 			//parametros.put("txt_remuneracion", detallePuesto.getFichaEmpleado().);
@@ -626,7 +633,7 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/controlAsistencia/reportes/sanciones.jasper");
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
-			response.addHeader("Content-disposition", "attachment; filename=vacacion_" + sdf.format(new Date()).toString() + ".pdf");
+			response.addHeader("Content-disposition", "attachment; filename=ACCION_DE_PERSONAL_Nº" +dtSancion.getDtpssnNumaccion()+"_"+seleccionPersona.nombresCompetos()+"_"+ sdf.format(new Date()).toString() + ".pdf");
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
 			JasperRunManager.runReportToPdfStream(rptStream,stream, parametros, new JREmptyDataSource());
@@ -639,6 +646,7 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		}
 		
 	}
+
 
 public boolean calcularTiempoUltimaSancion(DetallePuestoSancion dtSancionNueva,	DetallePuestoSancion dtSancionAnterior) {
 	  
