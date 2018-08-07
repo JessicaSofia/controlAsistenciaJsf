@@ -140,7 +140,7 @@ public class VacacionForm implements Serializable {
 
 	public void GuardarVacacion() {
 		boolean retorno = false;
-		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 
 		vacacion.setDtpsId(seleccionPersona.getDtpsId());
 		if (esActualizacion) {
@@ -434,6 +434,8 @@ public class VacacionForm implements Serializable {
 			esActualizacion = true;
 			permiso = seleccionPermiso;
 		}
+		salVacaCal1 = saldoVacacion1;
+		salVacaCal2 = saldoVacacion2;
 
 	}
 
@@ -557,8 +559,6 @@ public class VacacionForm implements Serializable {
 			
 			if(retorno){
 				calcularHoras();
-				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
-				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
 			}
 

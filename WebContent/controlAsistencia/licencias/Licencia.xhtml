@@ -188,7 +188,7 @@
 										value="Desde: *" />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="CalFechaInicio"
+									<p:calendar id="CalFechaInicio" disabled="#{registrosLicencia.renderCambHorario}"
 										value="#{registrosLicencia.licencia.lcnFechaInicio}"></p:calendar>
 								</ui:define>
 
@@ -200,7 +200,7 @@
 
 					</div>
 					<br />
-					<p:commandButton id="btnCalcularVacacion" value="Calcular"
+					<p:commandButton id="btnCalcularVacacion" value="Calcular" disabled="#{registrosLicencia.renderCambHorario}"
 						actionListener="#{registrosLicencia.calcularPeriodoLicencia()}"
 						update="panelVacacion" style="margin-left: 9%;margin-bottom: 1%;">
 					</p:commandButton>

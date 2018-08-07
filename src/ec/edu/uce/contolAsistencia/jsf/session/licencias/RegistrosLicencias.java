@@ -92,6 +92,7 @@ public class RegistrosLicencias implements Serializable {
 	private boolean btnComboHijo2 = false;
 	private boolean disableNumDias = true;
 	private boolean renderBtnImprimir = false;
+	private boolean renderCambHorario = false;
 
 	/*
 	 * @ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
@@ -146,27 +147,38 @@ public class RegistrosLicencias implements Serializable {
 				this.disableNumDias = false;
 				this.renderEtiqueta = false;
 				this.btnComboHijo2 = false;
+				this.renderCambHorario = false;
 				tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 				this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
-			} else {
-				if (tipoLicenciaAux.getTplcNombre().equals("MATERNIDAD") && this.regimen.getRgmId() != 3) {
+			} else if(tipoLicenciaAux.getTplcNombre().equals("CAMBIO DE HORARIOS")){
+				this.renderCambHorario = true;
+				this.renderEtiqueta = false;
+				this.btnComboHijo2 = false;
+				this.disableNumDias = true;
+				this.btnComboHijo = false;
+				setNumeroDias(Integer.parseInt(this.tipoLicencia));
+			}
+			else {
+				if (tipoLicenciaAux.getTplcNombre().equals("MATERNIDAD") && this.seleccionPersona.getRgmId() != 3) {
 					this.renderEtiqueta = true;
 					this.nombreEtiqueta = "Nacimiento multiple o Cesaria?";
 					this.btnComboHijo2 = false;
 					this.disableNumDias = true;
+					this.renderCambHorario = false;
 					tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 					this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 				} else {
 					this.renderEtiqueta = false;
 					this.btnComboHijo2 = false;
 					this.disableNumDias = true;
+					this.renderCambHorario = false;
 					tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 					this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 				}
 				setNumeroDias(Integer.parseInt(this.tipoLicencia));
 				this.btnComboHijo = false;
 				this.disableNumDias = true;
-
+				this.renderCambHorario = false;
 			}
 
 		} else {
@@ -180,6 +192,7 @@ public class RegistrosLicencias implements Serializable {
 			this.btnComboHijo = true;
 			this.btnComboHijo2 = false;
 			this.disableNumDias = true;
+			this.renderCambHorario = false;
 			tipoLicenciaEntidad = srvTipoLicencia.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicencia));
 			this.licencia.setLcnObservacion(tipoLicenciaEntidad.getTplcDescripcion());
 		}
@@ -196,7 +209,7 @@ public class RegistrosLicencias implements Serializable {
 					.buscarTipoLicenciaPorId(Integer.parseInt(this.tipoLicenciaHijo));
 			if (tipoLicenciaAux.getTplcNombre().equals("PARTO: NORMAL")
 					|| tipoLicenciaAux.getTplcNombre().equals("PARTO: CESARIA")) {
-				if (this.regimen.getRgmId() != 3) {
+				if (this.seleccionPersona.getRgmId() != 3) {
 					this.renderEtiqueta = true;
 					this.nombreEtiqueta = "Nacimiento prematuro?";
 					this.disableNumDias = true;
@@ -304,6 +317,18 @@ public class RegistrosLicencias implements Serializable {
 			}
 		} else {
 			licencia.setLcnEstado(Estados.Activo.getId());
+			if(licencia.getTipoLicencia().getTplcNombre().equals("CAMBIO DE HORARIOS")){
+				if ( this.licencia.getLcnExplicacion().equals("")) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+							"Advertencia.", "Los campos marcados con (*) son obligatorios."));
+
+				} else {
+					retorno = srvlicencia.LicenciaInsertar(licencia);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Información.", "Licencia registrada exitosamente."));
+					this.renderBtnImprimir = true;
+				}
+			}else{
 			if (this.tipoLicencia.equals("0") || this.licencia.getLcnFechaInicio() == null
 					|| this.licencia.getLcnFechaFin() == null || this.licencia.getLcnExplicacion().equals("")) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -315,51 +340,93 @@ public class RegistrosLicencias implements Serializable {
 						"Información.", "Licencia registrada exitosamente."));
 				this.renderBtnImprimir = true;
 			}
+			}
 
 		}
 	}
 
 	public void verPDF() {
-		try {
+		if(licencia.getTipoLicencia().getTplcNombre().equals("CAMBIO DE HORARIOS")){
+			try {
 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
-			Map<String, Object> parametros = new HashMap<>();
-			parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
-			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
-			parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
-			parametros.put("txt_dependencia",  seleccionPersona.getDpnNombre());
-			String fecha_inicio = sdf.format(licencia.getLcnFechaInicio());
-			String fecha_fin = sdf.format(licencia.getLcnFechaFin());
+				Map<String, Object> parametros = new HashMap<>();
+				parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
+				parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+				
+				parametros.put("txt_dependencia",  seleccionPersona.getDpnNombre());
+				
+				String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\nOBSERVACIÓN:\n" + licencia.getLcnObservacion();
+				parametros.put("txt_resumen", resumen);
+				parametros.put("txt_copia", licencia.getLcnCopia());
 
-			String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\nRegistra: "
-					+ licencia.getLcnNumDias() + " días\n\n" + "Desde: " + fecha_inicio + " 	Hasta: " + fecha_fin
-					+ "\n\nOBSERVACIÓN:\n" + licencia.getLcnObservacion();
-			parametros.put("txt_resumen", resumen);
-			parametros.put("txt_copia", licencia.getLcnCopia());
+				File jasper = new File(FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/controlAsistencia/reportes/cambioHorario.jasper"));
+				
+				JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
 
-			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext()
-					.getRealPath("/controlAsistencia/reportes/licencias.jasper"));
+				InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext()
+						.getResourceAsStream("/controlAsistencia/reportes/cambioHorario.jasper");
+				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+						.getResponse();
+				response.addHeader("Content-disposition", "attachment; filename=LICENCIA_"
+						+ this.seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
+				ServletOutputStream stream = response.getOutputStream();
+				JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+				JasperRunManager.runReportToPdfStream(rptStream, stream, parametros, new JREmptyDataSource());
+				stream.flush();
+				stream.close();
+				FacesContext.getCurrentInstance().responseComplete();
 
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext()
-					.getResourceAsStream("/controlAsistencia/reportes/licencias.jasper");
-			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-					.getResponse();
-			response.addHeader("Content-disposition", "attachment; filename=LICENCIA_"
-					+ this.seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
-			ServletOutputStream stream = response.getOutputStream();
-			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
-			JasperRunManager.runReportToPdfStream(rptStream, stream, parametros, new JREmptyDataSource());
-			stream.flush();
-			stream.close();
-			FacesContext.getCurrentInstance().responseComplete();
+		}else{
+			try {
 
-		} catch (Exception e) {
-			e.printStackTrace();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+				Map<String, Object> parametros = new HashMap<>();
+				parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
+				parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+				parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
+				parametros.put("txt_dependencia",  seleccionPersona.getDpnNombre());
+				String fecha_inicio = sdf.format(licencia.getLcnFechaInicio());
+				String fecha_fin = sdf.format(licencia.getLcnFechaFin());
+
+				String resumen = "EXPLICACIÓN:\n\n" + licencia.getLcnExplicacion() + "\n\nRegistra: "
+						+ licencia.getLcnNumDias() + " días\n\n" + "Desde: " + fecha_inicio + " 	Hasta: " + fecha_fin
+						+ "\n\nOBSERVACIÓN:\n" + licencia.getLcnObservacion();
+				parametros.put("txt_resumen", resumen);
+				parametros.put("txt_copia", licencia.getLcnCopia());
+
+				File jasper = new File(FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/controlAsistencia/reportes/licencias.jasper"));
+				
+				JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros);
+
+				InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext()
+						.getResourceAsStream("/controlAsistencia/reportes/licencias.jasper");
+				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+						.getResponse();
+				response.addHeader("Content-disposition", "attachment; filename=LICENCIA_"
+						+ this.seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
+				ServletOutputStream stream = response.getOutputStream();
+				JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+				JasperRunManager.runReportToPdfStream(rptStream, stream, parametros, new JREmptyDataSource());
+				stream.flush();
+				stream.close();
+				FacesContext.getCurrentInstance().responseComplete();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
-
+		
+		
 	}
 
 	public void cargarVariables(Licencia seleccionLicencia) {
@@ -647,4 +714,13 @@ public class RegistrosLicencias implements Serializable {
 		this.renderBtnImprimir = renderBtnImprimir;
 	}
 
+	public boolean isRenderCambHorario() {
+		return renderCambHorario;
+	}
+
+	public void setRenderCambHorario(boolean renderCambHorario) {
+		this.renderCambHorario = renderCambHorario;
+	}
+
+	
 }
