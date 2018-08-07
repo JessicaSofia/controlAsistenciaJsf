@@ -194,7 +194,7 @@
 									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
 									
 								<p:commandButton id="btnCancelarVacion" value="Volver"
-									action="#{vacacionForm.regresar()}"></p:commandButton>
+									action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
 							</div>
 							<p:commandButton id="btnAnularVacion" value="Anular" update="VacacionForm"  onclick="PF('anulDialogVacacion').show();"></p:commandButton>
 							<p:commandButton id="btnPDFVacaciones"
@@ -208,7 +208,6 @@
 
 			</p:panel>
 
-		</h:form>
 			<div id="divDialogoAnulVacacion">
 		<p:dialog header="Anulación" widgetVar="anulDialogVacacion" modal="true" height="40%" width="50%" >
 		<div class="row cells8"> 
@@ -230,12 +229,15 @@
 					
 				</div>
 				<center>
-				<p:commandButton value="Guardar"  actionListener="#{vacacionForm.anularVacacion()}" update="VacacionForm" ></p:commandButton>
-				<p:commandButton value="Volver" update="VacacionForm"></p:commandButton>
+				<p:commandButton value="Guardar"  actionListener="#{vacacionForm.anularVacacion()}" update="VacacionForm"  Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
+				<p:commandButton value="Volver" update="VacacionForm"  Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
 				</center>
+				
     	
 		</p:dialog> 
 		</div>
+		
+		</h:form>
 	</ui:define>
 
 </ui:composition>

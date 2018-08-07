@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DependenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.LicenciaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PermisoServicio;
+import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
@@ -57,8 +58,6 @@ public class ReporteVacaciones implements Serializable{
 	public void init() {
 		
 		
-		
-		
 	}
 	
 	@EJB
@@ -75,6 +74,9 @@ public class ReporteVacaciones implements Serializable{
 	
 	@EJB
 	private PermisoServicio srvPermiso;
+	
+	@EJB
+	private PersonaServicio srvPersona;
 	
 	
 	public int getAnio() {
@@ -251,6 +253,27 @@ public class ReporteVacaciones implements Serializable{
 		
 		
 	}
-
+	public String obtenerNombrePersona(int dpstId) {
+		String perNombre="";
+		perNombre=srvPersona.obtenerNombrePersonaporDetallePuestoId(dpstId);
+		return perNombre;
+		
+	}
+	
+	public String obtenerNombreRegimen(int dpstId) {
+		String depNombre="";
+		depNombre=srvDependencia.obtenerNombreDependenciaporDetallePuestoId(dpstId);
+		return depNombre;
+		
+	}
+	
+	
+	public String obtenerNombreDependencia(int dpstId) {
+		String regNombre="";
+		regNombre=srvRegimen.obtenerNombreRegimenporDetallePuestoId(dpstId);
+		return regNombre;
+		
+	}
+	
 	
 }

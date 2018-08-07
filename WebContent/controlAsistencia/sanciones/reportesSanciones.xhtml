@@ -182,7 +182,7 @@ function regenererCalSancion(){
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="/img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
+        <p:dataExporter type="xls" target="tblRepSanciones" fileName="sanciones" pageOnly="true"/>
     </h:commandLink>
     
     </f:facet>
@@ -219,7 +219,7 @@ function regenererCalSancion(){
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="/img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepSancionesDesgloce" fileName="Vacaciones" pageOnly="true"/>
+        <p:dataExporter type="xls" target="tblRepSancionesDesgloce" fileName="sancionesDesgloce" pageOnly="true"/>
     </h:commandLink>
     
     </f:facet>
@@ -268,7 +268,7 @@ function regenererCalSancion(){
                  <f:facet name="{Exporters}">
                 <h:commandLink value="Exportar">
         <p:graphicImage name="/img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepSanciones" fileName="Vacaciones" pageOnly="true"/>
+        <p:dataExporter type="xls" target="tblRepSanciones" fileName="sancionesAnual" pageOnly="true"/>
     </h:commandLink>
     
     </f:facet>
@@ -296,6 +296,12 @@ function regenererCalSancion(){
 	
 	</div>
 </div>
+	<div>
+					<center>
+							<p:commandButton id="btnCancelarReportes" value="Volver"
+							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
+							</center>
+					</div>
 	</p:panel>
 	</h:form>
 	

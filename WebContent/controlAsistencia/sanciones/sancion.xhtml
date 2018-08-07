@@ -69,7 +69,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicioForm" value="Año-Mes:"  />	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanInicioForm" value="#{sancionForm.fecha}" required="true"
+		       				 <p:calendar  id="calendarSanInicioForm" value="#{sancionForm.fecha}" required="true" disabled="#{sancionForm.esBloqueado}"
                 pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
                   />
      	
@@ -87,7 +87,7 @@ function regenererCalSancionForm(){
 		       				</ui:define>
 		       				<ui:define name="valor">	
 		       					<p:inputText id="txtDiasSancionForm" value="#{sancionForm.dtSancion.dtpssnDias}" required="true"  
-		       									style="font-weight: Normal !important; width: 100%;">
+		       									style="font-weight: Normal !important; width: 100%;" disabled="#{sancionForm.esBloqueado}">
 		       					</p:inputText>	
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
@@ -105,7 +105,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblTipoFalta" for="tipoFalta" value="Falta: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoFalta" required="true"
+		       					<p:selectOneMenu id="tipoFalta" required="true" disabled="#{sancionForm.esBloqueado}"
 											value="#{sancionForm.tipoFalta}" effect="fold">
 											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
 											<f:selectItems value="#{sancionForm.tipoFaltas}"  />
@@ -124,7 +124,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblMinutos" for="txtMinutosSancionForm" value="Minutos: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       				<p:inputText id="txtMinutosSancionForm" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true"
+		       				<p:inputText id="txtMinutosSancionForm" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true" disabled="#{sancionForm.esBloqueado}"
 		       									>
 		       					</p:inputText>
 		       					
@@ -137,7 +137,7 @@ function regenererCalSancionForm(){
 				
 				</div>
 				<br/>
-				<p:commandButton id="btnCalcularSancion"  value="Calcular" onclick="regenererCalSancionForm()" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
+				<p:commandButton id="btnCalcularSancion"  value="Calcular" onclick="regenererCalSancionForm()" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;" rendered="#{!sancionForm.esBloqueado}"> </p:commandButton>
 				<br/>
 				<p:separator></p:separator>
 				<div class="row cells8"> 
@@ -160,7 +160,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblValorSancion" for="txtValorSancion" value="Valor: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" 
+		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" disabled="#{sancionForm.esBloqueado}"
 		       									style="font-weight: Normal !important;">
 		       					</p:inputText>	
 		       				</ui:define>
@@ -174,7 +174,7 @@ function regenererCalSancionForm(){
 		       				</ui:define>
 		       				<ui:define name="valor">
 		       				
-		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}" />
+		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}"  disabled="#{sancionForm.esBloqueado}"/>
  		
 		       				</ui:define>
 		       			</ui:decorate>
@@ -186,7 +186,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblTipoSancion" for="tipoSancion" value="Sanción: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoSancion"
+		       					<p:selectOneMenu id="tipoSancion" disabled="#{sancionForm.esBloqueado}"
 											value="#{sancionForm.tipoSancion}" effect="fold">
 											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
 											<f:selectItems value="#{sancionForm.tiposSanciones}"  />
@@ -208,7 +208,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtObservacion" value="#{sancionForm.dtSancion.dtpssnObservacion}" 
+		       					<p:inputTextarea id="txtObservacion" value="#{sancionForm.dtSancion.dtpssnObservacion}" disabled="#{sancionForm.esBloqueado}"
 		       									style="font-weight: Normal !important;width: 200%;">
 		       					</p:inputTextarea>
 		       				</ui:define>
@@ -221,17 +221,20 @@ function regenererCalSancionForm(){
 				<div  class="row cells8">
 				<div class="cell colpan3"></div>
 				<div class="cell colpan3"></div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnGuardarVacion" value="Guardar"   actionListener="#{sancionForm.guardarSancion()}" update="sancionForm" ></p:commandButton>
+				<div class="cell colpan2">
+                <p:commandButton id="btnGuardarVacion" value="Guardar"   actionListener="#{sancionForm.guardarSancion()}" update="panelSancion" disabled="#{sancionForm.esBloqueado}" ></p:commandButton>
 				</div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnAnularVacacion" value="Anular" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}"></p:commandButton>
+				<div class="cell colpan2">
+				 <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}" process="@this"></p:commandButton>
 				</div>
-				<div class="cell colpan3">
-                <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}"></p:commandButton>
-				</div>
-				<div class="cell colpan3">
-								<p:commandButton id="btnPDFSancion"
+				<div class="cell colpan2"></div>
+				<div class="cell colpan2">
+				
+                <p:commandButton id="btnAnularVacacion" value="Anular" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
+			
+               	</div>
+				<div class="cell colpan2">
+								<p:commandButton id="btnPDFSancion" disabled="#{sancionForm.esBloqueado}"
 									value="Imprimir" rendered="#{sancionForm.esImprimir}" actionListener="#{sancionForm.verPDF}"
 									target="_blank" ajax="false"></p:commandButton>
 							</div> 
@@ -242,11 +245,9 @@ function regenererCalSancionForm(){
 					 
 	</p:panel>
 	
-	</h:form>
 	
 		<div id="divDialogoAnuladdo">
-		<h:form id="dialogAnulSancion">
-		<p:dialog header="Insubcistencia" widgetVar="anulDialog" modal="true" height="40%" width="50%" >
+		<p:dialog header="Insubcistencia" widgetVar="anulDialog" modal="true" height="40%" width="50%"  id="dialogInsubcsistencia"  >
 		<div class="row cells8"> 
 					<div class="cell colspan8"><!-- NNOMBRES -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
@@ -254,7 +255,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblMotivo" for="txtMotivoInsub" value="Motivo:"/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtMotivoInsub" value="#{sancionForm.dtSancion.dtpssnMotivoInsub}" required="true" 
+		       					<p:inputTextarea id="txtMotivoInsub" value="#{sancionForm.dtSancion.dtpssnMotivoInsub}"
 		       									style="font-weight: Normal !important;width: 100%;">
 		       					</p:inputTextarea>	
 		       				</ui:define>
@@ -266,13 +267,14 @@ function regenererCalSancionForm(){
 					
 				</div>
 				<center>
-				<p:commandButton value="Guardar"  actionListener="#{sancionForm.anularSancion()}" update="dialogAnulSancion" ></p:commandButton>
-				<p:commandButton value="Volver" update="dialogAnulSancion"></p:commandButton>
+				<p:commandButton value="Guardar"  actionListener="#{sancionForm.anularSancion()}" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
+				<p:commandButton value="Volver" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
 				</center>
     	
 		</p:dialog> 
+				</div>
+		
 		</h:form>
-		</div>
 		
 	</ui:define>
 	  

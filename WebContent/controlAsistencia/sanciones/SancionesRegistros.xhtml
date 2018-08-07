@@ -103,20 +103,19 @@
 						</div>
 					</div>
 					<div id="divTblRegistrosSanciones">
-						<p:dataTable  id="tblSanciones" var="listSanc"     value="#{sancionForm.lstSanciones}"
+						<p:dataTable  id="tblSanciones" var="listSanc"     value="#{sancionForm.lstSanciones}" rowStyleClass="#{listSanc.dtpssnEstado le 3 ? 'red' : null}"
 						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px">
                  <f:facet name="{Exporters}">
  
             <h:commandLink value="Exportar">
                 <p:graphicImage name="/demo/images/pdf.png" width="24"/>
-                <p:dataExporter type="pdf" target="tblSanciones" fileName="cars"/>
+                <p:dataExporter type="xls" target="tblSanciones" fileName="SancionesEmpledo"/>
             </h:commandLink>
  
            
         </f:facet>
  
- >
 							<p:column headerText="N°" style="width: 5%">
 								<h:outputText value="#{listSanc.dtpssnNumaccion}" />
 							</p:column>
@@ -143,18 +142,9 @@
 									<i class="fa fa-check-square-o" />
 								</f:facet>
 								<p:commandLink value="Ver/Editar"
-									action="/controlAsistencia/sanciones/sancion.xhtml" >
-									<f:setPropertyActionListener value="#{listSanc}"
-										target="#{sancionForm.seleccionDtSancion}" />
-								</p:commandLink>
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<i class="fa fa-check-square-o" />
-								</f:facet>
+									action="/controlAsistencia/sanciones/sancion.xhtml"  actionListener="#{sancionForm.cargarVariables(listSanc)}">
 								
-								<p:commandLink  value="Imprimir" actionListener="#{sancionForm.verPDF}"
-									target="_blank" ajax="false"></p:commandLink>
+								</p:commandLink>
 							</p:column>
 							
 						</p:dataTable>
@@ -162,7 +152,7 @@
 					<div>
 					<center>
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="/controlAsistencia/sanciones/sancion.xhtml" ></p:commandButton>
+							action="/controlAsistencia/sanciones/sancion.xhtml" actionListener="#{sancionForm.cargarVariables(null)}" ></p:commandButton>
 							<p:commandButton id="btnCancelarSancion" value="Volver"
 							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
 							</center>

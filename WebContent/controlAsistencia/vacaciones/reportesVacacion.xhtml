@@ -95,7 +95,7 @@ function regenererCal(){
             <p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>  
         </p:column>
         <p:column headerText="Nombres">
-            <h:outputText value="#{repVac.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
+            <h:outputText value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
         </p:column>                                                                                                                                               
           <p:column headerText="Fecha Emisión">
             <h:outputText value="#{repVac.vccFechaEmision}"/>
@@ -113,7 +113,7 @@ function regenererCal(){
                     <f:selectItems value="#{reporteVacaciones.dependencia}" />
                 </p:selectCheckboxMenu>
             </f:facet>
-            <h:outputText value="#{repVac.detallePuesto.dependencia.dpnDescripcion}" />
+            <h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
         </p:column>
          <p:column headerText="Regimen" >
            <f:facet name="filter">
@@ -121,12 +121,9 @@ function regenererCal(){
                     <f:selectItems value="#{reporteVacaciones.regimen}" />
                 </p:selectCheckboxMenu>
             </f:facet>
-            <h:outputText value="#{repVac.detallePuesto.puesto.grupoOcupacional.regimen.rgmDescripcion}"/>
+            <h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}"/>
         </p:column>
         
-         <p:column headerText=" Tipo Ausencia">
-            <h:outputText value="Regimen"/>
-        </p:column>
        
 	</p:dataTable>
 	
@@ -151,7 +148,7 @@ function regenererCal(){
 							</p:column>
 							
 							<p:column headerText="Nombres">
-								<h:outputText value="#{licencia.detallePuesto.fichaEmpleado.persona.nombresCompetos()}" />
+								<h:outputText value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
 							</p:column>
 							<p:column headerText="Tipo Licencia">
 								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
@@ -167,11 +164,11 @@ function regenererCal(){
 							</p:column>
 							
 							<p:column headerText="Dependencia">
-								<h:outputText value="#{licencia.detallePuesto.dependencia.dpnDescripcion}" />
+								<h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
 							</p:column>
 							
 							<p:column headerText="Regimen">
-								<h:outputText value="#{licencia.detallePuesto.puesto.grupoOcupacional.regimen.rgmDescripcion}" />
+								<h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}" />
 							</p:column>
 							<p:column headerText="Explicación">
 								<h:outputText value="#{licencia.lcnExplicacion}" />
@@ -195,9 +192,6 @@ function regenererCal(){
     </f:facet>
 									<p:column headerText="Fecha Permiso">
 										<h:outputText value="#{permiso.prmFechaPermiso}" />
-									</p:column>
-									<p:column headerText="Nº Días">
-										<h:outputText value="#{permiso.prmNumDias}" />
 									</p:column>
 									<p:column headerText="Nº Horas">
 										<h:outputText value="#{permiso.prmNumHoras}" />
