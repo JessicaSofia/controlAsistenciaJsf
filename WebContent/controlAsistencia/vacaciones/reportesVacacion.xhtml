@@ -180,7 +180,7 @@ function regenererCal(){
 					</div>
 							<div id="divTblRegistrosPermisos">
 								<p:dataTable var="permiso" value="#{reporteVacaciones.lstPermisos}" rendered="#{reporteVacaciones.permActivar}"
-								widgetVar="reportAuscenTablePerm"
+								widgetVar="reportAuscenTablePerm" rowIndexVar="rowIndex"
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px">
 								
@@ -190,6 +190,14 @@ function regenererCal(){
         <p:dataExporter type="xls" target="reportAuscenTablePerm" fileName="Permisos" pageOnly="true"/>
     </h:commandLink>
     </f:facet>
+    								<p:column headerText="N°" style="width:5%">
+								<h:outputText value="#{rowIndex+1}" />
+							</p:column>
+							
+							<p:column headerText="Nombres">
+								<h:outputText value="#{reporteVacaciones.obtenerNombrePersona(perm.dtpsId)}" />
+							</p:column>
+							
 									<p:column headerText="Fecha Permiso">
 										<h:outputText value="#{permiso.prmFechaPermiso}" />
 									</p:column>
@@ -199,8 +207,14 @@ function regenererCal(){
 									<p:column headerText="A partir de">
 										<h:outputText value="#{permiso.prmHoraInicio}" />
 									</p:column>
-								
-
+									<p:column headerText="Dependencia">
+								<h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(perm.dtpsId)}" />
+							</p:column>
+							
+							<p:column headerText="Regimen">
+								<h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(perm.dtpsId)}" />
+							</p:column>
+							
 								</p:dataTable>
 								</div>	
 </div>

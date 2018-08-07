@@ -84,6 +84,7 @@ public class VacacionForm implements Serializable {
 	private Permiso seleccionPermiso;
 	private boolean valorJustificaHoras = false;
 	private boolean horasJustificadas = false;
+	private boolean esBloqueado=false;
 
 	/***
 	 * Declaracion de servicios
@@ -327,6 +328,7 @@ public class VacacionForm implements Serializable {
 		vacacion.setVccEstado(Estados.Anulado.getId());
 		vacacion.getVccObservacionEstado();
 		srvVacacion.VacacionActualizar(vacacion);
+		esBloqueado=true;
 
 	}
 
@@ -546,6 +548,9 @@ public class VacacionForm implements Serializable {
 			Permiso p = srvPermiso.ActualizarPermiso(permiso);
 			if (p != null) {
 				retorno = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso actualizado exitosamente."));
+				
 			} else {
 				retorno = false;
 			}
@@ -554,6 +559,7 @@ public class VacacionForm implements Serializable {
 			retorno = srvPermiso.InsertarPermiso(permiso);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
+			
 			
 			if(retorno){
 				calcularHoras();
