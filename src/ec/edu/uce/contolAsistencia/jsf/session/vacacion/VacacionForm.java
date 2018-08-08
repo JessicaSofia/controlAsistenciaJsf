@@ -436,6 +436,10 @@ public class VacacionForm implements Serializable {
 			esActualizacion = true;
 			permiso = seleccionPermiso;
 		}
+		
+		salVacaCal1 = saldoVacacion1;
+		salVacaCal2 = saldoVacacion2;
+
 
 	}
 
@@ -555,7 +559,7 @@ public class VacacionForm implements Serializable {
 				retorno = false;
 			}
 		} else {
-
+			System.out.println("Ingresa");
 			retorno = srvPermiso.InsertarPermiso(permiso);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
@@ -588,15 +592,28 @@ public class VacacionForm implements Serializable {
 		int m2=Integer.parseInt(divH2[1]);
 		System.out.println("Horas vacaciones "+h2 + ":"+m2);
 		
+	
 		int res1 = h1+h2;
-		
 		int res2 = m1+m2;
 		System.out.println("Suma "+res1+":"+res2);
-		
-		if(this.salVacaCal1 != null){
-			salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
-			salVacaCal1.setSlvcTotalHoras(res1+":"+res2);
+		if(res1 >= 8){
+			int diasS1 = salVacaCal1.getSlvcDiasRestantes();
+			int diasS12 = salVacaCal1.getSlvcDiasRegistrados();
+			int resultado = diasS1 - 1;
+			int resultado2 = diasS12 + 1;
+			salVacaCal1.setSlvcDiasRegistrados(resultado2);
+			salVacaCal1.setSlvcDiasRestantes(resultado);
+			salVacaCal1.setSlvcTotalHoras("00:00");
+		}else{
+			if(this.salVacaCal1 != null){
+				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
+				salVacaCal1.setSlvcTotalHoras("0"+res1+":"+res2+"0");
+			}
 		}
+		
+		//System.out.println("Suma "+res1+":"+res2);
+		
+		
 		//licenciaPermiso.setLcprHoraFin(res1+":"+res2);
 		
 		
