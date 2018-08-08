@@ -45,7 +45,7 @@
             <h:outputText value="#{emp.dpnNombre}" />
         </p:column>
         <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  value="Seleccionar" action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  >
+             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  >
                 <f:setPropertyActionListener value="#{emp}" target="#{sancionForm.seleccionPersona}" />
             </p:commandButton>
         </p:column>

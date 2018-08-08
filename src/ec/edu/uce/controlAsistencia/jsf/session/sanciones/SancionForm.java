@@ -77,7 +77,7 @@ public class SancionForm implements   Serializable{
 	private Date fecha; 
 	private boolean activar=false;
 	private int sueldo = 0;
-	private int valor = 0;
+	private float valor = 0;
 	
 	
 	@PostConstruct
@@ -320,12 +320,14 @@ public class SancionForm implements   Serializable{
 		Calendar c=Calendar.getInstance();
 		c.setTime(fecha);
 		dtSancion.setDtpssnAno(c.get(Calendar.YEAR));
-	 	dtSancion.setDtpssnMes(Calendar.MONTH);
+	 	dtSancion.setDtpssnMes(c.get(Calendar.MONTH)+1);
 	 	
 		 
  		String txtDias=dtSancion.getDtpssnDias();
  		
-		 float valor=0;
+		  valor=0;
+		  sueldo=srvSanciones.ObtnerSueldoPorDetallePuestoId(seleccionPersona.getDtpsId());
+			
 		int min=dtSancion.getDtpssnMinutos();
 		
 		
@@ -352,36 +354,34 @@ public class SancionForm implements   Serializable{
 		 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
 		 if(sancion.getTipoSancion().getTpsnId()==1) {
 			 if(VerificarSancionConsecutivoMuta(sancion,categoriaFaltaAplicar)) {
-				 List<Sancion> sanciones= new ArrayList<>();
-					sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(2);
-				for(Sancion s:sanciones) {
-					if(s.getSnNivel()==1) {
-						sancion=s;
-						break;
-					}
-				 
-			 }
+				 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
 		 }
 		 }
 			 
-		 this.tipoSancion=String.valueOf(sancion.getSnId());
+	  this.tipoSancion=String.valueOf(sancion.getSnId());
 		 
-if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
-	 valor=sancion.getSnPorcentaje();
-	 
-}else {
-   	if(sancion.getSnPorcentaje()!=-1) {
-	if(categoriaFaltaAplicar.getCtgflPorcentajeBase()!=0) {
+	if(sancion.getSnDescuento()!=0) {
+		if(sancion.getSnPorcentaje()>0) {
+		valor=sancion.getSnPorcentaje();	
+		}else {
 	if(esPorFrecuencia) {
-		  valor =(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
+		if(sancion.getSnPorcentaje()!=0) {
+		  valor =(dtSancion.getDtpssnFrecuencia()*sancion.getSnPorcentaje()); 
+		}else {
+			valor=(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
+		}
+		
 	  }else {
-		  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase()); 
-	  }}
-	}
+		  if(sancion.getSnPorcentaje()!=0) {
+		  valor=(dtSancion.getDtpssnMinutos()*sancion.getSnPorcentaje()); 
+		  }else {
+			  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
+		  }
+	  }}}
+	 
 	
-}
+    
 		if(valor!=0) {
-			int sueldo=srvSanciones.ObtnerSueldoPorDetallePuestoId(seleccionPersona.getDtpsId());
 				valor=(valor/100)*sueldo;
 				EsDescuento=true;
 		}else {
@@ -442,8 +442,11 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 		int tpsn= 0;
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
-		
-			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId());
+		if(categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId()!=1) {
+			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(), categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId());
+		}else {
+			dtSanUlt=srvSanciones.obtenerUltimaSancionPorTpSancionFaltaId(seleccionPersona.getDtpsId(), categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId(), categoriaFaltaAplicar.getFalta().getFlId());
+		}
 			if(dtSanUlt!=null){
 				ultimaSancion= dtSanUlt.getSancion();
 				tpsn=ultimaSancion.getTipoSancion().getTpsnId();
@@ -483,6 +486,8 @@ if(sancion.getSnPorcentaje()!=0 && sancion.getSnPorcentaje()!=-1 ) {
 			}
 				}
 			else {
+				
+				
 				retorno=sancion;
 			}
 		}
