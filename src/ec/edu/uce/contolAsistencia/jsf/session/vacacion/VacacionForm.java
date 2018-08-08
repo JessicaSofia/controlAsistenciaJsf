@@ -545,6 +545,7 @@ public class VacacionForm implements Serializable {
 	public void guardadPermiso() {
 		boolean retorno = false;
 
+		
 		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		permiso.setDtpsId(seleccionPersona.getDtpsId());
 
