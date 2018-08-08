@@ -354,7 +354,9 @@ public class SancionForm implements   Serializable{
 		 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
 		 if(sancion.getTipoSancion().getTpsnId()==1) {
 			 if(VerificarSancionConsecutivoMuta(sancion,categoriaFaltaAplicar)) {
-				 sancion  = obtenerSancionAplicar(categoriaFaltaAplicar.getSancion());
+					  Sancion sanAux =srvSanciones.obtenerSancionPorNivelPorTipoSancion(1, 2);		
+					  sancion= obtenerSancionAplicar(sanAux);  
+				
 		 }
 		 }
 			 
@@ -442,10 +444,10 @@ public class SancionForm implements   Serializable{
 		int tpsn= 0;
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
-		if(categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId()!=1) {
-			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(), categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId());
+		if(sancion.getTipoSancion().getTpsnId()!=1) {
+			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(), sancion.getTipoSancion().getTpsnId());
 		}else {
-			dtSanUlt=srvSanciones.obtenerUltimaSancionPorTpSancionFaltaId(seleccionPersona.getDtpsId(), categoriaFaltaAplicar.getSancion().getTipoSancion().getTpsnId(), categoriaFaltaAplicar.getFalta().getFlId());
+			dtSanUlt=srvSanciones.obtenerUltimaSancionPorTpSancionFaltaId(seleccionPersona.getDtpsId(), sancion.getTipoSancion().getTpsnId(), categoriaFaltaAplicar.getFalta().getFlId());
 		}
 			if(dtSanUlt!=null){
 				ultimaSancion= dtSanUlt.getSancion();
@@ -464,14 +466,7 @@ public class SancionForm implements   Serializable{
 						retorno=sancion;
 					}else {
 						ulnivel=ulnivel+1;
-						List<Sancion> sanciones= new ArrayList<>();
-     						sanciones = srvSanciones.ObtenerLstSancionPorTipoSancionId(tpsn);
-						for(Sancion s:sanciones) {
-							if(s.getSnNivel()==ulnivel) {
-								retorno=s;
-								break;
-							}
-						}
+						retorno = srvSanciones.obtenerSancionPorNivelPorTipoSancion(ulnivel, tpsn);
 						
 					}
 					
@@ -502,7 +497,7 @@ public class SancionForm implements   Serializable{
 		fs.set(dtSancion.getDtpssnAno() , dtSancion.getDtpssnMes()-1,1);
 		for(int i=1;i<=2; i++) {
 			fs.add(Calendar.MONTH, -1);
-			DetallePuestoSancion  detSan= srvSanciones.obtenerSancionPorMesAnio(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId(),fs.get(Calendar.MONTH)+1,dtSancion.getDtpssnAno());
+			DetallePuestoSancion  detSan= srvSanciones.obtenerSancionPorMesAnio(seleccionPersona.getDtpsId(),categoriaFaltaAplicar.getCtgflId(),fs.get(Calendar.MONTH)+1,dtSancion.getDtpssnAno(), sancion.getTipoSancion().getTpsnId());
 			if(detSan==null) {
 				retorno=false;
 				break;
