@@ -361,36 +361,42 @@ public class SancionForm implements   Serializable{
 		 }
 			 
 	  this.tipoSancion=String.valueOf(sancion.getSnId());
+	  calcularValores();
 		 
-	if(sancion.getSnDescuento()!=0) {
-		if(sancion.getSnPorcentaje()>0) {
-		valor=sancion.getSnPorcentaje();	
-		}else {
-	if(esPorFrecuencia) {
-		if(sancion.getSnPorcentaje()!=0) {
-		  valor =(dtSancion.getDtpssnFrecuencia()*sancion.getSnPorcentaje()); 
-		}else {
-			valor=(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
-		}
-		
-	  }else {
-		  if(sancion.getSnPorcentaje()!=0) {
-		  valor=(dtSancion.getDtpssnMinutos()*sancion.getSnPorcentaje()); 
-		  }else {
-			  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
-		  }
-	  }}}
-	 
-	
-    
-		if(valor!=0) {
-				valor=(valor/100)*sueldo;
-				EsDescuento=true;
-		}else {
-			EsDescuento=false;
-			}
+		 				
+	}
 
-			dtSancion.setDtpssnValor(valor);		 				
+	
+	public void calcularValores() {
+		if(sancion.getSnDescuento()!=0) {
+			if(sancion.getSnPorcentaje()>0) {
+			valor=sancion.getSnPorcentaje();	
+			}else {
+		if(esPorFrecuencia) {
+			if(sancion.getSnPorcentaje()!=0) {
+			  valor =(dtSancion.getDtpssnFrecuencia()*sancion.getSnPorcentaje()); 
+			}else {
+				valor=(dtSancion.getDtpssnFrecuencia()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
+			}
+			
+		  }else {
+			  if(sancion.getSnPorcentaje()!=0) {
+			  valor=(dtSancion.getDtpssnMinutos()*sancion.getSnPorcentaje()); 
+			  }else {
+				  valor=(dtSancion.getDtpssnMinutos()*categoriaFaltaAplicar.getCtgflPorcentajeBase());
+			  }
+		  }}}
+		 
+		
+	    
+			if(valor!=0) {
+					valor=(valor/100)*sueldo;
+					EsDescuento=true;
+			}else {
+				EsDescuento=false;
+				}
+
+				dtSancion.setDtpssnValor(valor);
 	}
 	
 	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId , int min,  int frc) {
@@ -445,7 +451,7 @@ public class SancionForm implements   Serializable{
 		DetallePuestoSancion dtSanUlt= null;
 		Sancion ultimaSancion=  null;
 		if(sancion.getTipoSancion().getTpsnId()!=1) {
-			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(), sancion.getTipoSancion().getTpsnId());
+			dtSanUlt=srvSanciones.obtenerUltimaSancion(seleccionPersona.getDtpsId(), sancion.getTipoSancion().getTpsnId(), dtSancion.getDtpssnAno(), dtSancion.getDtpssnMes());
 		}else {
 			dtSanUlt=srvSanciones.obtenerUltimaSancionPorTpSancionFaltaId(seleccionPersona.getDtpsId(), sancion.getTipoSancion().getTpsnId(), categoriaFaltaAplicar.getFalta().getFlId());
 		}
@@ -730,6 +736,15 @@ public void cargarVariables(DetallePuestoSancion dt) {
 	esBloqueado=false;
 }
 
+}
+
+public void calcularSancionDefinido() {
+	valor=0;
+	int snId=Integer.parseInt(tipoSancion);
+	sancion =srvSanciones.ObtenerSancionPorId(snId);
+	calcularValores();
+	
+	
 }
 
 

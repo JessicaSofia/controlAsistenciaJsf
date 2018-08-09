@@ -188,9 +188,10 @@ function regenererCalSancionForm(){
 		       				<ui:define name="valor">	
 		       					<p:selectOneMenu id="tipoSancion" disabled="#{sancionForm.esBloqueado}"
 											value="#{sancionForm.tipoSancion}" effect="fold">
+											
 											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
 											<f:selectItems value="#{sancionForm.tiposSanciones}"  />
-
+											<p:ajax listener="#{sancionForm.calcularSancionDefinido()}" update="sancionForm"></p:ajax>
 										</p:selectOneMenu>
 		       					
 		       				</ui:define>
