@@ -109,7 +109,7 @@
 										value="#{vacacionForm.valorJustificaHoras}">
 										<p:ajax 
 											listener="#{vacacionForm.visualizarHorasJustificadas()}" 
-											update=":VacacionForm:panelPermiso"></p:ajax>
+											update=":VacacionForm:txtJustifica"></p:ajax>
 									</p:selectBooleanCheckbox>
 
 								</ui:define>
@@ -123,13 +123,11 @@
 								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblJustifica" for="txtJustifica"
-										rendered="#{vacacionForm.horasJustificadas}"
 										value="Horas justificadas (HH:mm): " />
 								</ui:define>
 								<ui:define name="valor">
 									<p:inputText id="txtJustifica"
-										value="#{vacacionForm.permiso.prmJustificacion}"
-										rendered="#{vacacionForm.horasJustificadas}"
+										value="#{vacacionForm.permiso.prmHorasJustificadas}" disabled="#{vacacionForm.horasJustificadas}"
 										style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
 								</ui:define>
