@@ -64,7 +64,7 @@
 										value="N° Días: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputText id="txtNumDias"
+									<p:inputText id="txtNumDias" disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccNumDias}" required="true"
 										style="font-weight: Normal !important;width: 200%;"></p:inputText>
 
@@ -83,7 +83,7 @@
 										value="Desde: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="CalFechaInicio" required="true"
+									<p:calendar id="CalFechaInicio" required="true" disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccFechaInicio}"></p:calendar>
 								</ui:define>
 
@@ -95,7 +95,7 @@
 
 					</div>
 					<br />
-					<p:commandButton id="btnCalcularVacacion" value="Calcular"
+					<p:commandButton id="btnCalcularVacacion" value="Calcular" rendered="#{!vacacionForm.esBloqueado}"
 						actionListener="#{vacacionForm.CalcularVacaciones()}"
 						update="VacacionForm" style="margin-left: 9%;margin-bottom: 1%;">
 					</p:commandButton>
@@ -111,7 +111,7 @@
 										value="Hasta: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="txtFechaFinal"
+									<p:calendar id="txtFechaFinal" disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccFechaFin}"
 										style="font-weight: Normal !important;" showOn="button"
 										></p:calendar>
@@ -162,7 +162,7 @@
 										value="Observación: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputTextarea id="txtObservacion"
+									<p:inputTextarea id="txtObservacion" disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccObservacion}"
 										style="font-weight: Normal !important;width: 200%;">
 									</p:inputTextarea>
@@ -190,14 +190,14 @@
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3"></div>
 							<div class="cell colpan6">
-								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm"
+								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm" rendered="#{!vacacionForm.esBloqueado}"
 									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
 									
 								<p:commandButton id="btnCancelarVacion" value="Volver"
 									action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
 							</div>
-							<p:commandButton id="btnAnularVacion" value="Anular" update="VacacionForm"  onclick="PF('anulDialogVacacion').show();"></p:commandButton>
-							<p:commandButton id="btnPDFVacaciones"
+							<p:commandButton id="btnAnularVacion" value="Anular"  onclick="PF('anulDialogVacacion').show();" rendered="#{!vacacionForm.esActualizacion}" disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
+							<p:commandButton id="btnPDFVacaciones" disabled="#{vacacionForm.esBloqueado}"
 								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
 								actionListener="#{vacacionForm.verPDF}" target="_blank"
 								ajax="false"></p:commandButton>

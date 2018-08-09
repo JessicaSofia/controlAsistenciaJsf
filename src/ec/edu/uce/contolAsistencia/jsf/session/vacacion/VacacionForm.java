@@ -22,6 +22,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ddf.EscherSimpleProperty;
+
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.ParametrosVacacion;
@@ -186,6 +188,8 @@ public class VacacionForm implements Serializable {
 	}
 
 	public void EditarVacacion() {
+		
+		
 
 	}
 
@@ -229,6 +233,7 @@ public class VacacionForm implements Serializable {
 	 * @param num
 	 */
 	public void CalcularSaldoVacacion(Date fechaInicio, int num) {
+		
 
 		int totaldias2 = 0, saldoDias2 = 0, diasReg2 = 0, diasAnt2 = 0, numFSem1 = 0, numFsTotal1 = 0;
 		int totaldias1 = 0, saldoDias1 = 0, diasReg1 = 0, diasAnt1 = 0, numFSem2 = 0, numFsTotal2 = 0;
@@ -251,8 +256,8 @@ public class VacacionForm implements Serializable {
 			numFsTotal2 = salVacaCal2.getSlvcTotalDias() / 7;
 		}
 
-		if (saldoVacacion1 != null && saldoVacacion2 != null) {
-			int f = num / 7;
+		if (salVacaCal1 != null && salVacaCal2 != null) {
+			
 
 			int saldoTotaldias = saldoDias1 - num;
 			if (saldoTotaldias < 0) {
@@ -261,6 +266,7 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcEstado(Estados.DesActivo.getId());
 				salVacaCal1.setSlvcNumfinsemana(numFsTotal1);
 				salVacaCal2.setSlvcPeriodo(1);
+				vacacion.setVccNumDiasDescon(num);
 				saldoTotaldias = saldoTotaldias + saldoDias2;
 				if (saldoTotaldias < 0) {
 					int numres = saldoTotaldias * (-1);
@@ -270,10 +276,12 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRestantes(0);
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
+					vacacion.setVccNumDias(num);
+					vacacion.setVccNumDiasDescon(num);
 
 				} else {
 
-					Map<String, Integer> resultado = CalcularNumDiasADescontar(saldoVacacion2, num);
+					Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal2, num);
 					int n = resultado.get("diasDescontar");
 					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
 					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
@@ -282,11 +290,13 @@ public class VacacionForm implements Serializable {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
+					vacacion.setVccNumDias(n);
+					vacacion.setVccNumDiasDescon(n);
 				}
 			}
 
 			else {
-				Map<String, Integer> resultado = CalcularNumDiasADescontar(saldoVacacion1, num);
+				Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal1, num );
 				int n = resultado.get("diasDescontar");
 				salVacaCal1.setSlvcDiasRegistrados(diasReg1 + n);
 				salVacaCal1.setSlvcDiasRestantes(totaldias1 - (diasReg1 + n));
@@ -294,6 +304,8 @@ public class VacacionForm implements Serializable {
 
 				vacacion.setVccFechaFin(
 						calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
+				vacacion.setVccNumDiasDescon(n);
+				vacacion.setVccNumDias(n);
 
 			}
 
@@ -308,6 +320,8 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRestantes(0);
 					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
+					vacacion.setVccNumDiasDescon(num);
+					vacacion.setVccNumDias(num);
 				} else {
 
 					Map<String, Integer> resultado = CalcularNumDiasADescontar(saldoVacacion2, num);
@@ -317,6 +331,8 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
+					vacacion.setVccNumDias(n);
+					vacacion.setVccNumDiasDescon(n);
 
 				}
 
@@ -331,6 +347,17 @@ public class VacacionForm implements Serializable {
 		vacacion.getVccObservacionEstado();
 		srvVacacion.VacacionActualizar(vacacion);
 		esBloqueado = true;
+		if(saldoVacacion1!=null && saldoVacacion2!=null) {
+			
+			
+		}else {
+			if(saldoVacacion1==null && saldoVacacion2!=null) {
+				
+			}
+			
+		}
+		
+		
 
 	}
 
@@ -349,8 +376,9 @@ public class VacacionForm implements Serializable {
 		int nAñF = 0;
 		int numFReg = saldoVacacion.getSlvcNumfinsemana();
 		int finSemana = saldoVacacion.getSlvcTotalDias() / 7;
+		int numsaldo=saldoVacacion.getSlvcDiasRestantes();
 		if (finSemana != 0) {
-			if (num <= 5) {
+			if (num <= 6) {
 
 				if (numFReg < finSemana) {
 
@@ -360,12 +388,20 @@ public class VacacionForm implements Serializable {
 					int fins = sumReg / 5;
 					if (numFReg < fins) {
 
-						n = num + 2;
+						
 						nAñF = 1;
 						if (num == 5) {
+							n = num + 2;
 							n1 = n;
-						} else {
+						} 
+						 else {
+							 if(num==6){
+								n=num+1; 
+								n1 = n;
+							 }
+						 else {
 							n1 = num;
+						 }
 						}
 
 					} else {
@@ -388,6 +424,11 @@ public class VacacionForm implements Serializable {
 			}
 
 		}
+		
+		
+		if(n>numsaldo) {
+			n=numsaldo;
+		}
 		retorno.put("diasDescontar", n);
 		retorno.put("diasCalcularFecha", n1);
 		retorno.put("finSemana", nAñF);
@@ -404,10 +445,13 @@ public class VacacionForm implements Serializable {
 		this.renderBtnImprimir = false;
 		this.horasJustificadas = true;
 		this.valorJustificaHoras = false;
+		
+		
 		return ruta;
 	}
 
 	public void cargarVariablesVacacion(Vacacion seleccionVacacion) {
+		
 
 		if (seleccionVacacion == null) {
 			esActualizacion = false;
@@ -418,8 +462,16 @@ public class VacacionForm implements Serializable {
 			vacacion.setVccCopia(seleccionPersona.getDpnNombre());
 
 		} else {
-			esActualizacion = true;
+			this.esActualizacion = true;
+			this.renderBtnImprimir = true;
 			vacacion = seleccionVacacion;
+			if(seleccionVacacion.getVccEstado()==3) {
+				this.esBloqueado=true;
+			}else {
+				this.esBloqueado=false;
+				
+			}
+	
 		}
 
 		salVacaCal1 = saldoVacacion1;
@@ -782,6 +834,8 @@ public class VacacionForm implements Serializable {
 		if(opcion == 1){
 			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
 			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
+			// ingresar metodo  fines de semna
+			CalcularVacaciones();
 			int resultado = diasRestantesS1 - 1;
 			int resultado2 = diasRegistradosS1 + 1;
 			salVacaCal1.setSlvcDiasRegistrados(resultado2);
@@ -1024,4 +1078,13 @@ public class VacacionForm implements Serializable {
 		this.renderBtnImprimir = renderBtnImprimir;
 	}
 
+	public boolean isEsBloqueado() {
+		return esBloqueado;
+	}
+
+	public void setEsBloqueado(boolean esBloqueado) {
+		this.esBloqueado = esBloqueado;
+	}
+
+	
 }
