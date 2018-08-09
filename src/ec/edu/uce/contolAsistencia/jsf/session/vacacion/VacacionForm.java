@@ -83,8 +83,8 @@ public class VacacionForm implements Serializable {
 	private List<Permiso> listaPermisos;
 	private Permiso seleccionPermiso;
 	private boolean valorJustificaHoras = false;
-	private boolean horasJustificadas = false;
-	private boolean esBloqueado=false;
+	private boolean horasJustificadas = true;
+	private boolean esBloqueado = false;
 
 	/***
 	 * Declaracion de servicios
@@ -124,32 +124,34 @@ public class VacacionForm implements Serializable {
 	// *=====================================================================METODOS====================================================================//
 
 	public void CalcularVacaciones() {
-		if (vacacion.getVccNumDias() > 2 ) {
-			if(vacacion.getVccFechaInicio() != null){
+		if (vacacion.getVccNumDias() > 2) {
+			if (vacacion.getVccFechaInicio() != null) {
 				CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
-			}else{
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia.", "No se ha especificado una fecha de inicio."));	
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+						"Advertencia.", "No se ha especificado una fecha de inicio."));
 			}
-			
+
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia.", "No se puede registrar una Autorización de vacaciones cuyo número de días es menor a 3."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia.",
+							"No se puede registrar una Autorización de vacaciones cuyo número de días es menor a 3."));
 		}
 
 	}
 
 	public void GuardarVacacion() {
 		boolean retorno = false;
-		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+		// detallePuesto =
+		// srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 
 		vacacion.setDtpsId(seleccionPersona.getDtpsId());
 		if (esActualizacion) {
 			Vacacion vac = srvVacacion.VacacionActualizar(vacacion);
 			if (vac != null) {
 				retorno = true;
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Aut. de vacaciones anuales actualizada exitosamente."));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "Aut. de vacaciones anuales actualizada exitosamente."));
 				this.renderBtnImprimir = true;
 			} else {
 				retorno = false;
@@ -157,8 +159,8 @@ public class VacacionForm implements Serializable {
 		} else {
 			vacacion.setVccEstado(Estados.Activo.getId());
 			retorno = srvVacacion.VacionInsertar(vacacion);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Aut. de vacaciones anuales registrada exitosamente."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Información.", "Aut. de vacaciones anuales registrada exitosamente."));
 			this.renderBtnImprimir = true;
 		}
 
@@ -198,8 +200,8 @@ public class VacacionForm implements Serializable {
 		Calendar fechaFinal = Calendar.getInstance();
 		fechaFinal.setTime(fechaInicio);
 		fechaFinal.add(Calendar.DAY_OF_YEAR, numDias - 1);
-		int dsab=fechaFinal.get(Calendar.DAY_OF_WEEK);
-		if(dsab==Calendar.SATURDAY) {
+		int dsab = fechaFinal.get(Calendar.DAY_OF_WEEK);
+		if (dsab == Calendar.SATURDAY) {
 			fechaFinal.add(Calendar.DAY_OF_YEAR, 1);
 		}
 		return (Date) fechaFinal.getTime();
@@ -328,7 +330,7 @@ public class VacacionForm implements Serializable {
 		vacacion.setVccEstado(Estados.Anulado.getId());
 		vacacion.getVccObservacionEstado();
 		srvVacacion.VacacionActualizar(vacacion);
-		esBloqueado=true;
+		esBloqueado = true;
 
 	}
 
@@ -400,11 +402,12 @@ public class VacacionForm implements Serializable {
 		permiso = null;
 		saldoVacacion = null;
 		this.renderBtnImprimir = false;
-		// cargarVariables();
+		this.horasJustificadas = true;
+		this.valorJustificaHoras = false;
 		return ruta;
 	}
 
-	public void cargarVariablesVacacion( Vacacion seleccionVacacion) {
+	public void cargarVariablesVacacion(Vacacion seleccionVacacion) {
 
 		if (seleccionVacacion == null) {
 			esActualizacion = false;
@@ -436,10 +439,9 @@ public class VacacionForm implements Serializable {
 			esActualizacion = true;
 			permiso = seleccionPermiso;
 		}
-		
+
 		salVacaCal1 = saldoVacacion1;
 		salVacaCal2 = saldoVacacion2;
-
 
 	}
 
@@ -495,14 +497,14 @@ public class VacacionForm implements Serializable {
 			parametros.put("txt_hasta", fecha_fin);
 			String saldo1 = null;
 			String saldo2 = null;
-			if(salVacaCal1.getSlvcDiasRestantes() == 0){
+			if (salVacaCal1.getSlvcDiasRestantes() == 0) {
 				saldo1 = "--";
-			}else {
+			} else {
 				saldo1 = String.valueOf(salVacaCal1.getSlvcDiasRestantes());
 			}
-			if(salVacaCal2.getSlvcDiasRestantes() == 0){
+			if (salVacaCal2.getSlvcDiasRestantes() == 0) {
 				saldo2 = "--";
-			}else{
+			} else {
 				saldo2 = String.valueOf(salVacaCal2.getSlvcDiasRestantes());
 			}
 			parametros.put("txt_saldo1", saldo1);
@@ -536,89 +538,264 @@ public class VacacionForm implements Serializable {
 
 	public void visualizarHorasJustificadas() {
 		if (this.valorJustificaHoras) {
-			this.horasJustificadas = true;
-		} else {
 			this.horasJustificadas = false;
+		} else {
+			this.horasJustificadas = true;
 		}
 	}
 
 	public void guardadPermiso() {
 		boolean retorno = false;
 
-		
-		//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
 		permiso.setDtpsId(seleccionPersona.getDtpsId());
 
 		if (esActualizacion) {
 			Permiso p = srvPermiso.ActualizarPermiso(permiso);
 			if (p != null) {
 				retorno = true;
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso actualizado exitosamente."));
-				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "Permiso actualizado exitosamente."));
+
 			} else {
 				retorno = false;
 			}
 		} else {
-			System.out.println("Ingresa");
+			if (this.valorJustificaHoras) {
+				// El valor 1 significa que existen horas justificadas
+				this.permiso.setPrmJustificacion(1);
+			} else {
+				this.permiso.setPrmHorasJustificadas("00:00");
+			}
 			retorno = srvPermiso.InsertarPermiso(permiso);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
-			
-			
-			if(retorno){
+
+			if (retorno) {
 				calcularHoras();
-				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
-				//salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
+				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
 			}
 
 		}
 	}
-	
+
 	public void calcularHoras() {
-		String horas = this.permiso.getPrmNumHoras();
+
+		// Variables del metodo
+		String numHorasPermiso = this.permiso.getPrmNumHoras();
+		String[] arrayNumHorasPermiso = numHorasPermiso.split(":");
+		String numHorasJustificadas = this.permiso.getPrmHorasJustificadas();
+		String[] arrayNumHorasJustificadas = numHorasJustificadas.split(":");
+		String totalHorasS1 = saldoVacacion1.getSlvcTotalHoras();
+		String[] arraytotalHorasS1 = totalHorasS1.split(":");
+		String totalHorasS2 = saldoVacacion2.getSlvcTotalHoras();
+		String[] arraytotalHorasS2 = totalHorasS2.split(":");
+
+		int h1, m1, h2, m2, h3, m3, resultadoRestaHoras, resultadoRestaMinutos, resultadoSumaHoras,
+				resultadoSumaMinutos;
 		
-		String[] divH1=horas.split(":");
-		int h1=Integer.parseInt(divH1[0]);
-		
-		int m1=Integer.parseInt(divH1[1]);
-		System.out.println("Horas permiso "+h1 + ":"+m1);
-		
-		//String horaInicio = licenciaPermiso.getLcprHoraInicio();
-		String totalHoras = saldoVacacion1.getSlvcTotalHoras();
-		String[] divH2=totalHoras.split(":");
-		int h2=Integer.parseInt(divH2[0]);
-		//System.out.println(h2);
-		int m2=Integer.parseInt(divH2[1]);
-		System.out.println("Horas vacaciones "+h2 + ":"+m2);
-		
-	
-		int res1 = h1+h2;
-		int res2 = m1+m2;
-		System.out.println("Suma "+res1+":"+res2);
-		if(res1 >= 8){
-			int diasS1 = salVacaCal1.getSlvcDiasRestantes();
-			int diasS12 = salVacaCal1.getSlvcDiasRegistrados();
-			int resultado = diasS1 - 1;
-			int resultado2 = diasS12 + 1;
-			salVacaCal1.setSlvcDiasRegistrados(resultado2);
-			salVacaCal1.setSlvcDiasRestantes(resultado);
-			salVacaCal1.setSlvcTotalHoras("00:00");
-		}else{
-			if(this.salVacaCal1 != null){
-				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
-				salVacaCal1.setSlvcTotalHoras("0"+res1+":"+res2+"0");
+
+		// si hay horas a justificar
+		if (this.valorJustificaHoras) {
+			// primero resto dichas horas al tiempo total del permiso
+			h1 = Integer.parseInt(arrayNumHorasPermiso[0]);
+			m1 = Integer.parseInt(arrayNumHorasPermiso[1]);
+			h2 = Integer.parseInt(arrayNumHorasJustificadas[0]);
+			m2 = Integer.parseInt(arrayNumHorasJustificadas[1]);
+
+			resultadoRestaHoras = h1 - h2;
+			resultadoRestaMinutos = m1 - m2;
+
+			// el resultado de la resta le sumo a las horas que tiene en saldo
+			// vacaciones
+			if (resultadoRestaHoras == 8) {
+				restarDias(1);
+				salVacaCal1.setSlvcTotalHoras("00:00");
+			} else if (resultadoRestaHoras < 8) {
+				// sumo las horas resultantes a las horas existentes en saldo
+				// vacaciones
+				h3 = Integer.parseInt(arraytotalHorasS1[0]);
+				m3 = Integer.parseInt(arraytotalHorasS1[1]);
+
+				resultadoSumaHoras = resultadoRestaHoras + h3;
+				resultadoSumaMinutos = resultadoRestaMinutos + m3;
+
+				if (resultadoSumaMinutos == 60) {
+					resultadoSumaHoras = resultadoSumaHoras + 1;
+					resultadoSumaMinutos = 0;
+				}
+
+				if (resultadoSumaHoras == 8) { // 08:00
+					restarDias(1);
+					if (resultadoSumaMinutos == 0) {
+						System.out.println("min " + resultadoSumaMinutos);
+						salVacaCal1.setSlvcTotalHoras("00:00");
+					} else {
+						System.out.println("min " + resultadoSumaMinutos);
+						String minAux;
+						if (resultadoSumaMinutos < 10) {
+							minAux = "0" + String.valueOf(resultadoSumaMinutos);
+						} else {
+							minAux = String.valueOf(resultadoSumaMinutos);
+						}
+						salVacaCal1.setSlvcTotalHoras("00" + ":" + minAux);
+					}
+
+				} else if (resultadoSumaHoras > 8 ) { // 08:30
+					restarDias(1);
+					int horasAux = resultadoSumaHoras - 8;
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + horasAux + ":" + minAux);
+				}else{
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + resultadoSumaHoras + ":" + minAux);
+				}
+
+			}else{
+				h3 = Integer.parseInt(arraytotalHorasS1[0]);
+				m3 = Integer.parseInt(arraytotalHorasS1[1]);
+
+				resultadoSumaHoras = resultadoRestaHoras + h3;
+				resultadoSumaMinutos = resultadoRestaMinutos + m3;
+
+				if (resultadoSumaMinutos == 60) {
+					resultadoSumaHoras = resultadoSumaHoras + 1;
+					resultadoSumaMinutos = 0;
+				}
+
+				if (resultadoSumaHoras == 8) { // 08:00
+					restarDias(1);
+					if (resultadoSumaMinutos == 0) {
+						System.out.println("min " + resultadoSumaMinutos);
+						salVacaCal1.setSlvcTotalHoras("00:00");
+					} else {
+						System.out.println("min " + resultadoSumaMinutos);
+						String minAux;
+						if (resultadoSumaMinutos < 10) {
+							minAux = "0" + String.valueOf(resultadoSumaMinutos);
+						} else {
+							minAux = String.valueOf(resultadoSumaMinutos);
+						}
+						salVacaCal1.setSlvcTotalHoras("00" + ":" + minAux);
+					}
+
+				} else if (resultadoSumaHoras > 8 ) { // 08:30
+					restarDias(1);
+					int horasAux = resultadoSumaHoras - 8;
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + horasAux + ":" + minAux);
+				}else{
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + resultadoSumaHoras + ":" + minAux);
+				}
+
+				
+			}
+			// sin horas justificadas
+		} else {
+
+			h1 = Integer.parseInt(arrayNumHorasPermiso[0]);
+			m1 = Integer.parseInt(arrayNumHorasPermiso[1]);
+			h3 = Integer.parseInt(arraytotalHorasS1[0]);
+			m3 = Integer.parseInt(arraytotalHorasS1[1]);
+			
+
+			if (h1 == 8 && m1 == 0) {
+				restarDias(1);
+
+			} else if (h1 == 16 && m1 == 0) {
+				restarDias(2);
+
+			} else {
+
+				resultadoSumaHoras = h1 + h3;
+				resultadoSumaMinutos = m1 + m3;
+
+				if (resultadoSumaMinutos == 60) {
+					resultadoSumaHoras = resultadoSumaHoras + 1;
+					resultadoSumaMinutos = 0;
+				}
+
+				if (resultadoSumaHoras == 8) {
+					restarDias(1);
+					if (resultadoSumaMinutos == 0) {
+						System.out.println("min " + resultadoSumaMinutos);
+						salVacaCal1.setSlvcTotalHoras("00:00");
+					} else {
+						System.out.println("min " + resultadoSumaMinutos);
+						String minAux;
+						if (resultadoSumaMinutos < 10) {
+							minAux = "0" + String.valueOf(resultadoSumaMinutos);
+						} else {
+							minAux = String.valueOf(resultadoSumaMinutos);
+						}
+						salVacaCal1.setSlvcTotalHoras("00" + ":" + minAux);
+					}
+
+				} else if (resultadoSumaHoras > 8) {
+					restarDias(1);
+					int horasAux = resultadoSumaHoras - 8;
+					System.out.println("horas aux " + horasAux);
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + horasAux + ":" + minAux);
+				} else {
+					String minAux;
+					if (resultadoSumaMinutos < 10) {
+						minAux = "0" + String.valueOf(resultadoSumaMinutos);
+					} else {
+						minAux = String.valueOf(resultadoSumaMinutos);
+					}
+					salVacaCal1.setSlvcTotalHoras("0" + resultadoSumaHoras + ":" + minAux);
+				}
+
 			}
 		}
-		
-		//System.out.println("Suma "+res1+":"+res2);
-		
-		
-		//licenciaPermiso.setLcprHoraFin(res1+":"+res2);
-		
-		
+
+	}
+	
+	public void restarDias (int opcion){
+		if(opcion == 1){
+			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
+			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
+			int resultado = diasRestantesS1 - 1;
+			int resultado2 = diasRegistradosS1 + 1;
+			salVacaCal1.setSlvcDiasRegistrados(resultado2);
+			salVacaCal1.setSlvcDiasRestantes(resultado);
+			
+		}else if (opcion == 2){
+			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
+			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
+			int resultado = diasRestantesS1 - 2;
+			int resultado2 = diasRegistradosS1 + 2;
+			salVacaCal1.setSlvcDiasRegistrados(resultado2);
+			salVacaCal1.setSlvcDiasRestantes(resultado);
 		}
+	}
 
 	public String regresarEmpleados() {
 		String ruta = "/controlAsistencia/empleado/busquedaEmpleado.xhtml";
@@ -629,16 +806,14 @@ public class VacacionForm implements Serializable {
 		return ruta;
 	}
 
-	
 	// ================================================================GETTERS &
 	// SETTERS================================================================================//
 
-	/*public Dependencia getDependencia() {
-		if (dependencia == null) {
-			dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId());
-		}
-		return dependencia;
-	}*/
+	/*
+	 * public Dependencia getDependencia() { if (dependencia == null) {
+	 * dependencia = srvDependencia.ObtenerPorId(seleccionPersona.getDpnId()); }
+	 * return dependencia; }
+	 */
 
 	public List<Permiso> getListaPermisos() {
 		if (seleccionPersona != null) {
@@ -655,25 +830,24 @@ public class VacacionForm implements Serializable {
 		this.dependencia = dependencia;
 	}
 
-	/*public DetallePuestoDto getDetallePuestoEmpleado() {
-		if (detallePuestoEmpleado == null) {
-			detallePuestoEmpleado = srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId());
-			if (detallePuestoEmpleado == null) {
-				System.out.println(" salio nulo");
-			}
-		}
-
-		return detallePuestoEmpleado;
-	}*/
+	/*
+	 * public DetallePuestoDto getDetallePuestoEmpleado() { if
+	 * (detallePuestoEmpleado == null) { detallePuestoEmpleado =
+	 * srvDetallePuesto.BuscarPorId(seleccionPersona.getDtpsId()); if
+	 * (detallePuestoEmpleado == null) { System.out.println(" salio nulo"); } }
+	 * 
+	 * return detallePuestoEmpleado; }
+	 */
 
 	public void setDetallePuestoEmpleado(DetallePuestoDto detallePuestoEmpleado) {
 		this.detallePuestoEmpleado = detallePuestoEmpleado;
 	}
 
-	/*public FichaEmpleado getFichaEmpleado() {
-		fichaEmpleado = srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId());
-		return fichaEmpleado;
-	}*/
+	/*
+	 * public FichaEmpleado getFichaEmpleado() { fichaEmpleado =
+	 * srvFichaEmpleado.BuscarPorid(seleccionPersona.getFcemId()); return
+	 * fichaEmpleado; }
+	 */
 
 	public void setFichaEmpleado(FichaEmpleado fichaEmpleado) {
 		this.fichaEmpleado = fichaEmpleado;
@@ -707,26 +881,24 @@ public class VacacionForm implements Serializable {
 		this.srvVacacion = srvVacacion;
 	}
 
-	/*public Puesto getPuesto() {
-		if (puesto == null) {
-
-			puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
-
-		}
-		return puesto;
-	}*/
+	/*
+	 * public Puesto getPuesto() { if (puesto == null) {
+	 * 
+	 * puesto = srvPuesto.BuscarPorId(seleccionPersona.getPstId());
+	 * 
+	 * } return puesto; }
+	 */
 
 	public void setPuesto(Puesto puesto) {
 		this.puesto = puesto;
 	}
 
-	/*public Regimen getRegimen() {
-
-		if (regimen == null) {
-			regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-		}
-		return regimen;
-	}*/
+	/*
+	 * public Regimen getRegimen() {
+	 * 
+	 * if (regimen == null) { regimen =
+	 * srvRegimen.BuscarPorId(seleccionPersona.getRgmId()); } return regimen; }
+	 */
 
 	public void setRegimen(Regimen regimen) {
 		this.regimen = regimen;
