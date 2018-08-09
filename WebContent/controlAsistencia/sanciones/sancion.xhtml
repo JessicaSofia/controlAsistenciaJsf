@@ -229,6 +229,8 @@ function regenererCalSancionForm(){
 				 <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}" process="@this"></p:commandButton>
 				</div>
 				<div class="cell colpan2"></div>
+				<p:commandButton id="btnMulta" value="Multas" target="_blank" ajax="false" rendered="#{sancionForm.btnRenderMulta}"
+							actionListener="#{sancionForm.generarReporteMultas()}"></p:commandButton>
 				<div class="cell colpan2">
 				
                 <p:commandButton id="btnAnularVacacion" value="Anular" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
@@ -270,6 +272,7 @@ function regenererCalSancionForm(){
 				<center>
 				<p:commandButton value="Guardar"  actionListener="#{sancionForm.anularSancion()}" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
 				<p:commandButton value="Volver" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
+				
 				</center>
     	
 		</p:dialog> 
