@@ -36,23 +36,11 @@ function regenererCalSancionForm(){
 	<div class="grid condensed">
 				<!-- ******************** FILA NUMERO 1 ************************ -->
 				<div class="row cells8"> 
-					<div class="cell colspan4"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNAutorizacion" value="#{SancionForm.dtSancion.dtpssnNumaccion}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
 					
-					<div class="cell colspan4"><!-- Fecha Elaboracion -->
+					<div class="cell colspan6"><!-- Fecha Elaboracion -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
+		       				<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
 		       					<p:outputLabel id="txtFechaElaboracion" value="#{sancionForm.dtSancion.dtpssnFechaEmision}" 
@@ -62,6 +50,7 @@ function regenererCalSancionForm(){
 		       			</ui:decorate>
 					</div>
 				</div>
+				
 				<div class="row cells8"> 
 					<div class="cell colspan4"  ><!-- segunda fila-->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml" >
@@ -141,7 +130,21 @@ function regenererCalSancionForm(){
 				<br/>
 				<p:separator></p:separator>
 				<div class="row cells8"> 
-					<div class="cell colspan2"><!-- FRECUENCIA DE SANCION -->
+				<div class="cell colspan2"><!-- NNOMBRES -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">	
+		       					<p:outputLabel id="txtNAutorizacion" value="#{SancionForm.dtSancion.dtpssnNumaccion}" 
+		       									style="font-weight: Normal !important;">
+		       					</p:outputLabel>	
+		       				</ui:define>
+		       			</ui:decorate>
+					</div>
+					
+				
+					<div class="cell colspan3"><!-- FRECUENCIA DE SANCION -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 		       				<ui:define name="etiqueta">	
 		       					<p:outputLabel id="lblFrecuenciaSancion" for="txtFrecuenciaSancion" value="Frecuencia:"/>	
@@ -167,20 +170,9 @@ function regenererCalSancionForm(){
 		       			</ui:decorate>
 					</div>
 					
-					<div class="cell colspan3"><!-- DESCUENTO -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDescuentoSancion" for="checkDescuento" value="Efectuar Descuento: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">
-		       				
-		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}"  disabled="#{sancionForm.esBloqueado}"/>
- 		
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-				</div>
-				<div class="cell colspan8"><!--TIPO DE SANCION  --> 
+							</div>
+				<div class="row cells8">
+				<div class="cell colspan5"><!--TIPO DE SANCION  --> 
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
 		       					<p:outputLabel id="lblTipoSancion" for="tipoSancion" value="Sanción: "/>	
@@ -199,9 +191,23 @@ function regenererCalSancionForm(){
 		       				<p:message id="msgtipoSancion" for="tipoSancion" />
 		       				</ui:define>
 		       			</ui:decorate>
+		       	</div>
+		       	
+		       	<div class="cell colspan3"><!-- DESCUENTO -->
+						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+		       				<ui:define name="etiqueta">	
+		       					<p:outputLabel id="lblDescuentoSancion" for="checkDescuento" value="Efectuar Descuento: "/>	
+		       				</ui:define>
+		       				<ui:define name="valor">
+		       				
+		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}"  disabled="#{sancionForm.esBloqueado}"/>
+ 		
+		       				</ui:define>
+		       			</ui:decorate>
 					</div>
-				
-				
+		
+				</div>
+			
 				 <div class="row cells8" > 
 					<div class="cell colspan8"><!-- Observaciones  -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">

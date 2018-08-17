@@ -365,10 +365,10 @@ public class SancionForm implements Serializable {
 	 * 
 	 * @return
 	 */
-	public int generarNumAutorizacion() {
+	public int generarNumAutorizacion(int tpSanId) {
 		int numAutorizacion = 0;
-		if (srvSanciones.MaximaNumAutorizacion() != 0) {
-			numAutorizacion = srvSanciones.MaximaNumAutorizacion() + 1;
+		if (srvSanciones.MaximaNumAutorizacion(tpSanId) != 0) {
+			numAutorizacion = srvSanciones.MaximaNumAutorizacion(tpSanId) + 1;
 		} else {
 			numAutorizacion = 1;
 		}
@@ -456,6 +456,9 @@ public class SancionForm implements Serializable {
 		}
 
 		dtSancion.setDtpssnValor(valor);
+		int numAccion=generarNumAutorizacion(sancion.getTipoSancion().getTpsnId());
+		dtSancion.setDtpssnNumaccion(numAccion);
+		
 	}
 
 	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId, int min, int frc) {
@@ -797,7 +800,6 @@ public class SancionForm implements Serializable {
 
 			esActualizacion = false;
 			limpiarFormSancion();
-			dtSancion.setDtpssnNumaccion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
 			dtSancion.setDtpssnFechaEmision(fechaEmision);
 			dtSancion.setDtpssnDescontar(0);
