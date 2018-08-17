@@ -128,7 +128,7 @@ public class VacacionForm implements Serializable {
 	public void CalcularVacaciones() {
 		if (vacacion.getVccNumDias() > 2) {
 			if (vacacion.getVccFechaInicio() != null) {
-				CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias());
+				CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias(),1);
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Advertencia.", "No se ha especificado una fecha de inicio."));
@@ -232,7 +232,7 @@ public class VacacionForm implements Serializable {
 	 * @param fechaInicio
 	 * @param num
 	 */
-	public void CalcularSaldoVacacion(Date fechaInicio, int num) {
+	public void CalcularSaldoVacacion(Date fechaInicio, int num, int tipo) {
 		
 
 		int totaldias2 = 0, saldoDias2 = 0, diasReg2 = 0, diasAnt2 = 0, numFSem1 = 0, numFsTotal1 = 0;
@@ -266,32 +266,42 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcEstado(Estados.DesActivo.getId());
 				salVacaCal1.setSlvcNumfinsemana(numFsTotal1);
 				salVacaCal2.setSlvcPeriodo(1);
+				if(tipo==1) {
 				vacacion.setVccNumDiasDescon(num);
+				}
+				int nres=saldoTotaldias*-1;
 				saldoTotaldias = saldoTotaldias + saldoDias2;
 				if (saldoTotaldias < 0) {
 					int numres = saldoTotaldias * (-1);
-					System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Información.", "El Usuario no tiene disponible el numero de dias solicitadas"));
 					salVacaCal2.setSlvcDiasAnticipados(numres);
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
-					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
+					
+					if(tipo==1) {
+					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 					vacacion.setVccNumDias(num);
 					vacacion.setVccNumDiasDescon(num);
+					}
 
 				} else {
 
-					Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal2, num);
+					Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal2, nres);
 					int n = resultado.get("diasDescontar");
 					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
 					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
 					salVacaCal2.setSlvcTotalHoras(salVacaCal1.getSlvcTotalHoras());
 					salVacaCal1.setSlvcTotalHoras("00:00");
+					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
+					if(tipo==1) {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
-					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
+				
 					vacacion.setVccNumDias(n);
 					vacacion.setVccNumDiasDescon(n);
+					}
 				}
 			}
 
@@ -301,11 +311,12 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcDiasRegistrados(diasReg1 + n);
 				salVacaCal1.setSlvcDiasRestantes(totaldias1 - (diasReg1 + n));
 				salVacaCal1.setSlvcNumfinsemana(numFSem1 + resultado.get("finSemana"));
-
+				if(tipo==1) {
 				vacacion.setVccFechaFin(
 						calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 				vacacion.setVccNumDiasDescon(n);
 				vacacion.setVccNumDias(n);
+				}
 
 			}
 
@@ -314,14 +325,17 @@ public class VacacionForm implements Serializable {
 
 				int saldoTotaldias = saldoDias2 - num;
 				if (saldoTotaldias < 0) {
-					System.out.println("El Usuario no tiene disponible el numero de dias solicitadas");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Información.", "El Usuario no tiene disponible el numero de dias solicitadas"));
 					salVacaCal2.setSlvcDiasAnticipados((-1) * saldoTotaldias);
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
 					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
+					if(tipo==1) {
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 					vacacion.setVccNumDiasDescon(num);
 					vacacion.setVccNumDias(num);
+					}
 				} else {
 
 					Map<String, Integer> resultado = CalcularNumDiasADescontar(saldoVacacion2, num);
@@ -329,10 +343,12 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
 					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
 					salVacaCal2.setSlvcNumfinsemana(numFSem2 + resultado.get("finSemana"));
+					if(tipo==1) {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 					vacacion.setVccNumDias(n);
 					vacacion.setVccNumDiasDescon(n);
+					}
 
 				}
 
@@ -832,22 +848,23 @@ public class VacacionForm implements Serializable {
 	
 	public void restarDias (int opcion){
 		if(opcion == 1){
-			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
-			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
+//			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
+//			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
 			// ingresar metodo  fines de semna
-			CalcularVacaciones();
-			int resultado = diasRestantesS1 - 1;
-			int resultado2 = diasRegistradosS1 + 1;
-			salVacaCal1.setSlvcDiasRegistrados(resultado2);
-			salVacaCal1.setSlvcDiasRestantes(resultado);
+			CalcularSaldoVacacion(permiso.getPrmFechaPermiso(), 1,2);
+//			int resultado = diasRestantesS1 - 1;
+//			int resultado2 = diasRegistradosS1 + 1;
+//			salVacaCal1.setSlvcDiasRegistrados(resultado2);
+//			salVacaCal1.setSlvcDiasRestantes(resultado);
 			
 		}else if (opcion == 2){
-			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
-			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
-			int resultado = diasRestantesS1 - 2;
-			int resultado2 = diasRegistradosS1 + 2;
-			salVacaCal1.setSlvcDiasRegistrados(resultado2);
-			salVacaCal1.setSlvcDiasRestantes(resultado);
+			CalcularSaldoVacacion(permiso.getPrmFechaPermiso(), 2,2);
+//			int diasRestantesS1 = salVacaCal1.getSlvcDiasRestantes();
+//			int diasRegistradosS1 = salVacaCal1.getSlvcDiasRegistrados();
+//			int resultado = diasRestantesS1 - 2;
+//			int resultado2 = diasRegistradosS1 + 2;
+//			salVacaCal1.setSlvcDiasRegistrados(resultado2);
+//			salVacaCal1.setSlvcDiasRestantes(resultado);
 		}
 	}
 

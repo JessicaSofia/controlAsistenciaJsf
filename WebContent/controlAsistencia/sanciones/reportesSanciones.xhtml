@@ -20,6 +20,9 @@
 .ui-datepicker-calendar {
     display: none;
 }
+.noBorders *{
+border: none !important;
+}
 
 
 
@@ -31,6 +34,12 @@ function regenererCalSancion(){
     
     $('#frmReporteSanciones\\:calendarSanInicio_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
       
+      
+    year1 = $("#frmReporteSanciones\\:calendarSanFin .ui-datepicker-year").val();
+    month1 = $("#frmReporteSanciones\\:calendarSanFin .ui-datepicker-month").val();
+    
+    $('#frmReporteSanciones\\:calendarSanFin_input').val(year1 + '-' + ('0' + (++month1)).slice(-2) + '-01');
+  
 }
 
 
@@ -155,17 +164,17 @@ function regenererCalSancion(){
 				<div class="  cell colspan2"><!-- DESGLOCE -->
 						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDesgloceRepSan" for="checkDescgloce" value="Desgloce:" rendered="#{!reporteSanciones.anualActv}"/>	
+		       					<p:outputLabel id="lblDesgloceRepSan" for="checkDescgloce" value="Desgloce:" />	
 		       				</ui:define>
 		       				<ui:define name="valor">
-		       				 <p:selectBooleanCheckbox id="checkDescgloce" value="#{reporteSanciones.desgloce}" rendered="#{!reporteSanciones.anualActv}">
+		       				 <p:selectBooleanCheckbox id="checkDescgloce" value="#{reporteSanciones.desgloce}" >
             <p:ajax update="frmReporteSanciones"/>
         </p:selectBooleanCheckbox>
                   
      	
 		       				</ui:define>
 		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgDesgloceReporteSan" for="checkDescgloce" rendered="#{!reporteSanciones.anualActv}" />
+		       				<p:message id="msgDesgloceReporteSan" for="checkDescgloce"  />
 		       				</ui:define>
 		       				
 		       			</ui:decorate>
@@ -175,7 +184,7 @@ function regenererCalSancion(){
 				</div>
 						<div id="divTblReportesSanc" >
 	<p:dataTable id="tblRepSanciones" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
-	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.desgloce}" 
+	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.desgloce and !reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px" 
                  rowIndexVar="rowIndex">
@@ -196,6 +205,7 @@ function regenererCalSancion(){
 							<p:column headerText="Nombres" >
 								<h:outputText value="#{listSanc.nombres}" />
 							</p:column>
+							
 							<p:column headerText="valor" style="width: 8%">
 								<h:outputText value="#{listSanc.valor}" />
 							</p:column>
@@ -212,7 +222,7 @@ function regenererCalSancion(){
 	
 	<div id="divTblDesgloceReportesSanc" >
 	<p:dataTable id="tblRepSancionesDesgloce" var="listSanc" value="#{reporteSanciones.lstDtSanciones}"
-	widgetVar="reportSancDesgTable"   rendered="#{reporteSanciones.desgloce}" 
+	widgetVar="reportSancDesgTable"   rendered="#{reporteSanciones.desgloce and  !reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px" 
                  rowIndexVar="rowIndex" >
@@ -261,7 +271,7 @@ function regenererCalSancion(){
 	
 <div id="divTblReportesSancAnual" >
 	<p:dataTable id="tblRepSancionesAnual" var="listSanc" value="#{reporteSanciones.lstDtSancionesAnual}"
-	widgetVar="reportSancTable"  rendered="#{reporteSanciones.anualActv}" 
+	widgetVar="reportSancTable"  rendered="#{!reporteSanciones.desgloce and reporteSanciones.anualActv}" 
 	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                  paginator="true" rows="10" style="margin-bottom:20px" 
                  rowIndexVar="rowIndex">
@@ -282,7 +292,7 @@ function regenererCalSancion(){
 							<p:column headerText="Nombres" >
 								<h:outputText value="#{listSanc.nombres}" />
 							</p:column>
-							<p:column headerText="valor" style="width: 8%">
+							<p:column headerText="Frecuencia" style="width: 8%">
 								<h:outputText value="#{listSanc.frecuencia}" />
 							</p:column>
 							<p:column headerText="Puesto">
@@ -293,6 +303,57 @@ function regenererCalSancion(){
 							</p:column>
 						       
 	</p:dataTable>
+	
+	
+	
+	
+	<p:dataTable id="tblRepSancionesAnualDesgloce" var="listSanc" value="#{reporteSanciones.lstDtSancionesAnual}"
+	widgetVar="reportSancTable"  rendered="#{ reporteSanciones.desgloce and reporteSanciones.anualActv}" 
+	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px; border: none !important;" 
+                 rowIndexVar="rowIndex" scrollable="true">
+                 <f:facet name="{Exporters}">
+                <h:commandLink value="Exportar">
+        <p:graphicImage name="/img/excel.jpg"/>
+        <p:dataExporter type="xls" target="tblRepSancionesAnualDesgloce" fileName="sancionesAnualDesgloce" pageOnly="true"  />
+    </h:commandLink>
+    
+    </f:facet>
+                 
+			<p:column headerText="N°" style="width: 10px" >
+								<h:outputText value="#{rowIndex+1}" />
+							</p:column>
+							<p:column headerText="Cedula" style="width: 45px">
+								<h:outputText value="#{listSanc.identificacion}" />
+							</p:column>
+							<p:column headerText="Nombres" style="width: 120px">
+								<h:outputText value="#{listSanc.nombres}" />
+							</p:column>
+								<c:forEach items="#{reporteSanciones.mesesBusqueda}"  var="item2" varStatus="i"  style=" border: none !important;">
+                                
+                                <p:column  headerText="#{item2}"  style="width: 110px;border: none !important;" >
+                                <p:dataList value="#{reporteSanciones.obternerFaltasPorMes(item2,listSanc.dtpsId,2018)}" var="flt" type="ordered" emptyMessage="" style=" border: none !important;">
+      			
+        							#{flt}
+    							</p:dataList>
+                                    
+                                   
+                                               
+                                </p:column>
+                            </c:forEach>
+                        
+							<p:column headerText="Frecuencia" style="width: 40px">
+								<h:outputText value="#{listSanc.frecuencia}" />
+							</p:column>
+							<p:column headerText="Puesto" style="width: 120px">
+								<h:outputText value="#{listSanc.cargo}" />
+							</p:column>
+							<p:column headerText="Dependencia" style="width: 120px" >
+								<h:outputText value="#{listSanc.dependencia}" />
+							</p:column>
+						       
+	</p:dataTable>
+	
 	
 	</div>
 </div>

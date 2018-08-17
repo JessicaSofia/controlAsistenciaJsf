@@ -233,11 +233,11 @@ function regenererCalSancionForm(){
 							actionListener="#{sancionForm.generarReporteMultas()}"></p:commandButton>
 				<div class="cell colpan2">
 				
-                <p:commandButton id="btnAnularVacacion" value="Anular" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
+                <p:commandButton id="btnAnularVacacion" value="Insubcistente" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
 			
                	</div>
 				<div class="cell colpan2">
-								<p:commandButton id="btnPDFSancion" disabled="#{sancionForm.esBloqueado}"
+								<p:commandButton id="btnPDFSancion"
 									value="Imprimir" rendered="#{sancionForm.esImprimir}" actionListener="#{sancionForm.verPDF}"
 									target="_blank" ajax="false"></p:commandButton>
 							</div> 

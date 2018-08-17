@@ -28,6 +28,7 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuestoSancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Falta;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Sancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.TipoSancion;
 
 @ManagedBean(name = "reporteSanciones")
@@ -62,6 +63,7 @@ public class ReporteSanciones implements Serializable{
 	private int idReg= 0;
 	private List<ReporteSancion> lstDtSancionesDesglosado  =new ArrayList<>();
 	private Map <Integer, String> meses;
+	private Map <String, Integer> mesesNombre;
 	private List<String> mesesBusqueda= new ArrayList<>();
 	private List<ReporteSancion> lstDtSancionesAnual= new ArrayList<>();
 	
@@ -101,6 +103,21 @@ public class ReporteSanciones implements Serializable{
 		this.meses.put(10,"Octubre");
 		this.meses.put(11,"Noviembre");
 		this.meses.put(12,"Diciembre");
+		
+this.mesesNombre= new HashMap<String, Integer>();
+		
+		this.mesesNombre.put("Enere",1);
+		this.mesesNombre.put("Febrero",2);
+		this.mesesNombre.put("Marzo",3);
+		this.mesesNombre.put("Abril",4);
+		this.mesesNombre.put("Mayo",5);
+		this.mesesNombre.put("Junio",6);
+		this.mesesNombre.put("Julio",7);
+		this.mesesNombre.put("Agosto",8);
+		this.mesesNombre.put("Septiembre",9);
+		this.mesesNombre.put("Octubre",10);
+		this.mesesNombre.put("Noviembre",11);
+		this.mesesNombre.put("Diciembre",12);
 	
 	}
 		
@@ -352,14 +369,14 @@ public class ReporteSanciones implements Serializable{
 			cf.setTime(fechaFin);
 			
 			
-			
-			anioFin= 2018;
-			mesFin= 7;
+			anioFin= cf.get(Calendar.YEAR);
+			mesFin= cf.get(Calendar.MONTH)+1;
 			 
-	            int numMeses= mesFin - mes;
+	        int numMeses= mesFin - mes;
 	            
-	            int mesinicio=mes;
-	            for(int i=0; i<numMeses; i++) {
+	        int mesinicio=mes;
+	        mesesBusqueda.clear();
+	            for(int i=0; i<=numMeses; i++) {
 	            	
 	            	mesesBusqueda.add(meses.get(mesinicio));
 	            	mesinicio++;
@@ -367,7 +384,7 @@ public class ReporteSanciones implements Serializable{
 	            
 	            if(idTpSan!=0) {
 	    			if(idReg!=0) {
-	    				lstDtSancionesAnual=srvSancion. listarDtSancionAnualPorAnioMesRegimenIdTipoSancionId(anio,mes,idReg,idTpSan,mesFin);
+	    				lstDtSancionesAnual=srvSancion. listarDtSancionAnualPorAnioMesRegimenIdTipoSancionId(anio,mes,idReg,idTpSan,anioFin,mesFin);
 	    			}else {
 	    				FacesContext.getCurrentInstance().addMessage(null,
 	    						new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Debe seleccionar el Regimen."));
@@ -379,9 +396,6 @@ public class ReporteSanciones implements Serializable{
 	    			
 	    			
 	    	}	
-	            
-	            
-	            
 		}
 		
 }
@@ -412,6 +426,18 @@ public class ReporteSanciones implements Serializable{
 		
 		return retorno;
 		
+	}
+	
+	
+	public List<String> obternerFaltasPorMes(String  mes, int dtpsId, int anio){
+		List<String> retorno=null;
+
+			int m=mesesNombre.get(mes);
+			int sn= Integer.parseInt(tpSacion);
+			Sancion san= srvSancion.ObtenerSancionPorId(sn);
+			retorno=srvSancion.listarfaltasPorDtPuestoIdMesAnioTipoSancion(dtpsId, m, anio, san.getTipoSancion().getTpsnId());
+		
+		return retorno;
 	}
 	
 }
