@@ -129,10 +129,14 @@
 								<h:outputText value="#{listSanc.dtpssnAno}" />
 							</p:column>  
 							<p:column headerText="Mes"  style="width: 10%">
-								<h:outputText value="#{listSanc.dtpssnMes}" />
+								<h:outputText value="#{sancionForm.obtenerMesTexto(listSanc.dtpssnMes)}" />
 							</p:column> 
 							<p:column headerText="Días">
 								<h:outputText value="#{listSanc.dtpssnDias}" />
+							</p:column>
+							 
+							<p:column headerText="Valor" style="width: 10%">
+								<h:outputText value="#{listSanc.dtpssnValor}" />
 							</p:column>
 							<p:column headerText="Observacion" style="width: 25%;">
 								<h:outputText value="#{listSanc.dtpssnObservacion}" />

@@ -336,6 +336,16 @@ public class SancionForm implements Serializable {
 	public void setBtnRenderMulta(boolean btnRenderMulta) {
 		this.btnRenderMulta = btnRenderMulta;
 	}
+	
+	
+
+	public HashMap<String, String> getMeses() {
+		return meses;
+	}
+
+	public void setMeses(HashMap<String, String> meses) {
+		this.meses = meses;
+	}
 
 	/**
 	 * Metodos
@@ -379,7 +389,7 @@ public class SancionForm implements Serializable {
 
 		int min = dtSancion.getDtpssnMinutos();
 
-		String[] Dias = txtDias.split("-");
+		String[] Dias = txtDias.split(",");
 		int frecuencia = Dias.length;
 
 		falta = srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
@@ -517,7 +527,7 @@ public class SancionForm implements Serializable {
 					int ulnivel = ultimaSancion.getSnNivel();
 					if (ulnivel >= nivel) {
 						if (ulnivel == 6) {
-							retorno = sancion;
+							retorno = srvSanciones.obtenerSancionPorNivelPorTipoSancion(ulnivel, tpsn);
 						} else {
 							ulnivel = ulnivel + 1;
 							retorno = srvSanciones.obtenerSancionPorNivelPorTipoSancion(ulnivel, tpsn);
@@ -722,8 +732,8 @@ public class SancionForm implements Serializable {
 		String diasNuevo = dtSancionNueva.getDtpssnDias();
 		String diasAnterior = dtSancionAnterior.getDtpssnDias();
 
-		String[] dias1 = diasNuevo.split("-");
-		String[] dias2 = diasAnterior.split("-");
+		String[] dias1 = diasNuevo.split(",");
+		String[] dias2 = diasAnterior.split(",");
 
 		int n2 = dias2.length;
 
@@ -802,6 +812,13 @@ public class SancionForm implements Serializable {
 		sancion = srvSanciones.ObtenerSancionPorId(snId);
 		calcularValores();
 
+	}
+	public String obtenerMesTexto(int m) {
+		String  retorno="";
+		String mes=String.valueOf(m);
+		retorno=meses.get(mes);
+		return retorno;
+		
 	}
 
 	public void generarReporteMultas() {
