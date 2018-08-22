@@ -178,7 +178,7 @@ function regenererCalSancionForm(){
 		       					<p:outputLabel id="lblTipoSancion" for="tipoSancion" value="Sanción: "/>	
 		       				</ui:define>
 		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoSancion" disabled="#{sancionForm.esBloqueado}"
+		       					<p:selectOneMenu id="tipoSancion" disabled="#{sancionForm.esBloqueado || sancionForm.esInsub}"
 											value="#{sancionForm.tipoSancion}" effect="fold">
 											
 											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />

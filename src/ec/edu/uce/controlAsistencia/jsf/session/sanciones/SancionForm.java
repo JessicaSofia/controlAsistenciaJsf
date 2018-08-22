@@ -84,6 +84,7 @@ public class SancionForm implements Serializable {
 	private HashMap<String, String> meses = new HashMap<>();
 	private String mesReporte;
 	private String anioReporte;
+	private boolean esInsub;
 
 	/* Reporte multas */
 	private List<DetallePuestoSancion> listaMultas = new ArrayList<>();
@@ -337,14 +338,21 @@ public class SancionForm implements Serializable {
 		this.btnRenderMulta = btnRenderMulta;
 	}
 	
-	
-
 	public HashMap<String, String> getMeses() {
 		return meses;
 	}
 
 	public void setMeses(HashMap<String, String> meses) {
 		this.meses = meses;
+	}
+	
+
+	public boolean isEsInsub() {
+		return esInsub;
+	}
+
+	public void setEsInsub(boolean esInsub) {
+		this.esInsub = esInsub;
 	}
 
 	/**
@@ -376,7 +384,7 @@ public class SancionForm implements Serializable {
 	}
 
 	public void calcularSancion() {
-
+		int frecuencia=0;
 		Calendar c = Calendar.getInstance();
 		c.setTime(fecha);
 		dtSancion.setDtpssnAno(c.get(Calendar.YEAR));
@@ -389,8 +397,7 @@ public class SancionForm implements Serializable {
 
 		int min = dtSancion.getDtpssnMinutos();
 
-		String[] Dias = txtDias.split(",");
-		int frecuencia = Dias.length;
+		
 
 		falta = srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
 		if (seleccionPersona.getCtgId() != 0) {
@@ -399,15 +406,22 @@ public class SancionForm implements Serializable {
 		}
 
 		if (categoriaFaltaAplicar == null) {
-			// if(Faltas.Atrasos.getId()==falta.getFlId()) {
-			// categoriaFaltaAplicar=
-			// obtenerCategoriaFaltaPorParametros(empleado.getCategoria().getCtgId(),
-			// Faltas.AbandonodeTrabajo.getId() , min);
-			//
-			// }
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Información.", "No se ha paramatrizado estos rangos"));
-			return;
+			if(falta.getFlNombre().equals("INSUBSISTENCIA")) {
+				esInsub=true;
+				dtSancion.setDtpssnDias("");
+				dtSancion.setDtpssnValor(0);
+				return;
+				
+			}else {
+				esInsub=false;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "No se ha paramatrizado estos rangos"));
+				return;
+			}
+			
+		}else {
+			String[] Dias = txtDias.split(",");
+			frecuencia = Dias.length;
 		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
 		// int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();

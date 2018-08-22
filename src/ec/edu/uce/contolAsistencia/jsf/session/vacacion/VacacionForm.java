@@ -396,17 +396,31 @@ public class VacacionForm implements Serializable {
 		salVacaCal1.setSlvcDiasRegistrados(dias);
 		int diasRes=saldoDias1+vacacion.getVccNumDias();
 		salVacaCal1.setSlvcDiasRestantes(diasRes);
+		int numFs=salVacaCal1.getSlvcDiasRegistrados()/7;
+		salVacaCal1.setSlvcNumfinsemana(numFs);
 		
 			
 		}else {
 			if(saldoVacacion1==null && saldoVacacion2!=null) {
+				if(diasAnt2==0) {
+				
 				int dias=diasReg2-vacacion.getVccNumDias();
 				if(dias<0) {
 				 salVacaCal1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId());
+				 if(salVacaCal1!=null) {
 				 salVacaCal1.setSlvcEstado(1);
 				 salVacaCal2.setSlvcPeriodo(2);
 				 salVacaCal2.setSlvcDiasRegistrados(0);
 				 salVacaCal2.setSlvcDiasRestantes(totaldias2);
+				 salVacaCal2.setSlvcNumfinsemana(0);
+				 int diasReg=salVacaCal1.getSlvcDiasRegistrados()-vacacion.getVccNumDias();
+					salVacaCal1.setSlvcDiasRegistrados(diasReg);
+					int diasRes=saldoDias2+vacacion.getVccNumDias();
+					salVacaCal1.setSlvcDiasRestantes(diasRes);
+					int numFs=salVacaCal1.getSlvcDiasRegistrados()/7;
+					salVacaCal1.setSlvcNumfinsemana(numFs);
+				 
+				 }
 				 
 				
 				}else {
@@ -414,8 +428,36 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRegistrados(diasReg);
 					int diasRes=saldoDias2+vacacion.getVccNumDias();
 					salVacaCal2.setSlvcDiasRestantes(diasRes);
+					int numFs=salVacaCal1.getSlvcDiasRegistrados()/7;
+					salVacaCal1.setSlvcNumfinsemana(numFs);
+					
 				}
-				;
+				}else {
+					int numAnt=diasAnt2-vacacion.getVccNumDias();
+					if(numAnt<0) {
+						int dias=diasReg2-vacacion.getVccNumDias();
+						if(dias<0) {
+						 salVacaCal1=srvVacacion.ObtenerSaldoVacacionPorPeriodo(1, seleccionPersona.getDtpsId());
+						 if(salVacaCal1!=null) {
+						 salVacaCal1.setSlvcEstado(1);
+						 salVacaCal2.setSlvcPeriodo(2);
+						 salVacaCal2.setSlvcDiasRegistrados(0);
+						 salVacaCal2.setSlvcDiasRestantes(totaldias2);
+						 salVacaCal2.setSlvcNumfinsemana(0);
+						 int diasReg=salVacaCal1.getSlvcDiasRegistrados()-vacacion.getVccNumDias();
+							salVacaCal1.setSlvcDiasRegistrados(diasReg);
+							int diasRes=saldoDias2+vacacion.getVccNumDias();
+							salVacaCal1.setSlvcDiasRestantes(diasRes);
+							int numFs=salVacaCal1.getSlvcDiasRegistrados()/7;
+							salVacaCal1.setSlvcNumfinsemana(numFs);
+						 }
+						}
+						
+					}else {
+						salVacaCal2.setSlvcDiasAnticipados(0);
+					}
+				}
+				
 				
 				
 			}
