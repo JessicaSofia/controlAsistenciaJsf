@@ -613,7 +613,13 @@ public class SancionForm implements Serializable {
 		tipoFalta = String.valueOf(falta.getFlId());
 		tipoSancion = String.valueOf(sancion.getSnId());
 		activar = false;
-		esImprimir = true;
+		if(sancion.getSnId() == 1){
+			esImprimir = false;
+			btnRenderMulta = true;
+		}else{
+			esImprimir = true;
+			btnRenderMulta = false;
+		}
 
 	}
 
@@ -695,9 +701,12 @@ public class SancionForm implements Serializable {
 	public void verPDF() {
 		try {
 
+			path = FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_logo", path);
 			parametros.put("txt_num_auto", String.valueOf(dtSancion.getDtpssnNumaccion()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());

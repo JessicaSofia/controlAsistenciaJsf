@@ -234,9 +234,10 @@ function regenererCalSancionForm(){
 				<div class="cell colpan2">
 				 <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}" process="@this"></p:commandButton>
 				</div>
-				<div class="cell colpan2"></div>
-				<p:commandButton id="btnMulta" value="Multas" target="_blank" ajax="false" rendered="#{sancionForm.btnRenderMulta}"
+				<div class="cell colpan2">
+				<p:commandButton id="btnMulta" value="Imprimir multa" target="_blank" ajax="false" rendered="#{sancionForm.btnRenderMulta}"
 							actionListener="#{sancionForm.generarReporteMultas()}"></p:commandButton>
+				</div>
 				<div class="cell colpan2">
 				
                 <p:commandButton id="btnAnularVacacion" value="Insubcistente" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
