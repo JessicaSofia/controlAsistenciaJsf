@@ -93,6 +93,8 @@ public class RegistrosLicencias implements Serializable {
 	private boolean disableNumDias = true;
 	private boolean renderBtnImprimir = false;
 	private boolean renderCambHorario = false;
+	
+	private String path;
 
 	/*
 	 * @ManagedProperty(value = "#{busEmpleado.seleccionPersona}")
@@ -346,7 +348,10 @@ public class RegistrosLicencias implements Serializable {
 	}
 
 	public void verPDF() {
+		path = FacesContext.getCurrentInstance().getExternalContext()
+				.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
 		if(licencia.getTipoLicencia().getTplcNombre().equals("CAMBIO DE HORARIOS")){
+			
 			try {
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -389,6 +394,7 @@ public class RegistrosLicencias implements Serializable {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 				Map<String, Object> parametros = new HashMap<>();
+				parametros.put("txt_logo", path);
 				parametros.put("txt_num_auto", String.valueOf(licencia.getLcnNumLicencia()));
 				parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 				parametros.put("txt_licencia", licencia.getTipoLicencia().getTplcNombre());
@@ -439,8 +445,8 @@ public class RegistrosLicencias implements Serializable {
 			//licencia.setLcnCopia(dependencia.getDpnDescripcion());
 			licencia.setLcnCopia(seleccionPersona.getDpnNombre());
 			//licencia.setDetallePuesto(detallePuesto);
-			detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
-			System.out.println(seleccionPersona.getDtpsId());
+			//detallePuesto = srvDetallePuesto.DetallePuestoBuscarPorId(seleccionPersona.getDtpsId());
+			//System.out.println(seleccionPersona.getDtpsId());
 			//licencia.setDetallePuesto(detallePuesto);
 			licencia.setDtpsId(seleccionPersona.getDtpsId());
 			
@@ -459,7 +465,13 @@ public class RegistrosLicencias implements Serializable {
 		if (persona != null) {
 			seleccionPersona = persona;
 			//this.regimen = srvRegimen.BuscarPorId(seleccionPersona.getRgmId());
-			this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(seleccionPersona.getRgmId());
+			if(this.seleccionPersona.getRgmId() == 1 || this.seleccionPersona.getRgmId() == 2){
+				this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(1);
+				
+			}else{
+				this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(3);
+			}
+			//this.listaTipoLicencia = srvTipoLicencia.listarTipoLicencia(seleccionPersona.getRgmId());
 			this.tiposLicencias = new LinkedHashMap<>();
 			this.listaTipoLicencia.forEach((tipoLicenciaEach) -> {
 				tiposLicencias.put(tipoLicenciaEach.getTplcNombre(), String.valueOf(tipoLicenciaEach.getTplcId()));

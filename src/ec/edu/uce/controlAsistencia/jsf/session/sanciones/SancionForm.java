@@ -85,6 +85,7 @@ public class SancionForm implements Serializable {
 	private String mesReporte;
 	private String anioReporte;
 	private boolean esInsub;
+	private String path;
 
 	/* Reporte multas */
 	private List<DetallePuestoSancion> listaMultas = new ArrayList<>();
@@ -839,7 +840,9 @@ public class SancionForm implements Serializable {
 
 	public void generarReporteMultas() {
 		try {
-
+			
+			path = FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 			List<ReporteMulta> multaModel = new ArrayList<>();
@@ -854,6 +857,7 @@ public class SancionForm implements Serializable {
 			
 			
 			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_logo", path);
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());
 			parametros.put("txt_anio", this.anioReporte);
