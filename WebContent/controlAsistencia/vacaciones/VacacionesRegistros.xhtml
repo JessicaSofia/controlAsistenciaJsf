@@ -151,7 +151,8 @@
 					<p:panel id="pnlVacacionesVacaciones"
 							header="Autorización de Vacaciones Anual">
 						<div id="divTblRegistrosVacaciones">
-							<p:dataTable var="listVac" value="#{vacacionForm.listaVacacion}">
+							<p:dataTable var="listVac" value="#{vacacionForm.listaVacacion}"  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
 								<p:column headerText="N° Autorizión" style="width:5%">
 									<h:outputText value="#{listVac.vccNumAutorizacion}" />
 								</p:column>
@@ -198,7 +199,9 @@
 						<p:panel id="pnlVacacionesPermisos"
 							header="Autorización de Ausencia Temporal">
 							<div id="divTblRegistrosPermisos">
-								<p:dataTable var="permiso" value="#{vacacionForm.listaPermisos}">
+								<p:dataTable var="permiso" value="#{vacacionForm.listaPermisos}" 
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                 				paginator="true" rows="10" style="margin-bottom:20px">
 									<p:column headerText="Fecha Permiso">
 										<h:outputText value="#{permiso.prmFechaPermiso}" />
 									</p:column>

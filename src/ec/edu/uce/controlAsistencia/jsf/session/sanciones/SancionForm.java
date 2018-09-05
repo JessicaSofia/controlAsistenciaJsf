@@ -614,6 +614,7 @@ public class SancionForm implements Serializable {
 		tipoSancion = String.valueOf(sancion.getSnId());
 		activar = false;
 		if(sancion.getSnId() == 1){
+		
 			esImprimir = false;
 			btnRenderMulta = true;
 		}else{

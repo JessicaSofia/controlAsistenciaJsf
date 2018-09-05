@@ -157,6 +157,7 @@ public class VacacionForm implements Serializable {
 				this.renderBtnImprimir = true;
 			} else {
 				retorno = false;
+				this.renderBtnImprimir = false;
 			}
 		} else {
 			vacacion.setVccEstado(Estados.Activo.getId());
@@ -173,6 +174,8 @@ public class VacacionForm implements Serializable {
 				salVacaCal2.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+				saldoVacacion1=salVacaCal1;
+				saldoVacacion2=salVacaCal2;
 
 			} else {
 				if (salVacaCal1 == null && salVacaCal2 != null) {
@@ -259,7 +262,7 @@ public class VacacionForm implements Serializable {
 		if (salVacaCal1 != null && salVacaCal2 != null) {
 			if(tipo==2) {
 
-				num=calcularHoras(saldoVacacion1);
+				num=calcularHoras(salVacaCal1);
 			}
 		if(num!=0) {
 		
@@ -271,7 +274,7 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcNumfinsemana(numFsTotal1);
 				salVacaCal2.setSlvcPeriodo(1);
 				if(tipo==1) {
-				vacacion.setVccNumDiasDescon(num);
+				vacacion.setVccNumDias(num);
 				}
 				int nres=saldoTotaldias*-1;
 				saldoTotaldias = saldoTotaldias + saldoDias2;
@@ -287,7 +290,6 @@ public class VacacionForm implements Serializable {
 					if(tipo==1) {
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
 					vacacion.setVccNumDias(num);
-					vacacion.setVccNumDiasDescon(num);
 					}
 
 				} else {
@@ -303,8 +305,7 @@ public class VacacionForm implements Serializable {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 				
-					vacacion.setVccNumDias(n);
-					vacacion.setVccNumDiasDescon(n);
+					vacacion.setVccNumDias(n);;
 					}
 				}
 			}
@@ -319,7 +320,7 @@ public class VacacionForm implements Serializable {
 				if(tipo==1) {
 				vacacion.setVccFechaFin(
 						calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
-				vacacion.setVccNumDiasDescon(n);
+
 				vacacion.setVccNumDias(n);
 				}
 
@@ -341,7 +342,6 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcNumfinsemana(numFsTotal2);
 					if(tipo==1) {
 					vacacion.setVccFechaFin(calcularFechaFinal(vacacion.getVccFechaInicio(), num));
-					vacacion.setVccNumDiasDescon(num);
 					vacacion.setVccNumDias(num);
 					}
 				} else {
@@ -355,7 +355,6 @@ public class VacacionForm implements Serializable {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
 					vacacion.setVccNumDias(n);
-					vacacion.setVccNumDiasDescon(n);
 					}
 
 				}
@@ -614,6 +613,9 @@ public class VacacionForm implements Serializable {
 		regimen = null;
 		puesto = null;
 		vacacion = null;
+		salVacaCal1= null;
+		salVacaCal2=null;
+		
 
 	}
 
