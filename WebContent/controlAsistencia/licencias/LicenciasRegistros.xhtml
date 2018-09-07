@@ -108,8 +108,7 @@
 
 				<div id="divTblRegistrosLicencias">
 					<p:dataTable var="licencia"
-						value="#{registrosLicencia.listaLicencias}" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                 paginator="true" rows="10" style="margin-bottom:20px" >
+						value="#{registrosLicencia.listaLicencias}">
 						<p:column headerText="Tipo Licencia" style="width:15%;">
 							<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
 						</p:column>

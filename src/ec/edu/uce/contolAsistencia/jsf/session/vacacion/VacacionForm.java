@@ -68,8 +68,8 @@ public class VacacionForm implements Serializable {
 	private boolean esActualizacion = false;
 	private List<Vacacion> listaVacacion = new ArrayList<>();
 	private Vacacion seleccionVacacion;
-	private SaldoVacacion saldoVacacion1;
-	private SaldoVacacion saldoVacacion2;
+	private SaldoVacacion saldoVacacion1 = null;
+	private SaldoVacacion saldoVacacion2 = null;
 	private DetallePuestoDto detallePuestoEmpleado;
 	private FichaEmpleado fichaEmpleado;
 	private Dependencia dependencia;
@@ -659,12 +659,12 @@ public class VacacionForm implements Serializable {
 			parametros.put("txt_hasta", fecha_fin);
 			String saldo1 = null;
 			String saldo2 = null;
-			if (salVacaCal1.getSlvcDiasRestantes() == 0) {
+			if (salVacaCal1.getSlvcDiasRestantes() == 0 || salVacaCal1 == null) {
 				saldo1 = "--";
 			} else {
 				saldo1 = String.valueOf(salVacaCal1.getSlvcDiasRestantes());
 			}
-			if (salVacaCal2.getSlvcDiasRestantes() == 0) {
+			if (salVacaCal2.getSlvcDiasRestantes() == 0 || salVacaCal2 == null) {
 				saldo2 = "--";
 			} else {
 				saldo2 = String.valueOf(salVacaCal2.getSlvcDiasRestantes());
