@@ -411,6 +411,8 @@ public class SancionForm implements Serializable {
 				esInsub=true;
 				dtSancion.setDtpssnDias("");
 				dtSancion.setDtpssnValor(0);
+				sancion =srvSanciones.ObtenerSancionPorId(8);
+				dtSancion.setSancion(sancion);
 				return;
 				
 			}else {
@@ -603,11 +605,17 @@ public class SancionForm implements Serializable {
 		} else {
 			esBloqueado = false;
 		}
+		
 		Calendar fedit = Calendar.getInstance();
 		fedit.set(seleccionDtSancion.getDtpssnAno(), seleccionDtSancion.getDtpssnMes(), 1);
 		fecha = fedit.getTime();
-
-		falta = seleccionDtSancion.getCategoriaFalta().getFalta();
+		if(seleccionDtSancion.getCategoriaFalta()!=null){
+			falta = seleccionDtSancion.getCategoriaFalta().getFalta();
+		}
+		else {
+			falta=srvSanciones.ObtenerFaltaPorI(7);
+		}
+		
 		categoriaFaltaAplicar = seleccionDtSancion.getCategoriaFalta();
 		sancion = seleccionDtSancion.getSancion();
 		tipoFalta = String.valueOf(falta.getFlId());
@@ -701,10 +709,18 @@ public class SancionForm implements Serializable {
 
 	public void verPDF() {
 		try {
+			
+			String partidaPresupuestaria=srvSanciones.obtenerPartidaPresupuestariaPorDetallePuestoId(seleccionPersona.getDtpsId());
+
+			String partidaIndividual=srvSanciones.obtenerPartidaIndividualPorDetallePuestoId(seleccionPersona.getDtpsId());
 
 			path = FacesContext.getCurrentInstance().getExternalContext()
 					.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
+			String faltaTexto="NINGUNO";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			if (dtSancion.getCategoriaFalta()!=null) {
+				faltaTexto=dtSancion.getCategoriaFalta().getFalta().getFlNombre();
+			}
 
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("txt_logo", path);
@@ -716,12 +732,12 @@ public class SancionForm implements Serializable {
 			parametros.put("txt_puesto", seleccionPersona.getPstNombre());
 			String sueldoAux = String.valueOf(sueldo);
 			parametros.put("txt_renumeracion", sueldoAux);
-			parametros.put("txt_tipo_falta", dtSancion.getCategoriaFalta().getFalta().getFlNombre());
+			parametros.put("txt_tipo_falta", faltaTexto);
 			parametros.put("txt_sancion", dtSancion.getSancion().getSnDescripcion());
 			String valorAux = String.valueOf(valor);
 			parametros.put("txt_valor", valorAux);
-			parametros.put("txt_partida", "1234567890000000000");
-			parametros.put("txt_individual", "123456");
+			parametros.put("txt_partida", partidaPresupuestaria);
+			parametros.put("txt_individual",partidaIndividual);
 			// parametros.put("txt_remuneracion",
 			// detallePuesto.getFichaEmpleado().);
 			// parametros.put("txt_partida",
