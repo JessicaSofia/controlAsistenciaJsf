@@ -3,6 +3,9 @@ package ec.edu.uce.controlAsistencia.jsf.springSecurity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ejb.EJB;
+import javax.inject.Named;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioRolServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioServicio;
 
+@Named("proveedorAutenticacion")
 public class ProveedorAutenticacion implements AuthenticationProvider, Serializable{
 	
 	
@@ -20,13 +24,17 @@ public class ProveedorAutenticacion implements AuthenticationProvider, Serializa
 	 */ 
 	private static final long serialVersionUID = 1L;
 	
+	@EJB
 	private UsuarioServicio srvUsuarioEjb;
+	@EJB
 	private UsuarioRolServicio srvUsuarioRolEjb;
+	private String mensaje;
 	
 	
 @Override
 public Authentication authenticate(Authentication authentication) throws
 AuthenticationException{
+	
 String username = authentication.getName();
 String password = (String) authentication.getCredentials();
 
@@ -62,6 +70,14 @@ public UsuarioRolServicio getSrvUsuarioRolEjb() {
 public void setSrvUsuarioRolEjb(UsuarioRolServicio srvUsuarioRolEjb) {
 	this.srvUsuarioRolEjb = srvUsuarioRolEjb;
 }
+public String getMensaje() {
+	return mensaje;
+}
+public void setMensaje(String mensaje) {
+	this.mensaje = mensaje;
+}
+
+
 
 
 }

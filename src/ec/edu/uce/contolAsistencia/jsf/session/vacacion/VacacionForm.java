@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +39,14 @@ import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.RegimenServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.VacacionServicio;
+import ec.edu.uce.controlAsistencia.jpa.entidades.Contrato;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Dependencia;
 import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuesto;
+import ec.edu.uce.controlAsistencia.jpa.entidades.DetallePuestoSancion;
 import ec.edu.uce.controlAsistencia.jpa.entidades.FichaEmpleado;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Licencia;
+import ec.edu.uce.controlAsistencia.jpa.entidades.ParametroVacacionRegimen;
+import ec.edu.uce.controlAsistencia.jpa.entidades.ParametroVacaciones;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Permiso;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Puesto;
 import ec.edu.uce.controlAsistencia.jpa.entidades.Regimen;
@@ -115,6 +120,9 @@ public class VacacionForm implements Serializable {
 
 	@EJB
 	private PermisoServicio srvPermiso;
+	
+	
+
 
 	// ==============================================POSTCONSTRUCT=============================================================//
 
@@ -273,9 +281,6 @@ public class VacacionForm implements Serializable {
 				salVacaCal1.setSlvcEstado(Estados.DesActivo.getId());
 				salVacaCal1.setSlvcNumfinsemana(numFsTotal1);
 				salVacaCal2.setSlvcPeriodo(1);
-				if(tipo==1) {
-				vacacion.setVccNumDias(num);
-				}
 				int nres=saldoTotaldias*-1;
 				saldoTotaldias = saldoTotaldias + saldoDias2;
 				if (saldoTotaldias < 0) {
@@ -293,9 +298,14 @@ public class VacacionForm implements Serializable {
 					}
 
 				} else {
-
+					int sumNdias=0;
 					Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal2, nres);
 					int n = resultado.get("diasDescontar");
+					if(n>nres) {
+						sumNdias=n-nres;
+					}
+					num= num+sumNdias;
+					
 					salVacaCal2.setSlvcDiasRegistrados(diasReg2 + n);
 					salVacaCal2.setSlvcDiasRestantes(totaldias2 - (diasReg2 + n));
 					salVacaCal2.setSlvcTotalHoras(salVacaCal1.getSlvcTotalHoras());
@@ -304,13 +314,12 @@ public class VacacionForm implements Serializable {
 					if(tipo==1) {
 					vacacion.setVccFechaFin(
 							calcularFechaFinal(vacacion.getVccFechaInicio(), resultado.get("diasCalcularFecha")));
-				
-					vacacion.setVccNumDias(n);;
+					
+					vacacion.setVccNumDias(num);;
 					}
 				}
 			}
-		}
-
+			
 			else {
 				Map<String, Integer> resultado = CalcularNumDiasADescontar(salVacaCal1, num );
 				int n = resultado.get("diasDescontar");
@@ -361,6 +370,7 @@ public class VacacionForm implements Serializable {
 
 			  }
 			}
+		}
 		}
 	}
 
@@ -562,6 +572,8 @@ public class VacacionForm implements Serializable {
 
 		if (seleccionVacacion == null) {
 			esActualizacion = false;
+			this.renderBtnImprimir = false;
+			this.esBloqueado=false;
 			vacacion = new Vacacion();
 			vacacion.setVccNumAutorizacion(generarNumAutorizacion());
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
@@ -981,6 +993,157 @@ public class VacacionForm implements Serializable {
 		// cargarVariables();
 		return ruta;
 	}
+	
+	
+	public void generarSaldoVacacionesNuevos() {
+		
+		int aniosContrato=0;
+		int mesesContrato=0;
+		int diasVac1 =0;
+		int diasVac2=0;
+		SaldoVacacion sv1=null;
+		SaldoVacacion sv2=null;
+		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getCtgId());
+		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12);
+	
+		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
+		SaldoVacacion saldoVacacion=new SaldoVacacion();
+		Calendar fechaActual= Calendar.getInstance();
+		Calendar fechaContrato=Calendar.getInstance();
+		fechaContrato.setTime(contrato.getCntFechaInicio());
+		int valor = fechaActual.compareTo(fechaContrato);
+		
+		if(valor>0){
+		
+		Map<String, Integer> resultado=calcularTiempoContratacion(fechaActual,fechaContrato);
+		aniosContrato=resultado.get("anios");
+		mesesContrato=resultado.get("meses");
+		if((aniosContrato==0) && (mesesContrato>0)){
+	     
+			diasVac2=(int)promDiasVacaMes*mesesContrato;
+		}
+		else{
+			if((aniosContrato<2)) {
+				diasVac1=Integer.parseInt(parametroDias.getPrvcrgValor());
+				if(mesesContrato>0)
+				diasVac2=(int)promDiasVacaMes*mesesContrato;
+				
+			}else {
+				if(aniosContrato>=2) {
+					diasVac1=Integer.parseInt(parametroDias.getPrvcrgValor());
+					diasVac2=Integer.parseInt(parametroDias.getPrvcrgValor());
+				}
+			}
+		}
+		if(diasVac2!=0) {
+			sv2=new SaldoVacacion();
+			sv2.setDtpsId(seleccionPersona.getDtpsId());
+			sv2.setSlvcDiasAnticipados(0);
+			sv2.setSlvcDiasRegistrados(0);
+			sv2.setSlvcPeriodo(2);
+			sv2.setSlvcDiasRestantes(diasVac2);
+			sv2.setSlvcTotalHoras("00:00");
+			sv2.setSlvcTotalDias(Integer.parseInt(parametroDias.getPrvcrgValor()));
+			sv2.setSlvcNumfinsemana(0);
+			sv2.setSlvcEstado(Estados.Activo.getId());
+		}
+		
+		if(diasVac1!=0) {
+			sv1=new SaldoVacacion();
+			sv1.setDtpsId(seleccionPersona.getDtpsId());
+			sv1.setSlvcDiasAnticipados(0);
+			sv1.setSlvcDiasRegistrados(0);
+			sv1.setSlvcPeriodo(1);
+			sv1.setSlvcDiasRestantes(diasVac1);
+			sv1.setSlvcTotalHoras("00:00");
+			sv1.setSlvcTotalDias(Integer.parseInt(parametroDias.getPrvcrgValor()));
+			sv1.setSlvcNumfinsemana(0);
+			sv1.setSlvcEstado(Estados.Activo.getId());
+		}
+		saldoVacacion1=sv1;
+		saldoVacacion2=sv2;
+		
+		}else{
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+						"Advertencia.", "La fecha de contracion del Funcionario a concluido "));
+		return;
+		}
+		
+		
+	
+	}
+	
+	public void actualizarSaldoVacacionesDiasAcumulados(SaldoVacacion saldoVacacion1, SaldoVacacion saldoVacacion2) {
+		
+		int aniosContrato=0;
+		int mesesContrato=0;
+		int diasVac1 =0;
+		int diasVac2=0;
+		SaldoVacacion sv1=null;
+		SaldoVacacion sv2=null;
+		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getCtgId());
+		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12);
+	
+		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
+		SaldoVacacion saldoVacacion=new SaldoVacacion();
+		Calendar fechaActual= Calendar.getInstance();
+		Calendar fechaContrato=Calendar.getInstance();
+		fechaContrato.setTime(contrato.getCntFechaInicio());
+		int valor = fechaActual.compareTo(fechaContrato);
+		
+		if(valor>0){
+			if((aniosContrato==0)&&(mesesContrato>0)) {
+				
+			}
+		}
+		
+		
+		
+	}
+
+	public Map<String, Integer> calcularTiempoContratacion(Calendar fechaActual, Calendar fechaContrato) {
+		
+		Map<String, Integer> retorno = new HashMap<String, Integer>();
+
+		int ultimoDiaNuevo = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int ultimoDiaAnterior = fechaContrato.get(Calendar.DAY_OF_MONTH);
+
+		int mesNuevo = fechaActual.get(Calendar.MONTH);
+		int mesAnterior = fechaContrato.get(Calendar.MONTH);
+
+		int anioNuevo = fechaActual.get(Calendar.YEAR);
+		int anioAnterior = fechaContrato.get(Calendar.YEAR);
+		
+		Calendar fecAct = Calendar.getInstance();
+
+		fecAct.set(anioNuevo, mesNuevo, ultimoDiaNuevo);
+
+		Calendar fUltSan = Calendar.getInstance();
+		fUltSan.set(anioAnterior, mesAnterior, ultimoDiaAnterior);
+
+		int monthDay[] = { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int anios = anioNuevo - anioAnterior;
+		int meses=0;
+		int dias=0;
+
+		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
+
+		Calendar sanAhora = Calendar.getInstance();
+		sanAhora.setTime(fUltSan.getTime());
+		sanAhora.add(Calendar.YEAR, anios);
+
+		if (fecAct.compareTo(sanAhora) < 0)
+			anios--;
+
+		retorno.put("anios", anios);
+		retorno.put("meses", meses);
+
+		return retorno;
+	}
+
+	
+	
+	
 
 	// ================================================================GETTERS &
 	// SETTERS================================================================================//

@@ -196,7 +196,7 @@
 								<p:commandButton id="btnCancelarVacion" value="Volver"
 									action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
 							</div>
-							<p:commandButton id="btnAnularVacion" value="Anular"  onclick="PF('anulDialogVacacion').show();" rendered="#{!vacacionForm.esActualizacion}" disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
+							<p:commandButton id="btnAnularVacion" value="Anular"  onclick="PF('anulDialogVacacion').show();" rendered="#{vacacionForm.esActualizacion}" disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
 							<p:commandButton id="btnPDFVacaciones" disabled="#{vacacionForm.esBloqueado}"
 								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
 								actionListener="#{vacacionForm.verPDF}" target="_blank"

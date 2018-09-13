@@ -9,7 +9,10 @@ import org.springframework.util.StringUtils;
 
 public class EstrategiaSesionInvalida implements InvalidSessionStrategy{
 private static final String FACES_REQUEST_HEADER = "faces-request";
+
 private String invalidSessionUrl;
+
+
 @Override
 public void onInvalidSessionDetected(HttpServletRequest request,HttpServletResponse response) throws
 IOException, ServletException{

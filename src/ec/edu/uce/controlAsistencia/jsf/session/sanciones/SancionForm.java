@@ -838,7 +838,7 @@ public class SancionForm implements Serializable {
 			cargarSancionFormEdit(seleccionDtSancion);
 			esActualizacion = true;
 		} else {
-
+			
 			esActualizacion = false;
 			limpiarFormSancion();
 			Timestamp fechaEmision = new Timestamp(System.currentTimeMillis());
@@ -847,6 +847,18 @@ public class SancionForm implements Serializable {
 			esBloqueado = false;
 		}
 
+	}
+	
+	public String DireccionarSancionesForm() {
+		String direccion="";
+		if(seleccionPersona.getCtgId()>0) {
+			direccion="/controlAsistencia/sanciones/sancion.xhtml";
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Información.", "El funcionario no tiene definido una categoria"));
+			
+		}
+		return direccion;
 	}
 
 	public void calcularSancionDefinido() {

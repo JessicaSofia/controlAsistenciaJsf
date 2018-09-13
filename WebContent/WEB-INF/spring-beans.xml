@@ -15,6 +15,8 @@ xmlns:jee="http://www.springframework.org/schema/jee"
 xmlns:security="http://www.springframework.org/schema/security"
 xmlns:context="http://www.springframework.org/schema/context"
 xmlns:aop="http://www.springframework.org/schema/aop">
+
+
 <!-- === DEFINE LA CLASE QUE MANEJA LA ESTRATEGIA SEGUIR CUANDO SE INGRESA AUN URL
 SIN AUTENTICACION == -->
 <bean id="estrategiaSesionInvalida"
@@ -25,24 +27,24 @@ class="ec.edu.uce.controlAsistencia.jsf.springSecurity.EstrategiaSesionInvalida"
 == -->  
 <bean id="sessionManagementFilter"
 class="org.springframework.security.web.session.SessionManagementFilter">
-<constructor-arg name="securityContextRepository"
-ref="httpSessionSecurityContextRepository" />
+<constructor-arg name="securityContextRepository"  ref="httpSessionSecurityContextRepository" />
 <property name="invalidSessionStrategy" ref="estrategiaSesionInvalida" />
 </bean>
-<!-- === ALMACENA EL CONTEXTO DE SEGURIDAD EN EL HTTPSESSION ENTER SOLICITUDES ==
--->
+<!-- === ALMACENA EL CONTEXTO DE SEGURIDAD EN EL HTTPSESSION ENTER SOLICITUDES ==-->
 <bean id="httpSessionSecurityContextRepository"
 class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"/>
+
 <!-- === DEFINE LA CLASE PROVEEDORA DE LA AUTENTICACION == -->
+
 <bean id="proveedorAutenticacion"
 class="ec.edu.uce.controlAsistencia.jsf.springSecurity.ProveedorAutenticacion">
-<property name="srvUsuarioEjb" ref="usuarioServicioEjb"/>
-<property name="srvUsuarioRolEjb" ref="usuarioRolServicioEjb"/>
+<!--<property name="srvUsuarioEjb" ref="usuarioServicioEjb"/>
+<property name="srvUsuarioRolEjb" ref="usuarioRolServicioEjb"/> -->
 </bean>
 <!-- === DEFINE EL SERVICIO DE CONSULTA DE USUARIOS == -->
 
-	<jee:local-slsb id="usuarioServicioEjb" jndi-name="java:global/ec.edu.uce.controlAsistencia.ear/ec.edu.uce.controlAsistencia.ejb/UsuarioServicioImpl" business-interface="ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioServicio"/>
+	<!--<jee:local-slsb id="usuarioServicioEjb" jndi-name="java:global/ec.edu.uce.controlAsistencia.ear/ec.edu.uce.controlAsistencia.ejb/UsuarioServicioImpl" business-interface="ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioServicio"/> -->
 	<!-- === DEFINE EL SERVICIO DE CONSULTA DE ROLES == -->
-    <jee:local-slsb id="usuarioRolServicioEjb" jndi-name="java:global/ec.edu.uce.controlAsistencia.ear/ec.edu.uce.controlAsistencia.ejb/UsuarioRolServicioImpl" business-interface="ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioRolServicio"/>
+   <!-- <jee:local-slsb id="usuarioRolServicioEjb" jndi-name="java:global/controlAsistenciaEar/repositorioEjb/UsuarioRolServicioImpl" business-interface="ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.UsuarioRolServicio"/>-->
 	
 </beans>

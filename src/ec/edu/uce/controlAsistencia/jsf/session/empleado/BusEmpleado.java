@@ -6,8 +6,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
@@ -117,11 +119,16 @@ public class BusEmpleado implements Serializable{
 			 List<PersonaDto> listEmpleados=  srvPersona.BuscarPorNombres(txtBusquedaEmpleado);
 			 if(listEmpleados != null){
 				 lstPersona=listEmpleados;
+				 if(listEmpleados.size()==0) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Información.", "No se encontro el funcionario "));
+				 }
 				 
 			
 			 }
 			 else {
-				 // tocar mandar el mensaje  no hay ese empleado
+				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Información.", "No se encontro el funcionario "));
 			 }
 			
 		 }   
