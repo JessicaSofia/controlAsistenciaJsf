@@ -1073,7 +1073,7 @@ public class VacacionForm implements Serializable {
 	
 	}
 	
-	public void actualizarSaldoVacacionesDiasAcumulados(SaldoVacacion saldoVacacion1, SaldoVacacion saldoVacacion2) {
+	public void actualizarSaldoVacacionesDiasAcumulados() {
 		
 		int aniosContrato=0;
 		int mesesContrato=0;
@@ -1083,6 +1083,29 @@ public class VacacionForm implements Serializable {
 		SaldoVacacion sv2=null;
 		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getCtgId());
 		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12);
+		
+		int totaldias2 = 0, saldoDias2 = 0, diasReg2 = 0, diasAnt2 = 0, numFSem2 = 0, numFsTotal2 = 0;
+		int totaldias1 = 0, saldoDias1 = 0, diasReg1 = 0, diasAnt1 = 0, numFSem1 = 0, numFsTotal1 = 0;
+
+		if (saldoVacacion1 != null) {
+			saldoDias1 = saldoVacacion1.getSlvcDiasRestantes();
+			totaldias1 = saldoVacacion1.getSlvcTotalDias();
+			diasReg1 = saldoVacacion1.getSlvcDiasRegistrados();
+			diasAnt1 = saldoVacacion1.getSlvcDiasAnticipados();
+			numFSem1 = saldoVacacion1.getSlvcNumfinsemana();
+			numFsTotal1 = saldoVacacion1.getSlvcTotalDias() / 7;
+
+		}
+		if (saldoVacacion2 != null) {
+			totaldias2 = saldoVacacion2.getSlvcTotalDias();
+			saldoDias2 = saldoVacacion2.getSlvcDiasRestantes();
+			diasReg2 = saldoVacacion2.getSlvcDiasRegistrados();
+			diasAnt2 = saldoVacacion2.getSlvcDiasAnticipados();
+			numFSem2 = saldoVacacion2.getSlvcNumfinsemana();
+			numFsTotal2 = saldoVacacion2.getSlvcTotalDias() / 7;
+		}
+
+		
 	
 		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
 		SaldoVacacion saldoVacacion=new SaldoVacacion();
@@ -1093,11 +1116,113 @@ public class VacacionForm implements Serializable {
 		
 		if(valor>0){
 			if((aniosContrato==0)&&(mesesContrato>0)) {
+				diasVac2=(int)promDiasVacaMes*mesesContrato;
+				saldoVacacion2.setSlvcTotalDias(diasVac2);
+				
+				int nDiasAumentar=diasVac1-diasReg2;
+				
+				if(nDiasAumentar>0) {
+					if(diasAnt2>0) {
+						int resul=diasAnt2-nDiasAumentar;
+						if(resul>=0) {
+							saldoVacacion2.setSlvcDiasAnticipados(resul);	
+						}else {
+							int aum=resul*-1;
+							saldoVacacion2.setSlvcDiasAnticipados(0);
+							saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+						}
+						
+					}else {
+						saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+					}
+				 
+				}
+			}else {
+				if(aniosContrato<2) {
+					if((saldoVacacion2!=null)&&(saldoVacacion1!=null)) {
+						
+						diasVac2=(int)promDiasVacaMes*mesesContrato;
+						saldoVacacion2.setSlvcTotalDias(diasVac2);
+						
+						int nDiasAumentar=diasVac1-diasReg2;
+						
+						if(nDiasAumentar>0) {
+							if(diasAnt2>0) {
+								int resul=diasAnt2-nDiasAumentar;
+								if(resul>=0) {
+									saldoVacacion2.setSlvcDiasAnticipados(resul);	
+								}else {
+									int aum=resul*-1;
+									saldoVacacion2.setSlvcDiasAnticipados(0);
+									saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+								}
+								
+							}else {
+								saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+							}
+						 
+						}
+					}else {
+						if((saldoVacacion2!=null)&&(saldoVacacion1==null)) {
+							
+							int numTotal=Integer.parseInt(parametroDias.getPrvcrgValor());
+							saldoVacacion2.setSlvcTotalDias(numTotal);
+							int nDiasAumentar=numTotal-diasReg2;
+							if(nDiasAumentar>0) {
+								if(diasAnt2>0) {
+									int resul=diasAnt2-nDiasAumentar;
+									if(resul>=0) {
+										saldoVacacion2.setSlvcDiasAnticipados(resul);	
+									}else {
+										int aum=resul*-1;
+										saldoVacacion2.setSlvcDiasAnticipados(0);
+										saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+									}
+									
+								}else {
+									saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+								}
+							 
+							}
+							
+						if(mesesContrato>0) {
+							
+							SaldoVacacion slv=new SaldoVacacion();
+							slv=srvVacacion.ObtenerSaldoVacacionPorPeriodo(0, seleccionPersona.getDtpsId());
+							if(slv==null) {
+								diasVac2=(int)promDiasVacaMes*mesesContrato;
+								slv.setSlvcEstado(1);
+								slv.setSlvcTotalDias(diasVac2);
+								slv.setSlvcDiasAnticipados(0);
+								slv.setSlvcDiasRegistrados(0);
+								slv.setSlvcDiasRestantes(diasVac2);
+								slv.setSlvcNumfinsemana(0);
+								slv.setSlvcPeriodo(2);
+								slv.setSlvcTotalHoras("00:00");
+								//Insertar Vacacion
+								
+							}else {
+								diasVac2=(int)promDiasVacaMes*mesesContrato;
+								slv.setSlvcEstado(1);
+								slv.setSlvcTotalDias(diasVac2);
+								slv.setSlvcDiasAnticipados(0);
+								slv.setSlvcDiasRegistrados(0);
+								slv.setSlvcDiasRestantes(diasVac2);
+								slv.setSlvcNumfinsemana(0);
+								slv.setSlvcPeriodo(2);
+								slv.setSlvcTotalHoras("00:00");
+								//analizar si es mejor Actualizar
+							}
+							
+						}
+					}
+					
+				}
 				
 			}
 		}
-		
-		
+			
+		}
 		
 	}
 
