@@ -20,6 +20,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.print.attribute.standard.DialogTypeSelection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -92,6 +93,7 @@ public class VacacionForm implements Serializable {
 	private boolean valorJustificaHoras = false;
 	private boolean horasJustificadas = true;
 	private boolean esBloqueado = false;
+	private boolean esPermitirIngreso=true;
 
 	/***
 	 * Declaracion de servicios
@@ -635,9 +637,26 @@ public class VacacionForm implements Serializable {
 		limpiar();
 		if (persona != null) {
 			seleccionPersona = persona;
+			
 		}
-		saldoVacacion = srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionPersona.getDtpsId());
-		if (saldoVacacion.size() > 1) {
+		if(seleccionPersona.getCtnId()==0) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Información.", "El Funcionario no tiene definido una Contratacion, Actualice los datos"));
+			esPermitirIngreso=false;
+			return;
+		}
+		else {
+			esPermitirIngreso=true;
+		}
+		cargarSaldoVacaciones();
+		
+	}
+	
+	public void cargarSaldoVacaciones() {
+		
+	saldoVacacion = srvVacacion.listSaldoVacacionPorDetallePuestoId(seleccionPersona.getDtpsId());
+		
+		if (saldoVacacion.size()== 2) {
 			for (SaldoVacacion s : saldoVacacion) {
 				if (s.getSlvcPeriodo() == 1) {
 					saldoVacacion1 = s;
@@ -647,8 +666,16 @@ public class VacacionForm implements Serializable {
 				}
 			}
 		} else {
+			if(saldoVacacion.size()== 1) {
 			for (SaldoVacacion s : saldoVacacion) {
 				saldoVacacion2 = s;
+			}
+			
+			}else {
+				if(saldoVacacion==null || saldoVacacion.size()==0) {
+					generarSaldoVacacionesNuevos();
+					cargarSaldoVacaciones();
+				}
 			}
 
 		}
@@ -1060,8 +1087,13 @@ public class VacacionForm implements Serializable {
 			sv1.setSlvcNumfinsemana(0);
 			sv1.setSlvcEstado(Estados.Activo.getId());
 		}
-		saldoVacacion1=sv1;
-		saldoVacacion2=sv2;
+		//Insertar registros de Saldos de vacacion
+		if(sv1!=null) {
+			srvVacacion.SaldoVacacionInsertar(sv1);
+		}
+		if(sv2!=null) {
+			srvVacacion.SaldoVacacionInsertar(sv2);
+		}
 		
 		}else{
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -1073,14 +1105,12 @@ public class VacacionForm implements Serializable {
 	
 	}
 	
-	public void actualizarSaldoVacacionesDiasAcumulados() {
+	public void actualizarSaldoVacacionesDiasAcumulados( SaldoVacacion saldoVacacion1, SaldoVacacion saldoVacacion2 ) {
 		
 		int aniosContrato=0;
 		int mesesContrato=0;
 		int diasVac1 =0;
 		int diasVac2=0;
-		SaldoVacacion sv1=null;
-		SaldoVacacion sv2=null;
 		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getCtgId());
 		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12);
 		
@@ -1105,21 +1135,23 @@ public class VacacionForm implements Serializable {
 			numFsTotal2 = saldoVacacion2.getSlvcTotalDias() / 7;
 		}
 
-		
 	
 		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
-		SaldoVacacion saldoVacacion=new SaldoVacacion();
+		//SaldoVacacion saldoVacacion=new SaldoVacacion();
 		Calendar fechaActual= Calendar.getInstance();
 		Calendar fechaContrato=Calendar.getInstance();
 		fechaContrato.setTime(contrato.getCntFechaInicio());
 		int valor = fechaActual.compareTo(fechaContrato);
 		
 		if(valor>0){
+			Map<String, Integer> resultado=calcularTiempoContratacion(fechaActual,fechaContrato);
+			aniosContrato=resultado.get("anios");
+			mesesContrato=resultado.get("meses");
 			if((aniosContrato==0)&&(mesesContrato>0)) {
 				diasVac2=(int)promDiasVacaMes*mesesContrato;
 				saldoVacacion2.setSlvcTotalDias(diasVac2);
 				
-				int nDiasAumentar=diasVac1-diasReg2;
+				int nDiasAumentar=diasVac2-totaldias2;
 				
 				if(nDiasAumentar>0) {
 					if(diasAnt2>0) {
@@ -1129,14 +1161,17 @@ public class VacacionForm implements Serializable {
 						}else {
 							int aum=resul*-1;
 							saldoVacacion2.setSlvcDiasAnticipados(0);
-							saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+							saldoVacacion2.setSlvcDiasRestantes(saldoDias2+aum);
 						}
 						
 					}else {
-						saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+						saldoVacacion2.setSlvcDiasRestantes(saldoDias2+nDiasAumentar);
 					}
+					
+					srvVacacion.ActualizarSaldoVacacion(saldoVacacion2);
 				 
 				}
+				
 			}else {
 				if(aniosContrato<2) {
 					if((saldoVacacion2!=null)&&(saldoVacacion1!=null)) {
@@ -1144,7 +1179,7 @@ public class VacacionForm implements Serializable {
 						diasVac2=(int)promDiasVacaMes*mesesContrato;
 						saldoVacacion2.setSlvcTotalDias(diasVac2);
 						
-						int nDiasAumentar=diasVac1-diasReg2;
+						int nDiasAumentar=diasVac2-totaldias2;
 						
 						if(nDiasAumentar>0) {
 							if(diasAnt2>0) {
@@ -1154,20 +1189,22 @@ public class VacacionForm implements Serializable {
 								}else {
 									int aum=resul*-1;
 									saldoVacacion2.setSlvcDiasAnticipados(0);
-									saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+									saldoVacacion2.setSlvcDiasRestantes(saldoDias2+aum);
 								}
 								
 							}else {
-								saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+								saldoVacacion2.setSlvcDiasRestantes(saldoDias2+nDiasAumentar);
 							}
 						 
+							//Actualizar Saldo de Vacacion actual
+							srvVacacion.ActualizarSaldoVacacion(saldoVacacion2);
 						}
 					}else {
 						if((saldoVacacion2!=null)&&(saldoVacacion1==null)) {
 							
 							int numTotal=Integer.parseInt(parametroDias.getPrvcrgValor());
 							saldoVacacion2.setSlvcTotalDias(numTotal);
-							int nDiasAumentar=numTotal-diasReg2;
+							int nDiasAumentar=numTotal-totaldias2;
 							if(nDiasAumentar>0) {
 								if(diasAnt2>0) {
 									int resul=diasAnt2-nDiasAumentar;
@@ -1176,13 +1213,15 @@ public class VacacionForm implements Serializable {
 									}else {
 										int aum=resul*-1;
 										saldoVacacion2.setSlvcDiasAnticipados(0);
-										saldoVacacion2.setSlvcDiasRestantes(diasReg2+aum);
+										saldoVacacion2.setSlvcDiasRestantes(saldoDias2+aum);
 									}
 									
 								}else {
-									saldoVacacion2.setSlvcDiasRestantes(diasReg2+nDiasAumentar);
+									saldoVacacion2.setSlvcDiasRestantes(saldoDias2+nDiasAumentar);
 								}
 							 
+								//Actualizar saldo de vacacion actual
+								srvVacacion.ActualizarSaldoVacacion(saldoVacacion2);
 							}
 							
 						if(mesesContrato>0) {
@@ -1200,6 +1239,7 @@ public class VacacionForm implements Serializable {
 								slv.setSlvcPeriodo(2);
 								slv.setSlvcTotalHoras("00:00");
 								//Insertar Vacacion
+								srvVacacion.SaldoVacacionInsertar(slv);
 								
 							}else {
 								diasVac2=(int)promDiasVacaMes*mesesContrato;
@@ -1211,7 +1251,8 @@ public class VacacionForm implements Serializable {
 								slv.setSlvcNumfinsemana(0);
 								slv.setSlvcPeriodo(2);
 								slv.setSlvcTotalHoras("00:00");
-								//analizar si es mejor Actualizar
+								//analizar si es mejor Actualizar 
+								srvVacacion.ActualizarSaldoVacacion(slv);
 							}
 							
 						}
@@ -1494,6 +1535,14 @@ public class VacacionForm implements Serializable {
 
 	public void setEsBloqueado(boolean esBloqueado) {
 		this.esBloqueado = esBloqueado;
+	}
+
+	public boolean isEsPermitirIngreso() {
+		return esPermitirIngreso;
+	}
+
+	public void setEsPermitirIngreso(boolean esPermitirIngreso) {
+		this.esPermitirIngreso = esPermitirIngreso;
 	}
 
 	

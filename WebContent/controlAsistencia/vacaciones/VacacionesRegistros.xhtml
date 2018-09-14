@@ -187,7 +187,7 @@
 									<p:commandButton value=" Nuevo Registro"
 										style="margin-top: 1%;"
 										action="/controlAsistencia/vacaciones/Vacacion.xhtml"
-										actionListener="#{vacacionForm.cargarVariablesVacacion(null)}"></p:commandButton>
+										actionListener="#{vacacionForm.cargarVariablesVacacion(null)}" disabled="#{vacacionForm.esPermitirIngreso}"></p:commandButton>
 									<p:commandButton id="btnCancelarVacion" value="Volver"
 										action="#{vacacionForm.regresarEmpleados()}"></p:commandButton>
 								</center>
@@ -239,7 +239,7 @@
 											style="margin-top: 1%;"
 											action="/controlAsistencia/vacaciones/Permiso.xhtml"
 											actionListener="#{vacacionForm.cargarVariablesPermiso(null)}"></p:commandButton>
-										<p:commandButton id="btnCancelarPermiso" value="Volver"
+										<p:commandButton id="btnCancelarPermiso" value="Volver" disabled="#{vacacionForm.esPermitirIngreso}"
 											action="#{vacacionForm.regresarEmpleados()}"></p:commandButton>
 									</center>
 								</div>
