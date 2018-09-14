@@ -311,8 +311,12 @@ public class RegistrosLicencias implements Serializable {
 		licencia.setTipoLicencia(tipoLicenciaEntidad);
 
 		if (esActualizacion) {
+			
 			Licencia lp = srvlicencia.LicenciaActualizar(licencia);
 			if (lp != null) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "Licencia actualizada exitosamente."));
+				
 				retorno = true;
 			} else {
 				retorno = false;
@@ -453,6 +457,7 @@ public class RegistrosLicencias implements Serializable {
 
 		} else {
 			esActualizacion = true;
+			this.renderBtnImprimir = true;
 			licencia = seleccionLicencia;
 			this.tipoLicencia = String.valueOf(this.licencia.getTipoLicencia().getTplcId());
 
