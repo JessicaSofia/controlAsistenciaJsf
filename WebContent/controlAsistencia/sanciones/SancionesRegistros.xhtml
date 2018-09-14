@@ -108,11 +108,10 @@
                  paginator="true" rows="10" style="margin-bottom:20px">
                  <f:facet name="{Exporters}">
  
-            <h:commandLink value="Exportar">
-                <p:graphicImage name="/demo/images/pdf.png" width="24"/>
-                <p:dataExporter type="xls" target="tblSanciones" fileName="SancionesEmpledo"/>
-            </h:commandLink>
- 
+            
+ 		<p:commandButton id="btnPDFSancion"
+									value="Exportar PDF "  actionListener="#{sancionForm.generarReporteSanciones()}" rendered="#{sancionForm.renderPDFExport}"
+									target="_blank" ajax="false"></p:commandButton>
            
         </f:facet>
  
@@ -159,6 +158,7 @@
 							action="#{sancionForm.DireccionarSancionesForm()}" actionListener="#{sancionForm.cargarVariables(null)}" ></p:commandButton>
 							<p:commandButton id="btnCancelarSancion" value="Volver"
 							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
+							
 							</center>
 					</div>
 				</p:panel>

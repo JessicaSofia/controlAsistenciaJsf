@@ -27,6 +27,7 @@ import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 
 import ec.edu.uce.controlAsistencia.ejb.datos.PersonaDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.ReporteMulta;
+import ec.edu.uce.controlAsistencia.ejb.datos.ReporteSancionPdf;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.DetallePuestoServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.PersonaServicio;
 import ec.edu.uce.controlAsistencia.ejb.servicios.interfaces.SancionesServicio;
@@ -86,7 +87,7 @@ public class SancionForm implements Serializable {
 	private String anioReporte;
 	private boolean esInsub;
 	private String path;
-
+	private boolean renderPDFExport;
 	/* Reporte multas */
 	private List<DetallePuestoSancion> listaMultas = new ArrayList<>();
 
@@ -134,7 +135,11 @@ public class SancionForm implements Serializable {
 
 	public List<DetallePuestoSancion> getLstSanciones() {
 		lstSanciones = srvSanciones.listarSancionPorDetallePuestoId(seleccionPersona.getDtpsId());
-
+		if(lstSanciones.isEmpty()){
+			this.renderPDFExport = false;
+		}else{
+			this.renderPDFExport = true;
+		}
 		return lstSanciones;
 	}
 
@@ -354,6 +359,15 @@ public class SancionForm implements Serializable {
 
 	public void setEsInsub(boolean esInsub) {
 		this.esInsub = esInsub;
+	}
+
+	
+	public boolean isRenderPDFExport() {
+		return renderPDFExport;
+	}
+
+	public void setRenderPDFExport(boolean renderPDFExport) {
+		this.renderPDFExport = renderPDFExport;
 	}
 
 	/**
@@ -914,6 +928,61 @@ public class SancionForm implements Serializable {
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			response.addHeader("Content-disposition", "attachment; filename=APLICACION_DE_MULTAS" + "_"
+					+ seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
+			ServletOutputStream stream = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			JasperRunManager.runReportToPdfStream(rptStream, stream, parametros,
+					new JRBeanCollectionDataSource(multaModel));
+			stream.flush();
+			stream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void generarReporteSanciones() {
+		try {
+			
+			path = FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			
+			List<ReporteSancionPdf> multaModel = new ArrayList<>();
+			for (DetallePuestoSancion dtpSancionEach : this.lstSanciones) {
+				
+				ReporteSancionPdf detalle = new ReporteSancionPdf();
+				detalle.setFalta(dtpSancionEach.getCategoriaFalta().getFalta().getFlNombre());
+				detalle.setSancion(dtpSancionEach.getSancion().getSnNombre());
+				detalle.setAnio(dtpSancionEach.getDtpssnAno());
+				detalle.setMes( this.meses.get(String.valueOf(dtpSancionEach.getDtpssnMes())));
+				detalle.setDias(dtpSancionEach.getDtpssnDias());
+				detalle.setValor(dtpSancionEach.getDtpssnValor());
+				detalle.setObservaciones(dtpSancionEach.getDtpssnObservacion());
+				multaModel.add(detalle);
+			}
+			
+			
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_logo", path);
+			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
+			parametros.put("txt_cedula", seleccionPersona.getPrsIdentificacion());
+			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());
+			parametros.put("txt_cargo", seleccionPersona.getPstNombre());
+			
+			File jasper = new File(FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/rptSanciones.jasper"));
+
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros,
+					new JRBeanCollectionDataSource(multaModel));
+
+			InputStream rptStream = FacesContext.getCurrentInstance().getExternalContext()
+					.getResourceAsStream("/controlAsistencia/reportes/rptSanciones.jasper");
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.addHeader("Content-disposition", "attachment; filename=REPORTE_SANCIONES" + "_"
 					+ seleccionPersona.nombresCompetos() + "_" + sdf.format(new Date()).toString() + ".pdf");
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
