@@ -93,7 +93,7 @@ public class VacacionForm implements Serializable {
 	private boolean valorJustificaHoras = false;
 	private boolean horasJustificadas = true;
 	private boolean esBloqueado = false;
-	private boolean esPermitirIngreso=true;
+	private boolean esPermitirIngreso=false;
 
 	/***
 	 * Declaracion de servicios
@@ -642,11 +642,11 @@ public class VacacionForm implements Serializable {
 		if(seleccionPersona.getCtnId()==0) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Información.", "El Funcionario no tiene definido una Contratacion, Actualice los datos"));
-			esPermitirIngreso=false;
+			esPermitirIngreso=true;
 			return;
 		}
 		else {
-			esPermitirIngreso=true;
+			esPermitirIngreso=false;
 		}
 		cargarSaldoVacaciones();
 		
@@ -1030,8 +1030,8 @@ public class VacacionForm implements Serializable {
 		int diasVac2=0;
 		SaldoVacacion sv1=null;
 		SaldoVacacion sv2=null;
-		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getCtgId());
-		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12);
+		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getRgmId());
+		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12.0);
 	
 		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
 		SaldoVacacion saldoVacacion=new SaldoVacacion();
@@ -1300,6 +1300,24 @@ public class VacacionForm implements Serializable {
 
 		if (fecAct.compareTo(sanAhora) < 0)
 			anios--;
+		
+		 int increment = 0;
+         if (ultimoDiaAnterior > ultimoDiaNuevo)
+             increment = monthDay[mesAnterior];
+         
+         if (increment != 0)
+         {
+             dias = (ultimoDiaNuevo + increment) - ultimoDiaAnterior;
+             increment = 1;
+         }
+         else
+             dias = ultimoDiaNuevo - ultimoDiaAnterior;
+         
+         if ((mesAnterior + increment) > mesNuevo)
+             meses = (mesNuevo + 12) - (mesAnterior + increment);
+         else
+             meses = (mesNuevo) - (mesAnterior + increment);
+
 
 		retorno.put("anios", anios);
 		retorno.put("meses", meses);
