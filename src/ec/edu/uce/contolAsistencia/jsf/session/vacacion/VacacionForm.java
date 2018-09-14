@@ -85,6 +85,7 @@ public class VacacionForm implements Serializable {
 	private SaldoVacacion salVacaCal1;
 	private SaldoVacacion salVacaCal2;
 	private boolean renderBtnImprimir = false;
+	private String path;
 
 	/* Permiso Personal */
 	private Permiso permiso;
@@ -336,6 +337,7 @@ public class VacacionForm implements Serializable {
 				}
 
 			}
+		}
 
 		} else {
 			if (salVacaCal1 == null && salVacaCal2 != null) {
@@ -373,7 +375,7 @@ public class VacacionForm implements Serializable {
 			  }
 			}
 		}
-		}
+		
 	}
 
 	public void anularVacacion() {
@@ -542,6 +544,9 @@ public class VacacionForm implements Serializable {
 				nAñF = sumReg / 7;
 			}
 
+		}else {
+			n=num;
+			n1=num;
 		}
 		
 		
@@ -685,8 +690,12 @@ public class VacacionForm implements Serializable {
 		try {
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			path = FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/controlAsistencia/reportes/logo_uce.jpg");
 
 			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("txt_logo", path);
+			
 			parametros.put("txt_num_auto", String.valueOf(vacacion.getVccNumAutorizacion()));
 			parametros.put("txt_nombres", seleccionPersona.nombresCompetos());
 			parametros.put("txt_dependencia", seleccionPersona.getDpnNombre());
@@ -698,12 +707,12 @@ public class VacacionForm implements Serializable {
 			parametros.put("txt_hasta", fecha_fin);
 			String saldo1 = null;
 			String saldo2 = null;
-			if (salVacaCal1.getSlvcDiasRestantes() == 0 || salVacaCal1 == null) {
+			if ( salVacaCal1 == null  ||  salVacaCal1.getSlvcDiasRestantes() == 0 ) {
 				saldo1 = "--";
 			} else {
 				saldo1 = String.valueOf(salVacaCal1.getSlvcDiasRestantes());
 			}
-			if (salVacaCal2.getSlvcDiasRestantes() == 0 || salVacaCal2 == null) {
+			if ( salVacaCal2 == null || salVacaCal2.getSlvcDiasRestantes() == 0 ) {
 				saldo2 = "--";
 			} else {
 				saldo2 = String.valueOf(salVacaCal2.getSlvcDiasRestantes());
@@ -772,9 +781,11 @@ public class VacacionForm implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
 
 			if (retorno) {
+				if(salVacaCal1!=null && salVacaCal2!=null) {
 				CalcularSaldoVacacion(permiso.getPrmFechaPermiso(), 0,2);
 				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
+				}
 			}
 
 		}
@@ -1067,10 +1078,16 @@ public class VacacionForm implements Serializable {
 			sv2.setDtpsId(seleccionPersona.getDtpsId());
 			sv2.setSlvcDiasAnticipados(0);
 			sv2.setSlvcDiasRegistrados(0);
-			sv2.setSlvcPeriodo(2);
+			if(diasVac1==0) {
+				sv2.setSlvcPeriodo(1);
+			}
+			else {
+				sv2.setSlvcPeriodo(2);
+			}
+			
 			sv2.setSlvcDiasRestantes(diasVac2);
 			sv2.setSlvcTotalHoras("00:00");
-			sv2.setSlvcTotalDias(Integer.parseInt(parametroDias.getPrvcrgValor()));
+			sv2.setSlvcTotalDias(diasVac2);
 			sv2.setSlvcNumfinsemana(0);
 			sv2.setSlvcEstado(Estados.Activo.getId());
 		}
@@ -1083,7 +1100,7 @@ public class VacacionForm implements Serializable {
 			sv1.setSlvcPeriodo(1);
 			sv1.setSlvcDiasRestantes(diasVac1);
 			sv1.setSlvcTotalHoras("00:00");
-			sv1.setSlvcTotalDias(Integer.parseInt(parametroDias.getPrvcrgValor()));
+			sv1.setSlvcTotalDias(diasVac1);
 			sv1.setSlvcNumfinsemana(0);
 			sv1.setSlvcEstado(Estados.Activo.getId());
 		}
