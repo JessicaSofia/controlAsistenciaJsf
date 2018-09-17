@@ -290,7 +290,7 @@ public class VacacionForm implements Serializable {
 				if (saldoTotaldias < 0) {
 					int numres = saldoTotaldias * (-1);
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Información.", "El Usuario no tiene disponible el numero de dias solicitadas"));
+							"Información.", "El Usuario no tiene disponible el numero total de dias solicitadas, Se registra "+numres + " dias de Anticipacion"));
 					salVacaCal2.setSlvcDiasAnticipados(numres);
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
@@ -349,7 +349,7 @@ public class VacacionForm implements Serializable {
 				int saldoTotaldias = saldoDias2 - num;
 				if (saldoTotaldias < 0) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Información.", "El Usuario no tiene disponible el numero de dias solicitadas"));
+							"Información.", "El Usuario no tiene disponible el numero de dias solicitadas, Se registra "+((-1) * saldoTotaldias) + " dias de Anticipacion "));
 					salVacaCal2.setSlvcDiasAnticipados((-1) * saldoTotaldias);
 					salVacaCal2.setSlvcDiasRegistrados(totaldias2);
 					salVacaCal2.setSlvcDiasRestantes(0);
