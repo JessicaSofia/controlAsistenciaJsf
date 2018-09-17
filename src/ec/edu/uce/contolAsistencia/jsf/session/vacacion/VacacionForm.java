@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ddf.EscherSimpleProperty;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.ContratoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
 import ec.edu.uce.controlAsistencia.ejb.datos.ParametrosVacacion;
@@ -1044,7 +1045,7 @@ public class VacacionForm implements Serializable {
 		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getRgmId());
 		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12.0);
 	
-		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
+		ContratoDto contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
 		SaldoVacacion saldoVacacion=new SaldoVacacion();
 		Calendar fechaActual= Calendar.getInstance();
 		Calendar fechaContrato=Calendar.getInstance();
@@ -1153,7 +1154,7 @@ public class VacacionForm implements Serializable {
 		}
 
 	
-		Contrato contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
+		ContratoDto contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
 		//SaldoVacacion saldoVacacion=new SaldoVacacion();
 		Calendar fechaActual= Calendar.getInstance();
 		Calendar fechaContrato=Calendar.getInstance();
