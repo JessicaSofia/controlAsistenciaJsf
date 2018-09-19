@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ddf.EscherSimpleProperty;
 
+import ec.edu.uce.controlAsistencia.ejb.datos.AccionPersonalDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.ContratoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.DetallePuestoDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.Estados;
@@ -782,10 +783,18 @@ public class VacacionForm implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Información.", "Permiso registrado exitosamente."));
 
 			if (retorno) {
-				if(salVacaCal1!=null && salVacaCal2!=null) {
+				
 				CalcularSaldoVacacion(permiso.getPrmFechaPermiso(), 0,2);
-				salVacaCal1.setDtpsId(seleccionPersona.getDtpsId());
+				if(salVacaCal1!=null && salVacaCal2!=null) {
+			
 				srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
+				srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+				
+				}
+				else {
+					if(salVacaCal1==null && salVacaCal2!=null) {
+						srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+					}
 				}
 			}
 
@@ -1036,6 +1045,45 @@ public class VacacionForm implements Serializable {
 	
 	public void generarSaldoVacacionesNuevos() {
 		
+
+		ContratoDto contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
+		AccionPersonalDto  nombramiento = null;
+		Date fechaPosesion=null;
+		if(contrato==null) {
+			nombramiento=srvContrato.obtenerAccionPersonal(seleccionPersona.getDtpsId());
+			fechaPosesion=nombramiento.getAcprFechaPosesion();
+		}else {
+			fechaPosesion=contrato.getCntFechaInicio();
+			
+		}
+		
+		int valor=0;
+		Calendar fechaActual= Calendar.getInstance();
+		Calendar fechaContrato=Calendar.getInstance();
+		Calendar fechaFinContrato=Calendar.getInstance();
+		fechaContrato.setTime(fechaPosesion);
+		
+		if(contrato!=null) {
+			fechaFinContrato.setTime(contrato.getCntFechaFin());
+			valor = fechaActual.compareTo(fechaFinContrato);
+			
+		}
+		
+		if(valor>=0){
+			determinarSaldoVacaciones (fechaActual, fechaContrato);
+		
+		}else{
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+						"Advertencia.", "La fecha de contracion del Funcionario a concluido "));
+		determinarSaldoVacaciones(fechaFinContrato, fechaContrato );
+		
+		}
+		
+		
+	
+	}
+	
+	public void determinarSaldoVacaciones(Calendar fechaActual, Calendar fechaContrato ) {
 		int aniosContrato=0;
 		int mesesContrato=0;
 		int diasVac1 =0;
@@ -1044,19 +1092,9 @@ public class VacacionForm implements Serializable {
 		SaldoVacacion sv2=null;
 		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getRgmId());
 		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12.0);
-	
-		ContratoDto contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
-		SaldoVacacion saldoVacacion=new SaldoVacacion();
-		Calendar fechaActual= Calendar.getInstance();
-		Calendar fechaContrato=Calendar.getInstance();
-		fechaContrato.setTime(contrato.getCntFechaInicio());
-		int valor = fechaActual.compareTo(fechaContrato);
-		
-		if(valor>0){
-		
 		Map<String, Integer> resultado=calcularTiempoContratacion(fechaActual,fechaContrato);
-		aniosContrato=resultado.get("anios");
-		mesesContrato=resultado.get("meses");
+		 aniosContrato=resultado.get("anios");
+		 mesesContrato=resultado.get("meses");
 		if((aniosContrato==0) && (mesesContrato>0)){
 	     
 			diasVac2=(int)promDiasVacaMes*mesesContrato;
@@ -1113,14 +1151,6 @@ public class VacacionForm implements Serializable {
 			srvVacacion.SaldoVacacionInsertar(sv2);
 		}
 		
-		}else{
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-						"Advertencia.", "La fecha de contracion del Funcionario a concluido "));
-		return;
-		}
-		
-		
-	
 	}
 	
 	public void actualizarSaldoVacacionesDiasAcumulados( SaldoVacacion saldoVacacion1, SaldoVacacion saldoVacacion2 ) {

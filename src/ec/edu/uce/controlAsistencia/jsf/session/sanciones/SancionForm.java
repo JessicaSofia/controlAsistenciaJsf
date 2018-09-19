@@ -88,6 +88,7 @@ public class SancionForm implements Serializable {
 	private boolean esInsub;
 	private String path;
 	private boolean renderPDFExport;
+	private boolean esPorCategoria=false;
 	/* Reporte multas */
 	private List<DetallePuestoSancion> listaMultas = new ArrayList<>();
 
@@ -416,7 +417,7 @@ public class SancionForm implements Serializable {
 
 		falta = srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
 		if (seleccionPersona.getCtgId() != 0) {
-			categoriaFaltaAplicar = obtenerCategoriaFaltaPorParametros(seleccionPersona.getCtgId(), falta.getFlId(),
+			categoriaFaltaAplicar = obtenerCategoriaFaltaPorParametros(seleccionPersona.getCtgId(), seleccionPersona.getRgmId(), falta.getFlId(),
 					min, frecuencia);
 		}
 
@@ -492,9 +493,18 @@ public class SancionForm implements Serializable {
 		
 	}
 
-	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int flId, int min, int frc) {
+	public CategoriaFalta obtenerCategoriaFaltaPorParametros(int ctgId, int rgmId, int flId, int min, int frc) {
 		CategoriaFalta categoriaFalta = null;
-		List<CategoriaFalta> parametros = srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(ctgId, flId);
+		List<CategoriaFalta> parametros=null;
+		if(esPorCategoria) {
+			 parametros = srvSanciones.listarcategoriaFaltaPorCategoriaIdFaltaId(ctgId, flId);
+		}
+		else {
+		
+			parametros = srvSanciones.listarcategoriaFaltaPorRgmIdFaltaId(rgmId, flId);
+		}
+		
+		
 		for (CategoriaFalta s : parametros) {
 			if (s.getCtgflMinuntosMin() != -1 && s.getCtgflMinutosMax() != -1) {
 
@@ -865,12 +875,22 @@ public class SancionForm implements Serializable {
 	
 	public String DireccionarSancionesForm() {
 		String direccion="";
+		if(esPorCategoria==true) {
 		if(seleccionPersona.getCtgId()>0) {
 			direccion="/controlAsistencia/sanciones/sancion.xhtml";
 		}else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Información.", "El funcionario no tiene definido una categoria"));
 			
+		}
+		}else {
+			if(seleccionPersona.getRgmId()>0) {
+				direccion="/controlAsistencia/sanciones/sancion.xhtml";
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Información.", "El funcionario no tiene definido un regimen"));
+				
+			}
 		}
 		return direccion;
 	}
