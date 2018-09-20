@@ -416,7 +416,7 @@ public class SancionForm implements Serializable {
 		
 
 		falta = srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
-		if (seleccionPersona.getCtgId() != 0) {
+		if (seleccionPersona.getRgmId()!= 0 ) {
 			categoriaFaltaAplicar = obtenerCategoriaFaltaPorParametros(seleccionPersona.getCtgId(), seleccionPersona.getRgmId(), falta.getFlId(),
 					min, frecuencia);
 		}

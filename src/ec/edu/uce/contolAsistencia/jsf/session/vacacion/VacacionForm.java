@@ -1069,7 +1069,7 @@ public class VacacionForm implements Serializable {
 			
 		}
 		
-		if(valor>=0){
+		if(valor<0){
 			determinarSaldoVacaciones (fechaActual, fechaContrato);
 		
 		}else{
