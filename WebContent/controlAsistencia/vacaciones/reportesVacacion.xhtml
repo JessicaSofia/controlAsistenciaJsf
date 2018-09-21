@@ -106,7 +106,7 @@ function regenererCal(){
 								</h:commandLink>
 							</f:facet>
 
-							<p:column headerText=" N°">
+							<p:column headerText="N° Autorización" style="width:6%">
 								<p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>
 							</p:column>
 							<p:column headerText="Nombres">
@@ -123,7 +123,7 @@ function regenererCal(){
 							<p:column headerText="Fecha Fin">
 								<h:outputText value="#{repVac.vccFechaFin}" />
 							</p:column>
-							<p:column headerText="Dependencia">
+							<p:column headerText="Regimen">
 								<f:facet name="filter">
 									<p:selectCheckboxMenu label="Dependencias"
 										onchange="PF('reportAuscenTable').filter()"
@@ -135,7 +135,7 @@ function regenererCal(){
 								<h:outputText
 									value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
 							</p:column>
-							<p:column headerText="Regimen">
+							<p:column headerText="Dependencia">
 								<f:facet name="filter">
 									<p:selectCheckboxMenu label="Regimen"
 										onchange="PF('reportAuscenTable').filter()"
@@ -171,7 +171,7 @@ function regenererCal(){
 								</h:commandLink>
 							</f:facet>
 
-							<p:column headerText="N° Lic.">
+							<p:column headerText="N° Licencia" style="width:5%">
 								<h:outputText value="#{licencia.lcnNumLicencia}" />
 							</p:column>
 
@@ -192,12 +192,12 @@ function regenererCal(){
 								<h:outputText value="#{licencia.lcnFechaFin}" />
 							</p:column>
 
-							<p:column headerText="Dependencia">
+							<p:column headerText="Regimen">
 								<h:outputText
 									value="#{reporteVacaciones.obtenerNombreDependencia(licencia.dtpsId)}" />
 							</p:column>
 
-							<p:column headerText="Regimen">
+							<p:column headerText="Dependencia">
 								<h:outputText
 									value="#{reporteVacaciones.obtenerNombreRegimen(licencia.dtpsId)}" />
 							</p:column>
@@ -227,7 +227,7 @@ function regenererCal(){
 										fileName="Permisos" pageOnly="true" />
 								</h:commandLink>
 							</f:facet>
-							<p:column headerText="N°" style="width:5%">
+							<p:column headerText="N° Permiso" style="width:5%">
 								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
 
@@ -245,12 +245,12 @@ function regenererCal(){
 							<p:column headerText="A partir de">
 								<h:outputText value="#{permiso.prmHoraInicio}" />
 							</p:column>
-							<p:column headerText="Dependencia">
+							<p:column headerText="Regimen">
 								<h:outputText
 									value="#{reporteVacaciones.obtenerNombreDependencia(permiso.dtpsId)}" />
 							</p:column>
 
-							<p:column headerText="Regimen">
+							<p:column headerText="Dependencia">
 								<h:outputText
 									value="#{reporteVacaciones.obtenerNombreRegimen(permiso.dtpsId)}" />
 							</p:column>
