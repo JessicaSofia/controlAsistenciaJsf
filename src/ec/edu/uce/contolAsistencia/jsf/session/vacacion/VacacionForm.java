@@ -20,11 +20,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.print.attribute.standard.DialogTypeSelection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ddf.EscherSimpleProperty;
+
 
 import ec.edu.uce.controlAsistencia.ejb.datos.AccionPersonalDto;
 import ec.edu.uce.controlAsistencia.ejb.datos.ContratoDto;
@@ -646,18 +645,11 @@ public class VacacionForm implements Serializable {
 			seleccionPersona = persona;
 			
 		}
-		if(seleccionPersona.getCtnId()==0) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Información.", "El Funcionario no tiene definido una Contratacion, Actualice los datos"));
-			esPermitirIngreso=true;
-			return;
-		}
-		else {
-			esPermitirIngreso=false;
-		}
+		
 		cargarSaldoVacaciones();
 		
 	}
+	
 	
 	public void cargarSaldoVacaciones() {
 		
@@ -680,14 +672,21 @@ public class VacacionForm implements Serializable {
 			
 			}else {
 				if(saldoVacacion==null || saldoVacacion.size()==0) {
-					generarSaldoVacacionesNuevos();
+					int retorno =generarSaldoVacacionesNuevos();
+					if (retorno!=1)
 					cargarSaldoVacaciones();
+					else
+						return;
 				}
 			}
 
 		}
 	}
 
+	
+	
+	
+	
 	public void verPDF() {
 		try {
 
@@ -1043,19 +1042,29 @@ public class VacacionForm implements Serializable {
 	}
 	
 	
-	public void generarSaldoVacacionesNuevos() {
-		
+	public int generarSaldoVacacionesNuevos() {
+		 int continuar=0;
 
 		ContratoDto contrato=srvContrato.obtenerPorId(seleccionPersona.getCtnId());
 		AccionPersonalDto  nombramiento = null;
 		Date fechaPosesion=null;
 		if(contrato==null) {
 			nombramiento=srvContrato.obtenerAccionPersonal(seleccionPersona.getDtpsId());
-			fechaPosesion=nombramiento.getAcprFechaPosesion();
+			if(nombramiento==null) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Información.", "El Funcionario no tiene definido una Contratacion, Actualice los datos"));
+					esPermitirIngreso=true;
+			 return 1;
+			}else {
+				fechaPosesion=nombramiento.getAcprFechaPosesion();
+				esPermitirIngreso=false;
+			}
+			
 		}else {
 			fechaPosesion=contrato.getCntFechaInicio();
 			
 		}
+		
 		
 		int valor=0;
 		Calendar fechaActual= Calendar.getInstance();
@@ -1069,7 +1078,7 @@ public class VacacionForm implements Serializable {
 			
 		}
 		
-		if(valor<0){
+		if(valor<=0){
 			determinarSaldoVacaciones (fechaActual, fechaContrato);
 		
 		}else{
@@ -1079,7 +1088,7 @@ public class VacacionForm implements Serializable {
 		
 		}
 		
-		
+		return continuar;
 	
 	}
 	
@@ -1097,7 +1106,7 @@ public class VacacionForm implements Serializable {
 		 mesesContrato=resultado.get("meses");
 		if((aniosContrato==0) && (mesesContrato>0)){
 	     
-			diasVac2=(int)promDiasVacaMes*mesesContrato;
+			diasVac2=(int)(promDiasVacaMes*mesesContrato);
 		}
 		else{
 			if((aniosContrato<2)) {
