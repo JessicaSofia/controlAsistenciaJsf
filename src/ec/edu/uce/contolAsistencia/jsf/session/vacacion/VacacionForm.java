@@ -480,6 +480,16 @@ public class VacacionForm implements Serializable {
 		
 
 		srvVacacion.VacacionActualizar(vacacion);
+		if(salVacaCal1!=null) {
+		srvVacacion.ActualizarSaldoVacacion(salVacaCal1);
+			
+		}
+		if(salVacaCal2!=null) {
+			srvVacacion.ActualizarSaldoVacacion(salVacaCal2);
+			
+		}
+		
+		cargarSaldoVacaciones();
 
 	}
 
