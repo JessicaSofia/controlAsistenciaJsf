@@ -442,8 +442,8 @@ public class VacacionForm implements Serializable {
 					salVacaCal2.setSlvcDiasRegistrados(diasReg);
 					int diasRes=saldoDias2+vacacion.getVccNumDias();
 					salVacaCal2.setSlvcDiasRestantes(diasRes);
-					int numFs=salVacaCal1.getSlvcDiasRegistrados()/7;
-					salVacaCal1.setSlvcNumfinsemana(numFs);
+					int numFs=salVacaCal2.getSlvcDiasRegistrados()/7;
+					salVacaCal2.setSlvcNumfinsemana(numFs);
 					
 				}
 				}else {
