@@ -124,7 +124,7 @@ function regenererCalSancion(){
 							</ui:decorate>
 						</div>
 
-						<div class="cell colspan2">
+						<div class="cell colspan4">
 							<!-- Fecha Fin-->
 							<ui:decorate
 								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
@@ -255,7 +255,7 @@ function regenererCalSancion(){
 							value="#{reporteSanciones.lstDtSanciones}"
 							widgetVar="reportSancDesgTable"
 							rendered="#{reporteSanciones.desgloce and  !reporteSanciones.anualActv}"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
 							paginator="true" rows="10" style="margin-bottom:20px"
 							emptyMessage="No existen registros." rowIndexVar="rowIndex">
 							<f:facet name="{Exporters}">

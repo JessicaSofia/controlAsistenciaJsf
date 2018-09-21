@@ -185,6 +185,22 @@
 							</ui:decorate>
 						</div>
 					</div>
+					<center>
+						<div class="row cells8">
+							<div class="cell colpan3"></div>
+							<p:commandButton id="btnAnularVacion" value="Anular"
+								onclick="PF('anulDialogVacacion').show();"
+								rendered="#{vacacionForm.esActualizacion}"
+								disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
+							<p:commandButton id="btnPDFVacaciones"
+								disabled="#{vacacionForm.esBloqueado}"
+								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
+								actionListener="#{vacacionForm.verPDF}" target="_blank"
+								ajax="false"></p:commandButton>
+
+						</div>
+					</center>
+
 				</div>
 			</p:panel>
 			<div class="row cells8">
@@ -198,15 +214,6 @@
 					<p:commandButton id="btnCancelarVacion" value="Regresar"
 						action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
 				</div>
-				<p:commandButton id="btnAnularVacion" value="Anular"
-					onclick="PF('anulDialogVacacion').show();"
-					rendered="#{vacacionForm.esActualizacion}"
-					disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
-				<p:commandButton id="btnPDFVacaciones"
-					disabled="#{vacacionForm.esBloqueado}"
-					rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
-					actionListener="#{vacacionForm.verPDF}" target="_blank"
-					ajax="false"></p:commandButton>
 			</div>
 
 			<div id="divDialogoAnulVacacion">
