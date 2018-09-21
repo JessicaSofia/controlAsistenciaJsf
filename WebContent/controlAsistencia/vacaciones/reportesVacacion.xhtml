@@ -1,154 +1,179 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"> 
-      
-<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="paginacion">
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia /Vacaciones/Reporte" />
 		</ui:include>
-</ui:define>
-		<ui:define name="cuerpo">
+	</ui:define>
+	<ui:define name="cuerpo">
 		<style type="text/css">
-
 .ui-datepicker-calendar {
-    display: none;
+	display: none;
 }
-
-
-
 </style>
-<script language="JavaScript">
+		<script language="JavaScript">
 function regenererCal(){
     year = $("#frmReporteVacaciones\\:calendrierDateDebut .ui-datepicker-year").val();
     month = $("#frmReporteVacaciones\\:calendrierDateDebut .ui-datepicker-month").val();
     $('#frmReporteVacaciones\\:calendrierDateDebut_input').val(year + '-' + ('0' + (++month)).slice(-2) + '-01');
 }
 </script>
-	<h:form  id="frmReporteVacaciones" enctype="multipart/form-data" acceptcharset="UTF-8" >
-	<p:panel id="pnlReporteVacaciones"  header="Generar Reporte" style="margin-bottom: 10px;">
-	
-<div class="grid condensed">
-				<!-- ******************** FILA NUMERO 1 ************************ -->
-				<div class="row cells8"> 
-					<div class="cell colspan4"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioRepVac" for="calendrierDateDebut" value="Año:"/>	
-		       				</ui:define>
-		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendrierDateDebut" value="#{reporteVacaciones.fecha}"
-                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
-                  />
-     	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgAnioReporteVac" for="calendrierDateDebut" />
-		       				</ui:define>
-		       				
-		       			</ui:decorate>
-					</div>
-									<div class="cell colspan4"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAusenciaRepVac" for="calendrierDateDebut" value="Ausencias:"/>	
-		       				</ui:define>
-		       				<ui:define name="valor">
-		       				 <p:selectManyCheckbox id="ausencias" value="#{reporteVacaciones.ausencias}">
-        <f:selectItem itemLabel="Vacaciones" itemValue="vacacion" />
-        <f:selectItem itemLabel="Permisos" itemValue="permiso" />
-        <f:selectItem itemLabel="Licencias" itemValue="licencia" />
-    </p:selectManyCheckbox>
-     	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgAusencReporteVac" for="ausencias" />
-		       				</ui:define>
-		       				
-		       			</ui:decorate>
-					</div>
+		<h:form id="frmReporteVacaciones" enctype="multipart/form-data"
+			acceptcharset="UTF-8">
+			<p:panel id="pnlReporteVacaciones" header="Generar Reporte"
+				style="margin-bottom: 10px;">
+
+				<div class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
+						<div class="cell colspan4">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblAnioRepVac" for="calendrierDateDebut"
+										value="Año:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:calendar id="calendrierDateDebut"
+										value="#{reporteVacaciones.fecha}" pattern="yyyy-MM-dd"
+										effect="slideDown" navigator="true" mode="inline" />
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgAnioReporteVac" for="calendrierDateDebut" />
+								</ui:define>
+
+							</ui:decorate>
+						</div>
+						<div class="cell colspan4">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblAusenciaRepVac" for="calendrierDateDebut"
+										value="Ausencias:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:selectManyCheckbox id="ausencias"
+										value="#{reporteVacaciones.ausencias}">
+										<f:selectItem itemLabel="Vacaciones" itemValue="vacacion" />
+										<f:selectItem itemLabel="Permisos" itemValue="permiso" />
+										<f:selectItem itemLabel="Licencias" itemValue="licencia" />
+									</p:selectManyCheckbox>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgAusencReporteVac" for="ausencias" />
+								</ui:define>
+
+							</ui:decorate>
+						</div>
 					</div>
 					
-	<br/>
-				<p:commandButton id="btnCalcularVacacion"  value="Buscar" onclick="regenererCal()"  actionListener="#{reporteVacaciones.BuscarVacacionesFiltros()}" update="frmReporteVacaciones tblRepVacaciones" style="margin-left: 9%;margin-bottom: 1%;"> </p:commandButton>
-				<br/>
-						<div id="divTblReportesVac" >
-	<p:dataTable id="tblRepVacaciones" var="repVac" value="#{reporteVacaciones.lstVacacion}" rendered="#{reporteVacaciones.vacActivar}"
-	widgetVar="reportAuscenTable"
-	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px">
-                 <f:facet name="{Exporters}">
-                <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="tblRepVacaciones" fileName="Vacaciones" pageOnly="true"/>
-    </h:commandLink>
-    </f:facet>
-                 
+						<p:commandButton id="btnCalcularVacacion" value="Buscar"
+							onclick="regenererCal()"
+							actionListener="#{reporteVacaciones.BuscarVacacionesFiltros()}"
+							update="frmReporteVacaciones tblRepVacaciones"
+							style="margin-left: 9%;margin-bottom: 1%;">
+						</p:commandButton>
 
-	 
-        <p:column headerText=" N°">
-            <p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>  
-        </p:column>
-        <p:column headerText="Nombres">
-            <h:outputText value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
-        </p:column>                                                                                                                                               
-          <p:column headerText="Fecha Emisión">
-            <h:outputText value="#{repVac.vccFechaEmision}"/>
-        </p:column> 
-        <p:column headerText="Fecha Inicio">
-            <h:outputText value="#{repVac.vccFechaInicio}" />
-        </p:column>
-         
-        <p:column headerText="Fecha Fin">
-            <h:outputText value="#{repVac.vccFechaFin}" />
-        </p:column>  
-        <p:column headerText="Dependencia" >
-         <f:facet name="filter">
-                <p:selectCheckboxMenu label="Dependencias" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150"  footerText="in" filterMatchMode="in">
-                    <f:selectItems value="#{reporteVacaciones.dependencia}" />
-                </p:selectCheckboxMenu>
-            </f:facet>
-            <h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
-        </p:column>
-         <p:column headerText="Regimen" >
-           <f:facet name="filter">
-                <p:selectCheckboxMenu label="Regimen" onchange="PF('reportAuscenTable').filter()" panelStyle="width:125px" scrollHeight="150" footerText="in" filterMatchMode="in">
-                    <f:selectItems value="#{reporteVacaciones.regimen}" />
-                </p:selectCheckboxMenu>
-            </f:facet>
-            <h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}"/>
-        </p:column>
-        
-       
-	</p:dataTable>
-	
-	</div>
-	
-	<div id="divTblRegistrosLicencias">
-						<p:dataTable var="licencia" rendered="#{reporteVacaciones.licActivar}"
+
+					<div id="divTblReportesVac">
+						<p:dataTable id="tblRepVacaciones" var="repVac"
+							value="#{reporteVacaciones.lstVacacion}"
+							rendered="#{reporteVacaciones.vacActivar}"
+							widgetVar="reportAuscenTable"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginator="true" rows="10" style="margin-bottom:20px">
+							<f:facet name="{Exporters}">
+								<h:commandLink value="Exportar">
+									<p:graphicImage name="img/excel.jpg" />
+									<p:dataExporter type="xls" target="tblRepVacaciones"
+										fileName="Vacaciones" pageOnly="true" />
+								</h:commandLink>
+							</f:facet>
+
+
+
+							<p:column headerText=" N°">
+								<p:outputLabel value="#{repVac.vccNumAutorizacion}"></p:outputLabel>
+							</p:column>
+							<p:column headerText="Nombres">
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
+							</p:column>
+							<p:column headerText="Fecha Emisión">
+								<h:outputText value="#{repVac.vccFechaEmision}" />
+							</p:column>
+							<p:column headerText="Fecha Inicio">
+								<h:outputText value="#{repVac.vccFechaInicio}" />
+							</p:column>
+
+							<p:column headerText="Fecha Fin">
+								<h:outputText value="#{repVac.vccFechaFin}" />
+							</p:column>
+							<p:column headerText="Dependencia">
+								<f:facet name="filter">
+									<p:selectCheckboxMenu label="Dependencias"
+										onchange="PF('reportAuscenTable').filter()"
+										panelStyle="width:125px" scrollHeight="150" footerText="in"
+										filterMatchMode="in">
+										<f:selectItems value="#{reporteVacaciones.dependencia}" />
+									</p:selectCheckboxMenu>
+								</f:facet>
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
+							</p:column>
+							<p:column headerText="Regimen">
+								<f:facet name="filter">
+									<p:selectCheckboxMenu label="Regimen"
+										onchange="PF('reportAuscenTable').filter()"
+										panelStyle="width:125px" scrollHeight="150" footerText="in"
+										filterMatchMode="in">
+										<f:selectItems value="#{reporteVacaciones.regimen}" />
+									</p:selectCheckboxMenu>
+								</f:facet>
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}" />
+							</p:column>
+
+
+						</p:dataTable>
+
+					</div>
+
+					<div id="divTblRegistrosLicencias">
+						<p:dataTable var="licencia"
+							rendered="#{reporteVacaciones.licActivar}"
 							value="#{reporteVacaciones.lstLicencias}"
 							widgetVar="reportAuscenTableLic"
-	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px"
-							>
-							   <f:facet name="{Exporters}">
-                <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="reportAuscenTableLic" fileName="Licencias" pageOnly="true"/>
-    </h:commandLink>
-    </f:facet>
-    						
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginator="true" rows="10" style="margin-bottom:20px">
+							<f:facet name="{Exporters}">
+								<h:commandLink value="Exportar">
+									<p:graphicImage name="img/excel.jpg" />
+									<p:dataExporter type="xls" target="reportAuscenTableLic"
+										fileName="Licencias" pageOnly="true" />
+								</h:commandLink>
+							</f:facet>
+
 							<p:column headerText="N° Lic.">
 								<h:outputText value="#{licencia.lcnNumLicencia}" />
 							</p:column>
-							
+
 							<p:column headerText="Nombres">
-								<h:outputText value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombrePersona(repVac.dtpsId)}" />
 							</p:column>
 							<p:column headerText="Tipo Licencia">
 								<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
@@ -162,66 +187,79 @@ function regenererCal(){
 							<p:column headerText="Fecha Fin">
 								<h:outputText value="#{licencia.lcnFechaFin}" />
 							</p:column>
-							
+
 							<p:column headerText="Dependencia">
-								<h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreDependencia(repVac.dtpsId)}" />
 							</p:column>
-							
+
 							<p:column headerText="Regimen">
-								<h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}" />
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreRegimen(repVac.dtpsId)}" />
 							</p:column>
 							<p:column headerText="Explicación">
 								<h:outputText value="#{licencia.lcnExplicacion}" />
 							</p:column>
-							
-						
-							
+
+
+
 						</p:dataTable>
 					</div>
-							<div id="divTblRegistrosPermisos">
-								<p:dataTable var="permiso" value="#{reporteVacaciones.lstPermisos}" rendered="#{reporteVacaciones.permActivar}"
-								widgetVar="reportAuscenTablePerm" rowIndexVar="rowIndex"
-	 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px">
-								
-								<f:facet name="{Exporters}">
-                <h:commandLink value="Exportar">
-        <p:graphicImage name="img/excel.jpg"/>
-        <p:dataExporter type="xls" target="reportAuscenTablePerm" fileName="Permisos" pageOnly="true"/>
-    </h:commandLink>
-    </f:facet>
-    								<p:column headerText="N°" style="width:5%">
+					<div id="divTblRegistrosPermisos">
+						<p:dataTable var="permiso"
+							value="#{reporteVacaciones.lstPermisos}"
+							rendered="#{reporteVacaciones.permActivar}"
+							widgetVar="reportAuscenTablePerm" rowIndexVar="rowIndex"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginator="true" rows="10" style="margin-bottom:20px">
+
+							<f:facet name="{Exporters}">
+								<h:commandLink value="Exportar">
+									<p:graphicImage name="img/excel.jpg" />
+									<p:dataExporter type="xls" target="reportAuscenTablePerm"
+										fileName="Permisos" pageOnly="true" />
+								</h:commandLink>
+							</f:facet>
+							<p:column headerText="N°" style="width:5%">
 								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
-							
+
 							<p:column headerText="Nombres">
-								<h:outputText value="#{reporteVacaciones.obtenerNombrePersona(perm.dtpsId)}" />
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombrePersona(perm.dtpsId)}" />
 							</p:column>
-							
-									<p:column headerText="Fecha Permiso">
-										<h:outputText value="#{permiso.prmFechaPermiso}" />
-									</p:column>
-									<p:column headerText="Nº Horas">
-										<h:outputText value="#{permiso.prmNumHoras}" />
-									</p:column>
-									<p:column headerText="A partir de">
-										<h:outputText value="#{permiso.prmHoraInicio}" />
-									</p:column>
-									<p:column headerText="Dependencia">
-								<h:outputText value="#{reporteVacaciones.obtenerNombreDependencia(perm.dtpsId)}" />
+
+							<p:column headerText="Fecha Permiso">
+								<h:outputText value="#{permiso.prmFechaPermiso}" />
 							</p:column>
-							
+							<p:column headerText="Nº Horas">
+								<h:outputText value="#{permiso.prmNumHoras}" />
+							</p:column>
+							<p:column headerText="A partir de">
+								<h:outputText value="#{permiso.prmHoraInicio}" />
+							</p:column>
+							<p:column headerText="Dependencia">
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreDependencia(perm.dtpsId)}" />
+							</p:column>
+
 							<p:column headerText="Regimen">
-								<h:outputText value="#{reporteVacaciones.obtenerNombreRegimen(perm.dtpsId)}" />
+								<h:outputText
+									value="#{reporteVacaciones.obtenerNombreRegimen(perm.dtpsId)}" />
 							</p:column>
-							
-								</p:dataTable>
-								</div>	
-</div>
-	</p:panel>
-	</h:form>
-	
-	</ui:define> 
-	</ui:composition>
-	
+
+						</p:dataTable>
+					</div>
+				</div>
+			</p:panel>
+			<div class="cell colspan2">
+				<p:commandButton value="Regresar"
+					action="/controlAsistencia/generalidades/principal.xhtml">
+				</p:commandButton>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
 </html>
