@@ -4,166 +4,176 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
-<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia / Sanciones / Listas" />
 		</ui:include>
-		</ui:define>
-<ui:define name="cuerpo">
-			<h:form id="frmRegistroSanciones" enctype="multipart/form-data"
-				acceptcharset="UTF-8">
+	</ui:define>
+	<ui:define name="cuerpo">
+		<h:form id="frmRegistroSanciones" enctype="multipart/form-data"
+			acceptcharset="UTF-8">
 
 
-				<p:panel id="pnlSancionesRegistros" header="Detalle Funcionario">
+			<p:panel id="pnlSancionesRegistros" header="Detalle Funcionario">
 
-					<div id="divDetalleEmpl" class="grid condensed">
-						<!-- ******************** FILA NUMERO 1 ************************ -->
-						<div class="row cells8">
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtCedula"
-											value="#{sancionForm.seleccionPersona.prsIdentificacion}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- NNOMBRES -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblNombres" for="txtNombres"
-											value="Nombres: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtNombres"
-											value="#{sancionForm.seleccionPersona.nombresCompetos()}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DEPENDENCIA -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDependencia" for="txtDependencia"
-											value="Dependencia: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDependencia"
-											value="#{sancionForm.seleccionPersona.dpnNombre}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- DENOMINACION -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblDenominacion" for="txtDenominacion"
-											value="Denominación: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtDenominacion"
-											value="#{sancionForm.seleccionPersona.pstNombre}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
-							<div class="cell colspan8">
-								<!-- REGIMEN -->
-								<ui:decorate
-									template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-									<ui:define name="etiqueta">
-										<p:outputLabel id="lblRegimen" for="txtRegimen"
-											value="Régimen: " />
-									</ui:define>
-									<ui:define name="valor">
-										<p:outputLabel id="txtRegimen"
-											value="#{sancionForm.seleccionPersona.rgmNombre}"
-											style="font-weight: Normal !important;">
-										</p:outputLabel>
-									</ui:define>
-								</ui:decorate>
-							</div>
+				<div id="divDetalleEmpl" class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblCedula" for="txtCedula" value="Cédula: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtCedula"
+										value="#{sancionForm.seleccionPersona.prsIdentificacion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNombres" for="txtNombres"
+										value="Nombres: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtNombres"
+										value="#{sancionForm.seleccionPersona.nombresCompetos()}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DEPENDENCIA -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDependencia" for="txtDependencia"
+										value="Dependencia: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDependencia"
+										value="#{sancionForm.seleccionPersona.dpnNombre}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- DENOMINACION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDenominacion" for="txtDenominacion"
+										value="Denominación: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtDenominacion"
+										value="#{sancionForm.seleccionPersona.pstNombre}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan8">
+							<!-- REGIMEN -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblRegimen" for="txtRegimen"
+										value="Régimen: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtRegimen"
+										value="#{sancionForm.seleccionPersona.rgmNombre}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
 						</div>
 					</div>
-					<div id="divTblRegistrosSanciones">
-						<p:dataTable  id="tblSanciones" var="listSanc"     value="#{sancionForm.lstSanciones}" rowStyleClass="#{listSanc.dtpssnEstado le 3 ? 'red' : null}"
-						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                 paginator="true" rows="10" style="margin-bottom:20px">
-                 <f:facet name="{Exporters}">
- 
-            
- 		<p:commandButton id="btnPDFSancion"
-									value="Exportar PDF "  actionListener="#{sancionForm.generarReporteSanciones()}" rendered="#{sancionForm.renderPDFExport}"
-									target="_blank" ajax="false"></p:commandButton>
-           
-        </f:facet>
- 
-							<p:column headerText="N°" style="width: 5%">
-								<h:outputText value="#{listSanc.dtpssnNumaccion}" />
-							</p:column>
-							<p:column headerText="Falta">
-								<h:outputText value="#{listSanc.categoriaFalta.falta.flNombre}" />
-							</p:column>
-							<p:column headerText="Sancion">
-								<h:outputText value="#{listSanc.sancion.snNombre}" />
-							</p:column>
-							<p:column headerText="Año"  style="width: 5%;">
-								<h:outputText value="#{listSanc.dtpssnAno}" />
-							</p:column>  
-							<p:column headerText="Mes"  style="width: 10%">
-								<h:outputText value="#{sancionForm.obtenerMesTexto(listSanc.dtpssnMes)}" />
-							</p:column> 
-							<p:column headerText="Días">
-								<h:outputText value="#{listSanc.dtpssnDias}" />
-							</p:column>
-							 
-							<p:column headerText="Valor" style="width: 10%">
-								<h:outputText value="#{listSanc.dtpssnValor}" />
-							</p:column>
-							<p:column headerText="Observacion" style="width: 25%;">
-								<h:outputText value="#{listSanc.dtpssnObservacion}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<i class="fa fa-check-square-o" />
-								</f:facet>
-								<p:commandLink value="Ver/Editar"
-									action="/controlAsistencia/sanciones/sancion.xhtml"  actionListener="#{sancionForm.cargarVariables(listSanc)}">
-								
-								</p:commandLink>
-							</p:column>
-							
-						</p:dataTable>
-					</div>
-					<div>
-					<center>
-						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
-							action="#{sancionForm.DireccionarSancionesForm()}" actionListener="#{sancionForm.cargarVariables(null)}" ></p:commandButton>
-							<p:commandButton id="btnCancelarSancion" value="Volver"
-							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
-							
-							</center>
-					</div>
-				</p:panel>
+				</div>
+			</p:panel>
+			<p:panel id="pnlLicenciasRegistros"
+				header="Historial Sanciones y Multass">
+				<div id="divTblRegistrosSanciones">
+					<p:dataTable id="tblSanciones" var="listSanc"
+						value="#{sancionForm.lstSanciones}"
+						rowStyleClass="#{listSanc.dtpssnEstado le 3 ? 'red' : null}"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+						paginator="true" rows="10" style="margin-bottom:20px">
+						<f:facet name="{Exporters}">
 
-			</h:form>
-</ui:define>
-	</ui:composition>
-	</html>
+
+							<p:commandButton id="btnPDFSancion" value="Exportar PDF "
+								actionListener="#{sancionForm.generarReporteSanciones()}"
+								rendered="#{sancionForm.renderPDFExport}" target="_blank"
+								ajax="false"></p:commandButton>
+
+						</f:facet>
+
+						<p:column headerText="N°" style="width: 5%">
+							<h:outputText value="#{listSanc.dtpssnNumaccion}" />
+						</p:column>
+						<p:column headerText="Falta">
+							<h:outputText value="#{listSanc.categoriaFalta.falta.flNombre}" />
+						</p:column>
+						<p:column headerText="Sancion">
+							<h:outputText value="#{listSanc.sancion.snNombre}" />
+						</p:column>
+						<p:column headerText="Año" style="width: 5%;">
+							<h:outputText value="#{listSanc.dtpssnAno}" />
+						</p:column>
+						<p:column headerText="Mes" style="width: 10%">
+							<h:outputText
+								value="#{sancionForm.obtenerMesTexto(listSanc.dtpssnMes)}" />
+						</p:column>
+						<p:column headerText="Días">
+							<h:outputText value="#{listSanc.dtpssnDias}" />
+						</p:column>
+
+						<p:column headerText="Valor" style="width: 10%">
+							<h:outputText value="#{listSanc.dtpssnValor}" />
+						</p:column>
+						<p:column headerText="Observacion" style="width: 25%;">
+							<h:outputText value="#{listSanc.dtpssnObservacion}" />
+						</p:column>
+						<p:column headerText="Opción" style="width:10%;text-align: center">
+							<p:commandLink value="Ver/Editar"
+								action="/controlAsistencia/sanciones/sancion.xhtml"
+								actionListener="#{sancionForm.cargarVariables(listSanc)}">
+
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+				</div>
+				<div>
+					<div class="cell colspan2">
+						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
+							action="#{sancionForm.DireccionarSancionesForm()}"
+							actionListener="#{sancionForm.cargarVariables(null)}"></p:commandButton>
+						
+					</div>
+				</div>
+			</p:panel>
+			<div class="cell colspan2">
+			<p:commandButton id="btnCancelarSancion" value="Regresar"
+							action="#{sancionForm.regresarEmpleado()}"></p:commandButton>
+			
+				</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

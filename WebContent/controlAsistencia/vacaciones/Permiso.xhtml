@@ -23,7 +23,7 @@
 						<div class="cell colspan8">
 							<!-- Fecha Elaboracion -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaRegistro" for="txtFechaRegistro"
 										value="Fecha Elaboración: " />
@@ -66,8 +66,7 @@
 								</ui:define>
 								<ui:define name="valor">
 									<p:inputText id="txtTiempoSolicitadoHoras"
-										value="#{vacacionForm.permiso.prmNumHoras}"
-										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+										value="#{vacacionForm.permiso.prmNumHoras}"></p:inputText>
 
 								</ui:define>
 								<ui:define name="etiquetaError">
@@ -87,8 +86,7 @@
 								</ui:define>
 								<ui:define name="valor">
 									<p:inputText id="txtApartir"
-										value="#{vacacionForm.permiso.prmHoraInicio}"
-										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+										value="#{vacacionForm.permiso.prmHoraInicio}"></p:inputText>
 
 								</ui:define>
 								<ui:define name="etiquetaError">
@@ -107,8 +105,8 @@
 								<ui:define name="valor">
 									<p:selectBooleanCheckbox id="booleanValue"
 										value="#{vacacionForm.valorJustificaHoras}">
-										<p:ajax 
-											listener="#{vacacionForm.visualizarHorasJustificadas()}" 
+										<p:ajax
+											listener="#{vacacionForm.visualizarHorasJustificadas()}"
 											update=":VacacionForm:txtJustifica"></p:ajax>
 									</p:selectBooleanCheckbox>
 
@@ -116,7 +114,7 @@
 
 							</ui:decorate>
 						</div>
-						
+
 						<div class="cell colspan8">
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
@@ -127,8 +125,8 @@
 								</ui:define>
 								<ui:define name="valor">
 									<p:inputText id="txtJustifica"
-										value="#{vacacionForm.permiso.prmHorasJustificadas}" disabled="#{vacacionForm.horasJustificadas}"
-										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+										value="#{vacacionForm.permiso.prmHorasJustificadas}"
+										disabled="#{vacacionForm.horasJustificadas}"></p:inputText>
 
 								</ui:define>
 								<ui:define name="etiquetaError">
@@ -146,9 +144,10 @@
 										value="Descripcion asunto oficial: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputText id="txtDescripMotivo"
+									<p:inputTextarea id="txtDescripMotivo"
 										value="#{vacacionForm.permiso.prmDescripcionMotivo}"
-										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+										style="font-weight: Normal !important;width: 200%;">
+									</p:inputTextarea>
 
 								</ui:define>
 								<ui:define name="etiquetaError">
@@ -157,31 +156,19 @@
 							</ui:decorate>
 						</div>
 					</div>
-					<br />
-
-					<p:separator></p:separator>
-					<center>
-						<div class="row cells8">
-							<div class="cell colpan3"></div>
-							<div class="cell colpan3"></div>
-							<div class="cell colpan3">
-								<p:commandButton id="btnGuardarPermiso" value="Guardar"
-									actionListener="#{vacacionForm.guardadPermiso()}"></p:commandButton>
-									
-									<p:commandButton id="btnCancelarPermiso" value="Volver"
-									action="#{vacacionForm.regresar()}"></p:commandButton>
-							</div>
-
-							
-
-						</div>
-					</center>
-
 				</div>
-
 			</p:panel>
-			
+			<div class="row cells8">
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3">
+					<p:commandButton id="btnGuardarPermiso" value="Guardar"
+						actionListener="#{vacacionForm.guardadPermiso()}"></p:commandButton>
 
+					<p:commandButton id="btnCancelarPermiso" value="Regresar"
+						action="#{vacacionForm.regresar()}"></p:commandButton>
+				</div>
+			</div>
 		</h:form>
 	</ui:define>
 

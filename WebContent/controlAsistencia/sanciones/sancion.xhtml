@@ -1,25 +1,26 @@
-   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
 			<ui:param name="pagina"
 				value="Control de Asistencia / Sanciones / Listas" />
 		</ui:include>
-		</ui:define>
+	</ui:define>
 	<ui:define name="cuerpo">
-<style type="text/css">
+		<style type="text/css">
 .ui-datepicker-calendar {
-    display: none;
+	display: none;
 }
-
 </style>
-<script language="JavaScript">
+		<script language="JavaScript">
 function regenererCalSancionForm(){
     year = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-year").val();
     month = $("#sancionForm\\:calendarSanInicioForm .ui-datepicker-month").val();
@@ -30,265 +31,329 @@ function regenererCalSancionForm(){
 
 </script>
 
-	
-	<h:form  id="sancionForm">
-	<p:panel  id="panelSancion" header="Nuevo Registro"  >
-	<div class="grid condensed">
-				<!-- ******************** FILA NUMERO 1 ************************ -->
-				<div class="row cells8"> 
-					
-					<div class="cell colspan6"><!-- Fecha Elaboracion -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       				<p:outputLabel id="lblFechaElaboracion" for="txtFechaElaboracion" value="Fecha Elaboración: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtFechaElaboracion" value="#{sancionForm.dtSancion.dtpssnFechaEmision}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-				</div>
-				
-				<div class="row cells8"> 
-					<div class="cell colspan4"  ><!-- segunda fila-->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml" >
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblAnioRepSan" for="calendarSanInicioForm" value="Año-Mes:"  />	
-		       				</ui:define>
-		       				<ui:define name="valor">
-		       				 <p:calendar  id="calendarSanInicioForm" value="#{sancionForm.fecha}" required="true" disabled="#{sancionForm.esBloqueado}"
-                pattern="yyyy-MM-dd" effect="slideDown" navigator="true" mode="inline" 
-                  />
-     	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgSanInicionReporteVac" for="calendarSanInicioForm" />
-		       				</ui:define>
-		       				
-		       			</ui:decorate>
-					</div>
-					<div class="cell colspan4"><!-- DIAS DE SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDiasSancion" for="txtDiasSancionForm" value="Días: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtDiasSancionForm" value="#{sancionForm.dtSancion.dtpssnDias}" required="true"  
-		       									style="font-weight: Normal !important; width: 100%;" disabled="#{sancionForm.esBloqueado}">
-		       					</p:inputText>	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgDiasSancionForm" for="txtDiasSancionForm" />
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-				</div>
-				
-				
-				 <div class="row cells8" > 
-					<div class="cell colspan4"><!--TIPO DE FALTA  --> 
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblTipoFalta" for="tipoFalta" value="Falta: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoFalta" required="true" disabled="#{sancionForm.esBloqueado}"
-											value="#{sancionForm.tipoFalta}" effect="fold">
-											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
-											<f:selectItems value="#{sancionForm.tipoFaltas}"  />
 
-										</p:selectOneMenu>
-		       					
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgTipoFalta" for="tipoFalta" />
-		       				</ui:define>
-		       			</ui:decorate>
+		<h:form id="sancionForm">
+			<p:panel id="panelSancion" header="Nuevo Registro">
+				<div class="grid condensed">
+					<!-- ******************** FILA NUMERO 1 ************************ -->
+					<div class="row cells8">
+
+						<div class="cell colspan4">
+							<!-- Fecha Elaboracion -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFechaElaboracion"
+										for="txtFechaElaboracion" value="Fecha Elaboración: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtFechaElaboracion"
+										value="#{sancionForm.dtSancion.dtpssnFechaEmision}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
 					</div>
-				<div class="cell colspan4"><!--NUMERO EN MINUTOS  --> 
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblMinutos" for="txtMinutosSancionForm" value="Minutos: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       				<p:inputText id="txtMinutosSancionForm" value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true" disabled="#{sancionForm.esBloqueado}"
-		       									>
-		       					</p:inputText>
-		       					
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgNumMinSancion" for="txtMinutosSancionForm" />
-		       				</ui:define>
-		       			</ui:decorate>
+
+					<div class="row cells8">
+						<div class="cell colspan4">
+							<!-- segunda fila-->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblAnioRepSan" for="calendarSanInicioForm"
+										value="Año-Mes:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:calendar id="calendarSanInicioForm"
+										value="#{sancionForm.fecha}" required="true"
+										disabled="#{sancionForm.esBloqueado}" pattern="yyyy-MM-dd"
+										effect="slideDown" navigator="true" mode="inline" />
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgSanInicionReporteVac"
+										for="calendarSanInicioForm" />
+								</ui:define>
+
+							</ui:decorate>
+						</div>
+						<div class="cell colspan4">
+							<!-- DIAS DE SANCION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDiasSancion" for="txtDiasSancionForm"
+										value="Días: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtDiasSancionForm"
+										value="#{sancionForm.dtSancion.dtpssnDias}" required="true"
+										disabled="#{sancionForm.esBloqueado}">
+									</p:inputText>
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgDiasSancionForm" for="txtDiasSancionForm" />
+								</ui:define>
+							</ui:decorate>
+						</div>
 					</div>
-				
-				</div>
-				<br/>
-				<p:commandButton id="btnCalcularSancion"  value="Calcular" onclick="regenererCalSancionForm()" actionListener="#{sancionForm.calcularSancion()}" update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;" rendered="#{!sancionForm.esBloqueado}"> </p:commandButton>
-				<br/>
-				<p:separator></p:separator>
-				<div class="row cells8"> 
-				<div class="cell colspan2"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion" value="N° Autorizacion: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:outputLabel id="txtNAutorizacion" value="#{SancionForm.dtSancion.dtpssnNumaccion}" 
-		       									style="font-weight: Normal !important;">
-		       					</p:outputLabel>	
-		       				</ui:define>
-		       			</ui:decorate>
+
+
+					<div class="row cells8">
+						<div class="cell colspan4">
+							<!--TIPO DE FALTA  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblTipoFalta" for="tipoFalta"
+										value="Falta: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:selectOneMenu id="tipoFalta" required="true"
+										disabled="#{sancionForm.esBloqueado}"
+										value="#{sancionForm.tipoFalta}" effect="fold">
+										<f:selectItem itemLabel="Seleccionar..." itemValue="0"
+											noSelectionOption="true" />
+										<f:selectItems value="#{sancionForm.tipoFaltas}" />
+
+									</p:selectOneMenu>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgTipoFalta" for="tipoFalta" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+						<div class="cell colspan4">
+							<!--NUMERO EN MINUTOS  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblMinutos" for="txtMinutosSancionForm"
+										value="Minutos: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtMinutosSancionForm"
+										value="#{sancionForm.dtSancion.dtpssnMinutos}" required="true"
+										disabled="#{sancionForm.esBloqueado}">
+									</p:inputText>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgNumMinSancion" for="txtMinutosSancionForm" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
 					</div>
-					
-				
-					<div class="cell colspan3"><!-- FRECUENCIA DE SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblFrecuenciaSancion" for="txtFrecuenciaSancion" value="Frecuencia:"/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtFrecuenciaSancion" value="#{sancionForm.dtSancion.dtpssnFrecuencia}" disabled="true"
-		       									style="font-weight: Normal !important;">
-		       					</p:inputText>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					
-					<div class="cell colspan3"><!--  VALOR SANCION -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblValorSancion" for="txtValorSancion" value="Valor: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputText id="txtValorSancion" value="#{sancionForm.dtSancion.dtpssnValor}" disabled="#{sancionForm.esBloqueado}"
-		       									style="font-weight: Normal !important;">
-		       					</p:inputText>	
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-					
-							</div>
-				<div class="row cells8">
-				<div class="cell colspan5"><!--TIPO DE SANCION  --> 
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblTipoSancion" for="tipoSancion" value="Sanción: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:selectOneMenu id="tipoSancion" disabled="#{sancionForm.esBloqueado || sancionForm.esInsub}"
-											value="#{sancionForm.tipoSancion}" effect="fold">
-											
-											<f:selectItem itemLabel="Seleccionar..." itemValue="0" noSelectionOption="true" />
-											<f:selectItems value="#{sancionForm.tiposSanciones}"  />
-											<p:ajax listener="#{sancionForm.calcularSancionDefinido()}" update="sancionForm"></p:ajax>
-										</p:selectOneMenu>
-		       					
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgtipoSancion" for="tipoSancion" />
-		       				</ui:define>
-		       			</ui:decorate>
-		       	</div>
-		       	
-		       	<div class="cell colspan3"><!-- DESCUENTO -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblDescuentoSancion" for="checkDescuento" value="Efectuar Descuento: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">
-		       				
-		       				<p:selectBooleanCheckbox id="checkDescuento" value="#{sancionForm.esDescuento}"  disabled="#{sancionForm.esBloqueado}"/>
- 		
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>
-		
-				</div>
-			
-				 <div class="row cells8" > 
-					<div class="cell colspan8"><!-- Observaciones  -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblObservacion" for="txtObservacion" value="Observación: "/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtObservacion" value="#{sancionForm.dtSancion.dtpssnObservacion}" disabled="#{sancionForm.esBloqueado}"
-		       									style="font-weight: Normal !important;width: 200%;">
-		       					</p:inputTextarea>
-		       				</ui:define>
-		       			</ui:decorate>
-					</div>  
-					  
-					</div>
+					<br />
+					<p:commandButton id="btnCalcularSancion" value="Calcular"
+						onclick="regenererCalSancionForm()"
+						actionListener="#{sancionForm.calcularSancion()}"
+						update="sancionForm" style="margin-left: 9%;margin-bottom: 1%;"
+						rendered="#{!sancionForm.esBloqueado}">
+					</p:commandButton>
+					<br />
 					<p:separator></p:separator>
-					<center>       
-				<div  class="row cells8">
-				<div class="cell colpan3"></div>
-				<div class="cell colpan3"></div>
-				<div class="cell colpan2">
-                <p:commandButton id="btnGuardarVacion" value="Guardar"   actionListener="#{sancionForm.guardarSancion()}" update="panelSancion" disabled="#{sancionForm.esBloqueado}" ></p:commandButton>
-				</div>
-				<div class="cell colpan2">
-				 <p:commandButton id="btnCancelarVacion" value="Volver" action="#{sancionForm.regresar()}" process="@this"></p:commandButton>
-				</div>
-				<div class="cell colpan2">
-				<p:commandButton id="btnMulta" value="Imprimir multa" target="_blank" ajax="false" rendered="#{sancionForm.btnRenderMulta}"
-							actionListener="#{sancionForm.generarReporteMultas()}"></p:commandButton>
-				</div>
-				<div class="cell colpan2">
-				
-                <p:commandButton id="btnAnularVacacion" value="Insubcistente" onclick="PF('anulDialog').show();"  rendered="#{sancionForm.esActualizacion}" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
-			
-               	</div>
-				<div class="cell colpan2">
-								<p:commandButton id="btnPDFSancion"
-									value="Imprimir" rendered="#{sancionForm.esImprimir}" actionListener="#{sancionForm.verPDF}"
-									target="_blank" ajax="false"></p:commandButton>
-							</div> 
-				</div>
-				</center>
-					
-		</div>
-					 
-	</p:panel>
-	
-	
-		<div id="divDialogoAnuladdo">
-		<p:dialog header="Insubcistencia" widgetVar="anulDialog" modal="true" height="40%" width="50%"  id="dialogInsubcsistencia"  >
-		<div class="row cells8"> 
-					<div class="cell colspan8"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblMotivo" for="txtMotivoInsub" value="Motivo:"/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtMotivoInsub" value="#{sancionForm.dtSancion.dtpssnMotivoInsub}"
-		       									style="font-weight: Normal !important;width: 100%;">
-		       					</p:inputTextarea>	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgtipoSancion" for="txtMotivoInsub" />
-		       				</ui:define>
-		       			</ui:decorate>
+					<div class="row cells8">
+						<div class="cell colspan2">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion"
+										value="N° Autorizacion: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:outputLabel id="txtNAutorizacion"
+										value="#{sancionForm.dtSancion.dtpssnNumaccion}"
+										style="font-weight: Normal !important;">
+									</p:outputLabel>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+
+						<div class="cell colspan3">
+							<!-- FRECUENCIA DE SANCION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblFrecuenciaSancion"
+										for="txtFrecuenciaSancion" value="Frecuencia:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtFrecuenciaSancion"
+										value="#{sancionForm.dtSancion.dtpssnFrecuencia}"
+										disabled="true" style="font-weight: Normal !important;">
+									</p:inputText>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+						<div class="cell colspan3">
+							<!--  VALOR SANCION -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblValorSancion" for="txtValorSancion"
+										value="Valor: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputText id="txtValorSancion"
+										value="#{sancionForm.dtSancion.dtpssnValor}"
+										disabled="#{sancionForm.esBloqueado}"
+										style="font-weight: Normal !important;">
+									</p:inputText>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
 					</div>
-					
+					<div class="row cells8">
+						<div class="cell colspan5">
+							<!--TIPO DE SANCION  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblTipoSancion" for="tipoSancion"
+										value="Sanción: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:selectOneMenu id="tipoSancion"
+										disabled="#{sancionForm.esBloqueado || sancionForm.esInsub}"
+										value="#{sancionForm.tipoSancion}" effect="fold">
+
+										<f:selectItem itemLabel="Seleccionar..." itemValue="0"
+											noSelectionOption="true" />
+										<f:selectItems value="#{sancionForm.tiposSanciones}" />
+										<p:ajax listener="#{sancionForm.calcularSancionDefinido()}"
+											update="sancionForm"></p:ajax>
+									</p:selectOneMenu>
+
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgtipoSancion" for="tipoSancion" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+				<!--  	<div class="cell colspan3">
+							
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblDescuentoSancion" for="checkDescuento"
+										value="Efectuar Descuento: " />
+								</ui:define>
+								<ui:define name="valor">
+
+									<p:selectBooleanCheckbox id="checkDescuento"
+										value="#{sancionForm.esDescuento}"
+										disabled="#{sancionForm.esBloqueado}" />
+
+								</ui:define>
+							</ui:decorate>
+						</div>-->	
+
+					</div>
+
+					<div class="row cells8">
+						<div class="cell colspan8">
+							<!-- Observaciones  -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblObservacion" for="txtObservacion"
+										value="Observación: " />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputTextarea id="txtObservacion"
+										value="#{sancionForm.dtSancion.dtpssnObservacion}"
+										disabled="#{sancionForm.esBloqueado}"
+										style="font-weight: Normal !important;width: 200%;">
+									</p:inputTextarea>
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+					</div>
+					<center>
+						<div class="row cells8">
+							<div class="cell colpan3"></div>
+							<div class="cell colpan3"></div>
+
+							<p:commandButton id="btnAnularVacacion" value="Insubcistente"
+								onclick="PF('anulDialog').show();"
+								rendered="#{sancionForm.esActualizacion}"
+								disabled="#{sancionForm.esBloqueado}"></p:commandButton>
+
+							<p:commandButton id="btnPDFSancion" value="Imprimir"
+								rendered="#{sancionForm.esImprimir}"
+								actionListener="#{sancionForm.verPDF}" target="_blank"
+								ajax="false"></p:commandButton>
+
+							<p:commandButton id="btnMulta" value="Imprimir multa"
+								target="_blank" ajax="false"
+								rendered="#{sancionForm.btnRenderMulta}"
+								actionListener="#{sancionForm.generarReporteMultas()}"></p:commandButton>
+						</div>
+					</center>
 				</div>
-				<center>
-				<p:commandButton value="Guardar"  actionListener="#{sancionForm.anularSancion()}" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
-				<p:commandButton value="Volver" update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
-				
-				</center>
-    	
-		</p:dialog> 
-				</div>
-		
+			</p:panel>
+			<div class="cell colpan2">
+				<p:commandButton id="btnGuardarVacion" value="Guardar"
+					actionListener="#{sancionForm.guardarSancion()}"
+					update="panelSancion" disabled="#{sancionForm.esBloqueado}"></p:commandButton>
+				<p:commandButton id="btnCancelarVacion" value="Regresar"
+					action="#{sancionForm.regresar()}" process="@this"></p:commandButton>
+
+			</div>
+
+
+			<div id="divDialogoAnuladdo">
+				<p:dialog header="Insubcistencia" widgetVar="anulDialog"
+					modal="true" height="40%" width="50%" id="dialogInsubcsistencia">
+					<div class="row cells8">
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblMotivo" for="txtMotivoInsub"
+										value="Motivo:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputTextarea id="txtMotivoInsub"
+										value="#{sancionForm.dtSancion.dtpssnMotivoInsub}"
+										style="font-weight: Normal !important;width: 100%;">
+									</p:inputTextarea>
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgtipoSancion" for="txtMotivoInsub" />
+								</ui:define>
+							</ui:decorate>
+						</div>
+
+					</div>
+					<center>
+						<p:commandButton value="Guardar"
+							actionListener="#{sancionForm.anularSancion()}"
+							update=":sancionForm" Oncomplete="PF('anulDialog').hide();"></p:commandButton>
+						<p:commandButton value="Volver" update=":sancionForm"
+							Oncomplete="PF('anulDialog').hide();"></p:commandButton>
+
+					</center>
+
+				</p:dialog>
+			</div>
+
 		</h:form>
-		
+
 	</ui:define>
-	  
-	</ui:composition>
-	
-</html>                                                                                                               
+
+</ui:composition>
+
+</html>

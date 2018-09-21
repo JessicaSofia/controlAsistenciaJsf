@@ -19,8 +19,8 @@
 			<p:panel id="panelVacacion" header="Nuevo Registro">
 				<div class="grid condensed">
 					<!-- ******************** FILA NUMERO 1 ************************ -->
-					<div class="row cells8">
-						<div class="cell colspan4">
+					<div class="row cells8" style="width: fit-content;">
+						<div class="cell colspan8">
 							<!-- NNOMBRES -->
 							<ui:decorate
 								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
@@ -37,7 +37,7 @@
 							</ui:decorate>
 						</div>
 
-						<div class="cell colspan4">
+						<div class="cell colspan8">
 							<!-- Fecha Elaboracion -->
 							<ui:decorate
 								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
@@ -53,15 +53,13 @@
 								</ui:define>
 							</ui:decorate>
 						</div>
-					</div>
-					<div class="row cells8" style="width: fit-content;">
 
 
 						<div class="cell colspan8">
 
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="CBoxTipos" value="Tipo Licencia: *" />
 								</ui:define>
@@ -83,7 +81,7 @@
 
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="CBoxTiposHijo" value="Subtipo 1: *"
 										rendered="#{registrosLicencia.btnComboHijo}" />
@@ -109,7 +107,7 @@
 
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="CBoxTiposHijo2" value="Subtipo 2: *"
 										rendered="#{registrosLicencia.btnComboHijo2}" />
@@ -136,7 +134,7 @@
 
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="valorBoolean"
 										value="#{registrosLicencia.nombreEtiqueta}"
@@ -149,20 +147,13 @@
 										<p:ajax listener="#{registrosLicencia.cambiarValorNumMax()}"
 											update="VacacionForm"></p:ajax>
 									</p:selectBooleanCheckbox>
-
 								</ui:define>
-
-
 							</ui:decorate>
-
 						</div>
-
-
-
 						<div class="cell colspan8">
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblNumDias" for="txtNumDias"
 										value="N° Días: " />
@@ -182,13 +173,14 @@
 						<div class="cell colspan8">
 							<!-- Fecha Inicio de Vacaciones -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaInicio" for="CalFechaInicio"
 										value="Desde: *" />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="CalFechaInicio" disabled="#{registrosLicencia.renderCambHorario}"
+									<p:calendar id="CalFechaInicio"
+										disabled="#{registrosLicencia.renderCambHorario}"
 										value="#{registrosLicencia.licencia.lcnFechaInicio}"></p:calendar>
 								</ui:define>
 
@@ -200,7 +192,8 @@
 
 					</div>
 					<br />
-					<p:commandButton id="btnCalcularVacacion" value="Calcular" disabled="#{registrosLicencia.renderCambHorario}"
+					<p:commandButton id="btnCalcularVacacion" value="Calcular"
+						disabled="#{registrosLicencia.renderCambHorario}"
 						actionListener="#{registrosLicencia.calcularPeriodoLicencia()}"
 						update="panelVacacion" style="margin-left: 9%;margin-bottom: 1%;">
 					</p:commandButton>
@@ -210,7 +203,7 @@
 						<div class="cell colspan8">
 							<!-- Fecha Final -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaFinal" for="txtFechaFinal"
 										value="Hasta: *" />
@@ -229,7 +222,7 @@
 						<div class="cell colspan8">
 							<!-- Observaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblExplicacion" for="txtExplicacion"
 										value="Explicación: *" />
@@ -245,7 +238,7 @@
 						<div class="cell colspan8">
 							<!-- Con copia a -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblObservacion" for="txtObservacion"
 										value="Observación: " />
@@ -262,7 +255,7 @@
 						<div class="cell colspan8">
 							<!-- Con copia a -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblCopia" for="txtCopia" value="Copia a: " />
 								</ui:define>
@@ -276,19 +269,11 @@
 						</div>
 
 					</div>
-					<p:separator></p:separator>
 					<center>
 						<div class="row cells8">
 							<div class="cell colpan3"></div>
 							<div class="cell colpan3"></div>
-							<div class="cell colpan3">
-								<p:commandButton id="btnGuardarVacion" value="Guardar"
-									update="VacacionForm"
-									actionListener="#{registrosLicencia.guardadLicencia()}"></p:commandButton>
-								<p:commandButton id="btnCancelarVacion" value="Volver"
-									action="#{registrosLicencia.regresar()}"></p:commandButton>
 
-							</div>
 
 							<p:commandButton id="btnPDFLicenia"
 								rendered="#{registrosLicencia.renderBtnImprimir}"
@@ -300,7 +285,15 @@
 				</div>
 
 			</p:panel>
+			<div class="cell colspan2">
 
+				<p:commandButton id="btnGuardarVacion" value="Guardar"
+					update="VacacionForm"
+					actionListener="#{registrosLicencia.guardadLicencia()}"></p:commandButton>
+				<p:commandButton id="btnCancelarVacion" value="Volver"
+					action="#{registrosLicencia.regresar()}"></p:commandButton>
+
+			</div>
 
 		</h:form>
 	</ui:define>

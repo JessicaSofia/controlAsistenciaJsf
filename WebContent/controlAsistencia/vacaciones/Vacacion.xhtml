@@ -19,11 +19,11 @@
 			<p:panel id="panelVacacion" header="Nuevo Registro">
 				<div class="grid condensed">
 					<!-- ******************** FILA NUMERO 1 ************************ -->
-					<div class="row cells8">
-						<div class="cell colspan4">
+					<div class="row cells8" style="width: fit-content;">
+						<div class="cell colspan8">
 							<!-- NNOMBRES -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblNAutorizacion" for="txtNAutorizacion"
 										value="N° Autorizacion: " />
@@ -37,10 +37,10 @@
 							</ui:decorate>
 						</div>
 
-						<div class="cell colspan4">
+						<div class="cell colspan8">
 							<!-- Fecha Elaboracion -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaElaboracion"
 										for="txtFechaElaboracion" value="Fecha Elaboración: " />
@@ -53,20 +53,18 @@
 								</ui:define>
 							</ui:decorate>
 						</div>
-					</div>
-					<div class="row cells8" style="width: fit-content;">
 						<div class="cell colspan8">
 							<!--Numero de  dias de vacaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblNumDias" for="txtNumDias"
 										value="N° Días: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputText id="txtNumDias" disabled="#{vacacionForm.esBloqueado}"
-										value="#{vacacionForm.vacacion.vccNumDias}" required="true"
-										style="font-weight: Normal !important;width: 200%;"></p:inputText>
+									<p:inputText id="txtNumDias"
+										disabled="#{vacacionForm.esBloqueado}"
+										value="#{vacacionForm.vacacion.vccNumDias}" required="true"></p:inputText>
 
 								</ui:define>
 								<ui:define name="etiquetaError">
@@ -77,13 +75,14 @@
 						<div class="cell colspan8">
 							<!-- Fecha Inicio de Vacaciones -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralEdit.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaInicio" for="CalFechaInicio"
 										value="Desde: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="CalFechaInicio" required="true" disabled="#{vacacionForm.esBloqueado}"
+									<p:calendar id="CalFechaInicio" required="true"
+										disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccFechaInicio}"></p:calendar>
 								</ui:define>
 
@@ -95,7 +94,8 @@
 
 					</div>
 					<br />
-					<p:commandButton id="btnCalcularVacacion" value="Calcular" rendered="#{!vacacionForm.esBloqueado}"
+					<p:commandButton id="btnCalcularVacacion" value="Calcular"
+						rendered="#{!vacacionForm.esBloqueado}"
 						actionListener="#{vacacionForm.CalcularVacaciones()}"
 						update="VacacionForm" style="margin-left: 9%;margin-bottom: 1%;">
 					</p:commandButton>
@@ -105,23 +105,23 @@
 						<div class="cell colspan8">
 							<!-- Fecha Final -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblFechaFinal" for="txtFechaFinal"
 										value="Hasta: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:calendar id="txtFechaFinal" disabled="#{vacacionForm.esBloqueado}"
+									<p:calendar id="txtFechaFinal"
+										disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccFechaFin}"
-										style="font-weight: Normal !important;" showOn="button"
-										></p:calendar>
+										style="font-weight: Normal !important;" showOn="button"></p:calendar>
 								</ui:define>
 							</ui:decorate>
 						</div>
 						<div class="cell colspan8">
 							<!-- Saldo Vacaciones  Periodo1  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblSaldo1" for="txtSaldo1"
 										value="Saldo Vacaciones(Periodo anterior): " />
@@ -138,7 +138,7 @@
 						<div class="cell colspan8">
 							<!-- Saldo Vacaciones  Periodo2  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblSaldo2" for="txtSaldo2"
 										value="Saldo Vacaciones(Periodo actual): " />
@@ -156,13 +156,14 @@
 						<div class="cell colspan8">
 							<!-- Observaciones  -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblObservacion" for="txtObservacion"
 										value="Observación: " />
 								</ui:define>
 								<ui:define name="valor">
-									<p:inputTextarea id="txtObservacion" disabled="#{vacacionForm.esBloqueado}"
+									<p:inputTextarea id="txtObservacion"
+										disabled="#{vacacionForm.esBloqueado}"
 										value="#{vacacionForm.vacacion.vccObservacion}"
 										style="font-weight: Normal !important;width: 200%;">
 									</p:inputTextarea>
@@ -172,7 +173,7 @@
 						<div class="cell colspan8">
 							<!-- Con copia a -->
 							<ui:decorate
-								template="/componentesGenerales/plantillas/pltComponenteBigGeneralDisplay2.xhtml">
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
 								<ui:define name="etiqueta">
 									<p:outputLabel id="lblCopia" for="txtCopia" value="Con Copia: " />
 								</ui:define>
@@ -184,58 +185,67 @@
 							</ui:decorate>
 						</div>
 					</div>
-					<p:separator></p:separator>
-					<center>
-						<div class="row cells8">
-							<div class="cell colpan3"></div>
-							<div class="cell colpan3"></div>
-							<div class="cell colpan6">
-								<p:commandButton id="btnGuardarVacion" value="Guardar" update="VacacionForm" rendered="#{!vacacionForm.esBloqueado}"
-									actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
-									
-								<p:commandButton id="btnCancelarVacion" value="Volver"
-									action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
-							</div>
-							<p:commandButton id="btnAnularVacion" value="Anular"  onclick="PF('anulDialogVacacion').show();" rendered="#{vacacionForm.esActualizacion}" disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
-							<p:commandButton id="btnPDFVacaciones" disabled="#{vacacionForm.esBloqueado}"
-								rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
-								actionListener="#{vacacionForm.verPDF}" target="_blank"
-								ajax="false"></p:commandButton>
-						</div>
-					</center>
-
 				</div>
-
 			</p:panel>
+			<div class="row cells8">
+				<div class="cell colpan3"></div>
+				<div class="cell colpan3"></div>
+				<div class="cell colpan6">
+					<p:commandButton id="btnGuardarVacion" value="Guardar"
+						update="VacacionForm" rendered="#{!vacacionForm.esBloqueado}"
+						actionListener="#{vacacionForm.GuardarVacacion()}"></p:commandButton>
+
+					<p:commandButton id="btnCancelarVacion" value="Regresar"
+						action="#{vacacionForm.regresar()}" process="@this"></p:commandButton>
+				</div>
+				<p:commandButton id="btnAnularVacion" value="Anular"
+					onclick="PF('anulDialogVacacion').show();"
+					rendered="#{vacacionForm.esActualizacion}"
+					disabled="#{vacacionForm.esBloqueado}"></p:commandButton>
+				<p:commandButton id="btnPDFVacaciones"
+					disabled="#{vacacionForm.esBloqueado}"
+					rendered="#{vacacionForm.renderBtnImprimir}" value="Imprimir"
+					actionListener="#{vacacionForm.verPDF}" target="_blank"
+					ajax="false"></p:commandButton>
+			</div>
 
 			<div id="divDialogoAnulVacacion">
-		<p:dialog header="Anulación" widgetVar="anulDialogVacacion" modal="true" height="40%" width="50%" >
-		<div class="row cells8"> 
-					<div class="cell colspan8"><!-- NNOMBRES -->
-						<ui:decorate  template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
-		       				<ui:define name="etiqueta">	
-		       					<p:outputLabel id="lblMotivo" for="txtMotivoAnulado" value="Motivo:"/>	
-		       				</ui:define>
-		       				<ui:define name="valor">	
-		       					<p:inputTextarea id="txtMotivoAnulado" value="#{vacacionForm.vacacion.vccObservacionEstado}" 
-		       									style="font-weight: Normal !important;width: 100%;">
-		       					</p:inputTextarea>	
-		       				</ui:define>
-		       				<ui:define name="etiquetaError">
-		       				<p:message id="msgtipoSancion" for="txtMotivoAnulado" />
-		       				</ui:define>
-		       			</ui:decorate>
+				<p:dialog header="Anulación" widgetVar="anulDialogVacacion"
+					modal="true" height="40%" width="50%">
+					<div class="row cells8">
+						<div class="cell colspan8">
+							<!-- NNOMBRES -->
+							<ui:decorate
+								template="/componentesGenerales/plantillas/pltComponenteGeneralDisplay.xhtml">
+								<ui:define name="etiqueta">
+									<p:outputLabel id="lblMotivo" for="txtMotivoAnulado"
+										value="Motivo:" />
+								</ui:define>
+								<ui:define name="valor">
+									<p:inputTextarea id="txtMotivoAnulado"
+										value="#{vacacionForm.vacacion.vccObservacionEstado}"
+										style="font-weight: Normal !important;width: 100%;">
+									</p:inputTextarea>
+								</ui:define>
+								<ui:define name="etiquetaError">
+									<p:message id="msgtipoSancion" for="txtMotivoAnulado" />
+								</ui:define>
+							</ui:decorate>
+						</div>
 					</div>
-				</div>
-				<center>
-				<p:commandButton value="Guardar"  actionListener="#{vacacionForm.anularVacacion()}" update="VacacionForm"  Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
-				<p:commandButton value="Volver" update="VacacionForm"  Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
-				</center>
-				
-    	
-		</p:dialog> 
-		</div>
-		
+					<center>
+						<p:commandButton value="Guardar"
+							actionListener="#{vacacionForm.anularVacacion()}"
+							update="VacacionForm"
+							Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
+						<p:commandButton value="Volver" update="VacacionForm"
+							Oncomplete="PF('anulDialogVacacion').hide();"></p:commandButton>
+					</center>
+
+
+				</p:dialog>
+			</div>
+
 		</h:form>
 	</ui:define>
 

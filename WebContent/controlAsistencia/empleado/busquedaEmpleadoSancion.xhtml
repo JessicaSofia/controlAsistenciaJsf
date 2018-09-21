@@ -1,64 +1,81 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"> 
-      
-<ui:composition template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
-<ui:define name="paginacion">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition
+	template="/componentesGenerales/plantillas/pltPrincipalSinMenuEjecModal.xhtml">
+	<ui:define name="paginacion">
 		<ui:include src="/componentesGenerales/plantillas/pltPaginacion.xhtml">
-			<ui:param name="pagina"
-				value="Control de Asistencia / Sanciones" />
+			<ui:param name="pagina" value="Control de Asistencia / Sanciones" />
 		</ui:include>
-</ui:define>
-		<ui:define name="cuerpo">
-	<h:form  id="frmBusquedaEmpleado" enctype="multipart/form-data" acceptcharset="UTF-8">
-	<p:panel id="pnlBusquedaEmpleado"  header="Búsqueda Empleado" style="margin-bottom: 10px;">
-	<div class="grid condensed" style="margin:0 !important">
-	<div class="row cells8" style="width: fit-content;"> 
-						<div class="cell colspan2" >
-		       					<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado" value="Apellidos:  "/>
-		       			</div>
-		       			<div class="cell colspan4">	
-		       					<p:inputText  id="txtBusquedaEmpleado" value="#{busquedaEmpleadoSancion.txtBusquedaEmpleado}" 
-		       									style=" font-weight: Normal !important; with: 100%"  ></p:inputText> 
-		       			</div>
-		       					<div class="cell colspan2">	
-		       					<p:commandButton  value="Buscar"  actionListener="#{busquedaEmpleadoSancion.buscarEmpleado()}" update="tblEmpleados" action="controlAsistencia/vacaciones/VacacionesRegistros.xhtml" style="margin-left: 50%;"></p:commandButton>
-		       					</div>
-		       	
-	</div>				
-	<div id="divTblEmpleados" >
-	<p:dataTable id="tblEmpleados" var="emp" value="#{busquedaEmpleadoSancion.lstPersona}">
-	 
-        <p:column headerText="Cédula">
-            <p:outputLabel value="#{emp.prsIdentificacion}"></p:outputLabel>  
-        </p:column>
-        <p:column headerText="Nombres">
-            <h:outputText value="#{emp.prsNombres}" />
-        </p:column>                                                                                                                                               
-        <p:column headerText="Apellidos">
-            <h:outputText value="#{emp.toString()}" />
-        </p:column>
-        <p:column headerText="Dependencia">
-            <h:outputText value="#{emp.dpnNombre}" />
-        </p:column>
-        <p:column style="width:32px;text-align: center">
-             <p:commandButton update=":frmBusquedaEmpleado" icon="ui-icon-search" title="Seleccionar"  action="/controlAsistencia/sanciones/SancionesRegistros.xhtml"  >
-                <f:setPropertyActionListener value="#{emp}" target="#{sancionForm.seleccionPersona}" />
-            </p:commandButton>
-        </p:column>
-	</p:dataTable>
-	<br></br>
-	<center>
-	<p:commandLink value="Inicio" action="/controlAsistencia/generalidades/principal.xhtml"> </p:commandLink>
-	</center>
-	</div>
-</div>
-	</p:panel>
-	</h:form>
-	
-	</ui:define> 
-	</ui:composition>
+	</ui:define>
+	<ui:define name="cuerpo">
+		<h:form id="frmBusquedaEmpleado" enctype="multipart/form-data"
+			acceptcharset="UTF-8">
+			<div class="grid condensed">
+				<p:panel id="pnlBusquedaEmpleado"
+					header="Ingrese los datos para buscar">
+					<div class="row cells8">
+						<p:outputLabel id="lblBusquedaEmpleado" for="txtBusquedaEmpleado"
+							value="Primer Apellido:		 " />
+						<p:inputText id="txtBusquedaEmpleado"
+							value="#{busquedaEmpleadoSancion.txtBusquedaEmpleado}"></p:inputText>
+					</div>
+				</p:panel>
+				<div class="cell colspan2">
+					<p:commandButton value="Buscar"
+						actionListener="#{busquedaEmpleadoSancion.buscarEmpleado()}"
+						update="tblEmpleados"
+						action="controlAsistencia/sanciones/SancionesRegistros.xhtml"></p:commandButton>
+					<p:commandButton value="Limpiar"
+						actionListener="#{busquedaEmpleadoSancion.limpiarBusqueda()}"
+						update="frmBusquedaEmpleado"
+						action="controlAsistencia/sanciones/SancionesRegistros.xhtml"></p:commandButton>
+
+				</div>
+				<p:panel id="pnlListaEmpleado" header="Resultados de la búsqueda">
+
+					<p:dataTable id="tblEmpleados" var="emp"
+						value="#{busquedaEmpleadoSancion.lstPersona}" rows="10"
+						paginator="true"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" emptyMessage="No existen registros.">
+
+						<p:column headerText="Cédula">
+							<p:outputLabel value="#{emp.prsIdentificacion}"></p:outputLabel>
+						</p:column>
+						<p:column headerText="Nombres">
+							<h:outputText value="#{emp.prsNombres}" />
+						</p:column>
+						<p:column headerText="Apellidos">
+							<h:outputText value="#{emp.toString()}" />
+						</p:column>
+						<p:column headerText="Dependencia">
+							<h:outputText value="#{emp.dpnNombre}" />
+						</p:column>
+						<p:column headerText="Seleccionar"
+							style="width:60px;text-align: center">
+							<p:commandButton style="width:32px;text-align: center"
+								update=":frmBusquedaEmpleado" icon="ui-icon-search"
+								title="Seleccionar"
+								action="/controlAsistencia/sanciones/SancionesRegistros.xhtml">
+								<f:setPropertyActionListener value="#{emp}"
+									target="#{sancionForm.seleccionPersona}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<div class="cell colspan2">
+					<p:commandButton value="Regresar"
+						action="/controlAsistencia/generalidades/principal.xhtml">
+					</p:commandButton>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
 </html>

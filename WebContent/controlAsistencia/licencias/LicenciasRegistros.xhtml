@@ -19,7 +19,7 @@
 			acceptcharset="UTF-8">
 
 
-			<p:panel id="pnlLicenciasRegistros" header="Detalle Funcionario">
+			<p:panel id="pnlLicenciasFuncionario" header="Detalle Funcionario">
 
 				<div id="divDetalleEmpl" class="grid condensed">
 					<!-- ******************** FILA NUMERO 1 ************************ -->
@@ -105,10 +105,14 @@
 						</div>
 					</div>
 				</div>
-
+			</p:panel>
+			<p:panel id="pnlLicenciasRegistros" header="Historial Licencias">
 				<div id="divTblRegistrosLicencias">
 					<p:dataTable var="licencia"
-						value="#{registrosLicencia.listaLicencias}">
+						value="#{registrosLicencia.listaLicencias}" rows="10"
+						paginator="true"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" emptyMessage="No existen registros.">
 						<p:column headerText="Tipo Licencia" style="width:15%;">
 							<h:outputText value="#{licencia.tipoLicencia.tplcNombre}" />
 						</p:column>
@@ -125,10 +129,7 @@
 							<h:outputText value="#{licencia.lcnExplicacion}" />
 						</p:column>
 
-						<p:column style="width:10%;">
-							<f:facet name="header">
-								<i class="fa fa-check-square-o" />
-							</f:facet>
+						<p:column headerText="Opción" style="width:10%;text-align: center">
 							<p:commandLink value="Ver/Editar"
 								action="/controlAsistencia/licencias/Licencia.xhtml"
 								actionListener="#{registrosLicencia.cargarVariables(licencia)}">
@@ -140,16 +141,18 @@
 					</p:dataTable>
 				</div>
 				<div>
-					<center>
+					<div class="cell colspan2">
 						<p:commandButton value=" Nuevo Registro" style="margin-top: 1%;"
 							action="/controlAsistencia/licencias/Licencia.xhtml"
 							actionListener="#{registrosLicencia.cargarVariables(null)}"></p:commandButton>
-						<p:commandButton id="btnCancelarVacion" value="Volver"
-							action="#{registrosLicencia.regresarEmpleados()}"></p:commandButton>
-					</center>
+					</div>
 				</div>
 
 			</p:panel>
+			<div class="cell colspan2">
+				<p:commandButton id="btnCancelarVacion" value="Regresar"
+					action="#{registrosLicencia.regresarEmpleados()}"></p:commandButton>
+			</div>
 
 		</h:form>
 	</ui:define>
