@@ -141,6 +141,8 @@ public class VacacionForm implements Serializable {
 		if (vacacion.getVccNumDias() > 2) {
 			if (vacacion.getVccFechaInicio() != null) {
 				CalcularSaldoVacacion(vacacion.getVccFechaInicio(), vacacion.getVccNumDias(),1);
+				cargarSaldoVacaciones();
+				
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Advertencia.", "No se ha especificado una fecha de inicio."));

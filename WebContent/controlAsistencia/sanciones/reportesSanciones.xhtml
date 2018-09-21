@@ -315,7 +315,7 @@ function regenererCalSancion(){
 							<f:facet name="{Exporters}">
 								<h:commandLink value="Exportar">
 									<p:graphicImage name="/img/excel.jpg" />
-									<p:dataExporter type="xls" target="tblRepSanciones"
+									<p:dataExporter type="xls" target="tblRepSancionesAnual"
 										fileName="sancionesAnual" pageOnly="true" />
 								</h:commandLink>
 
@@ -349,20 +349,11 @@ function regenererCalSancion(){
 							value="#{reporteSanciones.lstDtSancionesAnual}"
 							widgetVar="reportSancTable"
 							rendered="#{ reporteSanciones.desgloce and reporteSanciones.anualActv}"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 							paginator="true" rows="10"
 							style="margin-bottom:20px; border: none !important;"
 							rowIndexVar="rowIndex" scrollable="true">
-							<f:facet name="{Exporters}">
-								<h:commandLink value="Exportar">
-									<p:graphicImage name="/img/excel.jpg" />
-									<p:dataExporter type="xls"
-										target="tblRepSancionesAnualDesgloce"
-										fileName="sancionesAnualDesgloce" pageOnly="true" />
-								</h:commandLink>
-
-							</f:facet>
-
+							
 							<p:column headerText="N°" style="width: 10px">
 								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
