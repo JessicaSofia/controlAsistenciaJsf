@@ -154,7 +154,7 @@ function regenererCal(){
 					</div>
 
 					<div id="divTblRegistrosLicencias">
-						<p:dataTable var="licencia"
+						<p:dataTable id="tblReporteLicencias" var="licencia"
 							rendered="#{reporteVacaciones.licActivar}"
 							value="#{reporteVacaciones.lstLicencias}"
 							widgetVar="reportAuscenTableLic"
@@ -166,7 +166,7 @@ function regenererCal(){
 							<f:facet name="{Exporters}">
 								<h:commandLink value="Exportar">
 									<p:graphicImage name="img/excel.jpg" />
-									<p:dataExporter type="xls" target="reportAuscenTableLic"
+									<p:dataExporter type="xls" target="tblReporteLicencias"
 										fileName="Licencias" pageOnly="true" />
 								</h:commandLink>
 							</f:facet>
@@ -210,7 +210,7 @@ function regenererCal(){
 						</p:dataTable>
 					</div>
 					<div id="divTblRegistrosPermisos">
-						<p:dataTable var="permiso"
+						<p:dataTable  id="tblReportPermisos" var="permiso"
 							value="#{reporteVacaciones.lstPermisos}"
 							rendered="#{reporteVacaciones.permActivar}"
 							widgetVar="reportAuscenTablePerm" rowIndexVar="rowIndex"
@@ -223,7 +223,7 @@ function regenererCal(){
 							<f:facet name="{Exporters}">
 								<h:commandLink value="Exportar">
 									<p:graphicImage name="img/excel.jpg" />
-									<p:dataExporter type="xls" target="reportAuscenTablePerm"
+									<p:dataExporter type="xls" target="tblReportPermisos"
 										fileName="Permisos" pageOnly="true" />
 								</h:commandLink>
 							</f:facet>
