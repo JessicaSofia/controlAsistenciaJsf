@@ -413,7 +413,8 @@ public class SancionForm implements Serializable {
 
 		int min = dtSancion.getDtpssnMinutos();
 
-		
+		String[] Dias = txtDias.split(",");
+		frecuencia = Dias.length;
 
 		falta = srvSanciones.ObtenerFaltaPorI(Integer.parseInt(tipoFalta));
 		if (seleccionPersona.getRgmId()!= 0 ) {
@@ -437,9 +438,6 @@ public class SancionForm implements Serializable {
 				return;
 			}
 			
-		}else {
-			String[] Dias = txtDias.split(",");
-			frecuencia = Dias.length;
 		}
 		dtSancion.setDtpssnFrecuencia(frecuencia);
 		// int idTiposancion=categoriaFaltaAplicar.getTipoSancion().getTpsnId();
