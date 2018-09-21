@@ -1038,7 +1038,9 @@ public class VacacionForm implements Serializable {
 		// this.licencia = null;
 		// saldoVacacion = null;
 		// cargarVariables();
+		this.esPermitirIngreso = false;
 		return ruta;
+		
 	}
 	
 	
