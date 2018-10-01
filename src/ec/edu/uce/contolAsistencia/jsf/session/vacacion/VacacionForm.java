@@ -1066,7 +1066,7 @@ public class VacacionForm implements Serializable {
 					esPermitirIngreso=true;
 			 return 1;
 			}else {
-				fechaPosesion=nombramiento.getAcprFechaPosesion();
+				fechaPosesion=nombramiento.getAcprFecha();
 				esPermitirIngreso=false;
 			}
 			
