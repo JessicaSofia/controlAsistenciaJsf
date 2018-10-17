@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -694,9 +695,6 @@ public class VacacionForm implements Serializable {
 	}
 
 	
-	
-	
-	
 	public void verPDF() {
 		try {
 
@@ -1102,7 +1100,7 @@ public class VacacionForm implements Serializable {
 	
 	}
 	
-	public void determinarSaldoVacaciones(Calendar fechaActual, Calendar fechaContrato ) {
+	public void determinarSaldoVacaciones(Calendar fechaActual, Calendar fechaContrato ){
 		int aniosContrato=0;
 		int mesesContrato=0;
 		int diasVac1 =0;
@@ -1110,19 +1108,29 @@ public class VacacionForm implements Serializable {
 		SaldoVacacion sv1=null;
 		SaldoVacacion sv2=null;
 		ParametroVacacionRegimen parametroDias=srvParamVacaciones.buscarPorId(ParametrosVacacion.NumDiasxAnio.getId(), seleccionPersona.getRgmId());
-		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/12.0);
+		double promDiasVacaMes=(Integer.parseInt(parametroDias.getPrvcrgValor())/365.0);
 		Map<String, Integer> resultado=calcularTiempoContratacion(fechaActual,fechaContrato);
 		 aniosContrato=resultado.get("anios");
 		 mesesContrato=resultado.get("meses");
+		int diferenciadias=0;
+		Calendar c = Calendar.getInstance();
 		if((aniosContrato==0) && (mesesContrato>0)){
 	     
-			diasVac2=(int)(promDiasVacaMes*mesesContrato);
+			//diasVac2=(int)(promDiasVacaMes*mesesContrato);
+			c.setTimeInMillis( (fechaActual.getTime().getTime()-fechaContrato.getTime().getTime()));
+			diferenciadias=c.get(Calendar.DAY_OF_YEAR);
+			diasVac2=(int)(promDiasVacaMes*diferenciadias);
 		}
 		else{
 			if((aniosContrato<2)) {
 				diasVac1=Integer.parseInt(parametroDias.getPrvcrgValor());
-				if(mesesContrato>0)
-				diasVac2=(int)promDiasVacaMes*mesesContrato;
+				if(mesesContrato>0) {
+					fechaContrato.add(Calendar.YEAR, 1);
+					c.setTimeInMillis( (fechaActual.getTime().getTime()-fechaContrato.getTime().getTime()));
+					diferenciadias=c.get(Calendar.DAY_OF_YEAR);
+					diasVac2=(int)(promDiasVacaMes*diferenciadias);
+				//diasVac2=(int)promDiasVacaMes*mesesContrato;
+				}
 				
 			}else {
 				if(aniosContrato>=2) {
