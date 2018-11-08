@@ -32,9 +32,7 @@ import ec.edu.uce.controlAsistencia.jpa.entidades.Vacacion;
 @SessionScoped
 public class ReporteVacaciones implements Serializable{
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	private int anio;
